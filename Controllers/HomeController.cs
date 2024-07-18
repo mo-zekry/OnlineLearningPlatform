@@ -10,7 +10,7 @@ namespace OnlineLearningPlatform.Controllers;
 public class HomeController : Controller
 {
     private readonly IUnitOfWork _db;
-    private readonly  IMapper _mapper;
+    private readonly IMapper _mapper;
 
     public HomeController(IUnitOfWork unitOfWork, IMapper mapper)
     {
@@ -18,7 +18,7 @@ public class HomeController : Controller
         _mapper = mapper;
     }
 
-       public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index()
     {
         var courses = await _db.Courses.GetAllAsync();
         var courseViewModels = _mapper.Map<IEnumerable<CourseViewModel>>(courses);

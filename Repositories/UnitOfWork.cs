@@ -4,10 +4,12 @@ using OnlineLearningPlatform.Repositories.Interface;
 
 namespace OnlineLearningPlatform.Repositories;
 
-public class UnitOfWork : IUnitOfWork {
+public class UnitOfWork : IUnitOfWork
+{
     private readonly ApplicationDbContext _context;
 
-    public UnitOfWork(ApplicationDbContext context) {
+    public UnitOfWork(ApplicationDbContext context)
+    {
         _context = context;
         Courses = new CourseRepository(_context);
         Category = new CategoryRepository(_context);
@@ -35,11 +37,13 @@ public class UnitOfWork : IUnitOfWork {
 
     public ICategoryRepository Category { get; private set; }
 
-    public async Task<int> SaveChangesAsync() {
+    public async Task<int> SaveChangesAsync()
+    {
         return await _context.SaveChangesAsync();
     }
 
-    public void Dispose() {
+    public void Dispose()
+    {
         _context.Dispose();
     }
 }
