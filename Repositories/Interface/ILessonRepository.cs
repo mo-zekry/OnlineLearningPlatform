@@ -4,6 +4,8 @@ using OnlineLearningPlatform.Repositories.Class;
 
 namespace OnlineLearningPlatform.Repositories.Interface;
 
-public class LessonRepository : GenericRepository<Lesson>, ILessonRepository {
-    public LessonRepository(ApplicationDbContext context) : base(context) { }
+public class LessonRepository : GenericRepository<Lesson>, ILessonRepository
+{
+    public LessonRepository(ApplicationDbContext context)
+        : base(context) { }
 }

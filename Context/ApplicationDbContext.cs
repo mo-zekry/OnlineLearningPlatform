@@ -6,7 +6,8 @@ using OnlineLearningPlatform.ModelsConfiguration;
 
 namespace OnlineLearningPlatform.Context;
 
-public class ApplicationDbContext : IdentityDbContext<Student> {
+public class ApplicationDbContext : IdentityDbContext<Student>
+{
     public DbSet<Course> Courses { get; set; }
     public DbSet<Module> Modules { get; set; }
     public DbSet<Lesson> Lessons { get; set; }
@@ -20,16 +21,20 @@ public class ApplicationDbContext : IdentityDbContext<Student> {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options) { }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
         base.OnConfiguring(optionsBuilder);
 
-        var connectionString = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build()
+        var connectionString = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build()
             .GetConnectionString("DefaultConnection");
 
         optionsBuilder.UseSqlServer(connectionString);
     }
 
-    protected override void OnModelCreating(ModelBuilder builder) {
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
         base.OnModelCreating(builder);
 
         builder.ApplyConfiguration(new CourseConfiguration());

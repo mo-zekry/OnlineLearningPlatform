@@ -10,7 +10,7 @@ public interface IGenericRepository<T>
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
         string includeProperties = ""
     );
-    
+
     Task<T> GetByIdAsync(int id);
     Task<IEnumerable<T>> GetAllAsync();
     Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);

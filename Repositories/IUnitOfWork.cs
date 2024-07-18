@@ -3,7 +3,8 @@ using OnlineLearningPlatform.Repositories.Interface;
 
 namespace OnlineLearningPlatform.Repositories;
 
-public interface IUnitOfWork : IDisposable {
+public interface IUnitOfWork : IDisposable
+{
     ICourseRepository Courses { get; }
     ICategoryRepository Category { get; }
     IModuleRepository Modules { get; }
@@ -17,4 +18,3 @@ public interface IUnitOfWork : IDisposable {
     IStudentLessonRepository StudentLessons { get; }
     Task<int> SaveChangesAsync();
 }
-
