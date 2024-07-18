@@ -1,0 +1,29 @@
+﻿@model IEnumerable<OnlineLearningPlatform.ViewModels.CourseViewModel>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">Courses</h1>
+        </div>
+    </div>
+    <div class="row">
+        @foreach (var course in Model)
+        {
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    @* <img src="@(course. ?? "no-image.jpg")" class="card-img-top" alt="..."> *@
+                    <div class="card-body">
+                        <h5 class="card-title">@course.Name</h5>
+                        <p class="card-text">@course.Description</p>
+                        <p class="card-text">Price: @course.Price</p>
+                        <p class="card-text">Is Progress Limited: @course.IsProgressLimited</p>
+                        @* <p class="card-text">Category: @course.Category.Name</p> *@
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
