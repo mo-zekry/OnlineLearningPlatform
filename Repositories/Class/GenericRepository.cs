@@ -17,22 +17,6 @@ public class GenericRepository<T> : IGenericRepository<T>
         _dbSet = context.Set<T>();
     }
 
-    public Task<List<T>> GetIncludingAsync(string includeProperties = "")
-    {
-        IQueryable<T> query = _dbSet;
-        foreach (
-            var includeProperty in includeProperties.Split(
-                new char[] { ',' },
-                StringSplitOptions.RemoveEmptyEntries
-            )
-        )
-        {
-            query = query.Include(includeProperty);
-        }
-
-        return query.ToListAsync();
-    }
-
     public async Task<T> GetByIdAsync(int id)
     {
         return await _dbSet.FindAsync(id) ?? throw new InvalidOperationException();
@@ -41,7 +25,11 @@ public class GenericRepository<T> : IGenericRepository<T>
     public async Task<IEnumerable<T>> GetAllAsync()
     {
         return await _dbSet.ToListAsync();
+    }
 
+    public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await _dbSet.Where(predicate).ToListAsync();
     }
 
     public async Task AddAsync(T entity)
@@ -83,27 +71,5 @@ public class GenericRepository<T> : IGenericRepository<T>
         }
 
         return orderBy != null ? orderBy(query).ToList() : query.ToList();
-    }
-
-    public async Task<IEnumerable<T>> FindAsync(
-        Expression<Func<T, bool>> predicate,
-        string includeProperties = ""
-    )
-    {
-        IQueryable<T> query = _dbSet.AsQueryable();
-        if (!string.IsNullOrWhiteSpace(includeProperties))
-        {
-            foreach (
-                var includeProperty in includeProperties.Split(
-                    new[] { ',' },
-                    StringSplitOptions.RemoveEmptyEntries
-                )
-            )
-            {
-                query = query.Include(includeProperty.Trim());
-            }
-        }
-
-        return await query.Where(predicate).ToListAsync();
     }
 }
