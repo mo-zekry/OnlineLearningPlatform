@@ -18,6 +18,7 @@ public class HomeController : Controller {
 
     public async Task<IActionResult> Index() {
         var courses = await _db.Courses.GetIncludingAsync("Category");
+
         var courseViewModels = _mapper.Map<IEnumerable<CourseViewModel>>(courses);
 
         var categories = await _db.Category.GetAllAsync();

@@ -12,7 +12,6 @@ public interface IGenericRepository<T>
     );
 
     Task<List<T>> GetIncludingAsync(string includeProperties = "");
-
     Task<T> GetByIdAsync(int id);
     Task<IEnumerable<T>> GetAllAsync();
     Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, string includeProperties = "");
