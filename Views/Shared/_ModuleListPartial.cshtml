@@ -1,0 +1,28 @@
+@model IEnumerable<ModuleViewModel>
+
+@{
+    ViewData["Title"] = "Modules";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">Modules</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var module in Model)
+        {
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@module.Name</h5>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+

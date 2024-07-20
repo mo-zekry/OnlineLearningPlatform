@@ -1,53 +1,29 @@
-﻿@model IEnumerable<OnlineLearningPlatform.ViewModels.CourseViewModel>
+@model IEnumerable<OnlineLearningPlatform.ViewModels.CourseViewModel>
+
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Courses";
 }
 
 <head>
+
     <link
         rel="stylesheet"
         href="~/@(nameof(OnlineLearningPlatform)).styles.css"
         asp-append-version="true"
     >
-
 </head>
 
 <div class="container">
-    <!-- Hero Section -->
-    <div class="jumbotron text-center bg-light my-4">
-        <h1 class="display-4">Welcome to Online Learning Platform!</h1>
-        <p class="lead">Explore a variety of courses to enhance your skills.</p>
-        <a
-            class="btn btn-primary btn-lg"
-            asp-controller="Course"
-            asp-action="Index"
-        >Browse Courses</a>
+    <div class="row">
+        <div class="col-md-12">
+            <h1
+                id="course-list-heading"
+                class="text-center"
+            >Courses</h1>
+        </div>
     </div>
 
-    <!-- Categories Section -->
-    <h2 id="category-heading">Categories</h2>
-    <div class="row mb-4">
-        @foreach (var category in ViewBag.Categories)
-        {
-            <div class="col-md-4">
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">@category.Name</h5>
-                        <a
-                            class="btn btn-primary"
-                            asp-controller="Course"
-                            asp-action="Index"
-                        >View Courses</a>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
-
-    <!-- Courses Section -->
-    <h2 id="course-list-heading">Courses</h2>
-
-    <!-- Search and Filter Section -->
+    <!-- Search and Filter -->
     <div
         class="row mb-4"
         id="search-and-filter"
@@ -75,6 +51,7 @@
         </div>
     </div>
 
+    <!-- Course List -->
 
     <div
         id="course-list"
@@ -107,22 +84,4 @@
     </div>
 </div>
 
-<script src="~/js/home.js"></script>
-
-<style>
-    #search-query {
-        margin-bottom: 1rem;
-    }
-
-    #search-button {
-        margin-bottom: 1rem;
-    }
-
-    #category-filter {
-        margin-bottom: 1rem;
-    }
-
-    #course-list {
-        margin-top: 1rem;
-    }
-</style>
+<script src="~/js/course.js"></script>

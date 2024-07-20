@@ -1,0 +1,34 @@
+@model CourseViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">@Model.Name</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <img
+                src="/img/@(Model.ImageUrl).webp"
+                class="img-fluid"
+                alt="Course Image"
+            >
+        </div>
+        <div class="col-md-8">
+            <p>@Model.Description</p>
+            <p>Price: @Model.Price</p>
+            <p>Category: @Model.CategoryName</p>
+            <a
+                class="btn btn-primary"
+                asp-controller="Lesson"
+                asp-action="Index"
+                asp-route-id="@Model.Id"
+            >View Lessons</a>
+        </div>
+    </div>
+</div>

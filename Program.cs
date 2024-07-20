@@ -34,6 +34,16 @@ public class Program
         // Auto Mapper Configurations
         builder.Services.AddAutoMapper(typeof(MappingProfile));
 
+        // WebOptimizer javascript bundler configurations
+        builder.Services.AddWebOptimizer(pipeline =>
+        {
+            pipeline.AddJavaScriptBundle(
+                "/js/bundle.js",
+                "wwwroot/js/*.js"
+            ).UseContentRoot();
+            pipeline.MinifyJsFiles();
+        });
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -43,6 +53,7 @@ public class Program
             app.UseHsts();
         }
 
+        app.UseWebOptimizer();
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 
