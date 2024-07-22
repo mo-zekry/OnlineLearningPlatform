@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using OnlineLearningPlatform.Models;
 using OnlineLearningPlatform.Repositories;
 using OnlineLearningPlatform.ViewModels;
@@ -17,56 +18,79 @@ public class CourseController : Controller
         _mapper = mapper;
     }
 
-    public async Task<IActionResult> Index()
+    public IActionResult Index()
     {
-        var courses = await _db.Courses.GetIncludingAsync("Category");
+        var courses = _db.Courses.Get(includeProperties: "Category");
+
         var courseViewModels = _mapper.Map<IEnumerable<CourseViewModel>>(courses);
 
-        var categories = await _db.Category.GetAllAsync();
+        var categories = _db.Categories.Get();
         var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
-        ViewBag.Categories = categoryViewModels;
+        ViewData["Categories"] = categoryViewModels;
 
         return View(courseViewModels);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Search(string query)
+    public IActionResult Search(string query)
     {
-        var results = await _db.Courses.FindAsync(x => x.Name.Contains(query), "Category");
+        var results = _db.Courses.Get(filter: x => x.Name.Contains(query));
 
         var courseViewModels = _mapper.Map<IEnumerable<CourseViewModel>>(results);
+
+        var categories = _db.Categories.Get();
+        var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
+        ViewData["Categories"] = categoryViewModels;
 
         return PartialView("_CourseListPartial", courseViewModels);
     }
 
     [HttpPost]
-    public async Task<IActionResult> GetCourses()
+    public IActionResult GetCourses()
     {
-        var results = await _db.Courses.GetIncludingAsync("Category");
+        var results = _db.Courses.Get();
 
         var courseViewModels = _mapper.Map<IEnumerable<CourseViewModel>>(results);
+
+        var categories = _db.Categories.Get();
+        var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
+        ViewData["Categories"] = categoryViewModels;
 
         return PartialView("_CourseListPartial", courseViewModels);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Filter(int id)
+    public IActionResult Filter(int id)
     {
-        var results = await _db.Courses.FindAsync(x => x.CategoryId == id, "Category");
+        var results = _db.Courses.Get(filter: x => x.CategoryId == id);
 
         var courseViewModels = _mapper.Map<IEnumerable<CourseViewModel>>(results);
+
+        var categories = _db.Categories.Get();
+        var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
+        ViewData["Categories"] = categoryViewModels;
 
         return PartialView("_CourseListPartial", courseViewModels);
     }
 
     // course detailes
 
-    public async Task<IActionResult> Details(int id)
+    public IActionResult Details(int id)
     {
-        var course = await _db.Courses.GetByIdAsync(id);
-        var courseCategory = await _db.Category.GetByIdAsync(course.CategoryId);
+        var course = _db.Courses.GetByID(id);
         var courseModel = _mapper.Map<CourseViewModel>(course);
-        courseModel.CategoryName = courseCategory.Name;
+
+        var courseCategory = _db.Categories.GetByID(course.CategoryId);
+        ViewBag.CategoryName = courseCategory.Name;
+
+        var modules = _db.Modules.Get(filter: x => x.CourseId == id);
+        var moduleViewModels = _mapper.Map<IEnumerable<ModuleViewModel>>(modules);
+        ViewData["Modules"] = moduleViewModels;
+
+        var lessons = _db.Lessons.Get(filter: x => x.ModuleId == id);
+        var lessonViewModels = _mapper.Map<IEnumerable<LessonViewModel>>(lessons);
+        ViewData["Lessons"] = lessonViewModels;
+        
         return View(courseModel);
     }
 
@@ -74,19 +98,28 @@ public class CourseController : Controller
 
     public IActionResult Create()
     {
-        return View();
+        var categories = _db.Categories.Get();
+        ViewBag.Categories = categories;
+
+        return View(new CourseViewModel());
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CourseViewModel courseViewModel)
     {
         if (ModelState.IsValid)
         {
+            var category = _db.Categories.GetByID(courseViewModel.CategoryId);
             var course = _mapper.Map<Course>(courseViewModel);
-            await _db.Courses.AddAsync(course);
+            course.Category = category;
+            _db.Courses.Insert(course);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
-        return RedirectToAction("Create");
+
+        return View("Create", courseViewModel);
     }
+
+    // edit course
 }

@@ -5,67 +5,25 @@ using OnlineLearningPlatform.Repositories.Interface;
 
 namespace OnlineLearningPlatform.Repositories.Class;
 
-public class GenericRepository<T> : IGenericRepository<T>
-    where T : class
+public class GenericRepository<TEntity> : IGenericRepository<TEntity>
+    where TEntity : class
 {
     protected readonly ApplicationDbContext _context;
-    protected readonly DbSet<T> _dbSet;
+    protected readonly DbSet<TEntity> _dbSet;
 
     public GenericRepository(ApplicationDbContext context)
     {
         _context = context;
-        _dbSet = context.Set<T>();
+        _dbSet = context.Set<TEntity>();
     }
 
-    public Task<List<T>> GetIncludingAsync(string includeProperties = "")
-    {
-        IQueryable<T> query = _dbSet;
-        foreach (
-            var includeProperty in includeProperties.Split(
-                new char[] { ',' },
-                StringSplitOptions.RemoveEmptyEntries
-            )
-        )
-        {
-            query = query.Include(includeProperty);
-        }
-
-        return query.ToListAsync();
-    }
-
-    public async Task<T> GetByIdAsync(int id)
-    {
-        return await _dbSet.FindAsync(id) ?? throw new InvalidOperationException();
-    }
-
-    public async Task<IEnumerable<T>> GetAllAsync()
-    {
-        return await _dbSet.ToListAsync();
-
-    }
-
-    public async Task AddAsync(T entity)
-    {
-        await _dbSet.AddAsync(entity);
-    }
-
-    public void Update(T entity)
-    {
-        _dbSet.Update(entity);
-    }
-
-    public void Remove(T entity)
-    {
-        _dbSet.Remove(entity);
-    }
-
-    public IEnumerable<T> Get(
-        Expression<Func<T, bool>>? filter = null,
-        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+    public virtual IEnumerable<TEntity> Get(
+        Expression<Func<TEntity, bool>>? filter = null,
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
         string includeProperties = ""
     )
     {
-        IQueryable<T> query = _dbSet;
+        IQueryable<TEntity> query = _dbSet;
 
         if (filter != null)
         {
@@ -82,28 +40,44 @@ public class GenericRepository<T> : IGenericRepository<T>
             query = query.Include(includeProperty);
         }
 
-        return orderBy != null ? orderBy(query).ToList() : query.ToList();
+        if (orderBy != null)
+        {
+            return orderBy(query).ToList();
+        }
+        else
+        {
+            return query.ToList();
+        }
     }
 
-    public async Task<IEnumerable<T>> FindAsync(
-        Expression<Func<T, bool>> predicate,
-        string includeProperties = ""
-    )
+    public virtual TEntity GetByID(object id)
     {
-        IQueryable<T> query = _dbSet.AsQueryable();
-        if (!string.IsNullOrWhiteSpace(includeProperties))
-        {
-            foreach (
-                var includeProperty in includeProperties.Split(
-                    new[] { ',' },
-                    StringSplitOptions.RemoveEmptyEntries
-                )
-            )
-            {
-                query = query.Include(includeProperty.Trim());
-            }
-        }
+        return _dbSet.Find(id) ?? throw new InvalidOperationException();
+    }
 
-        return await query.Where(predicate).ToListAsync();
+    public virtual void Insert(TEntity entity)
+    {
+        _dbSet.Add(entity);
+    }
+
+    public virtual void Delete(object id)
+    {
+        TEntity entityToDelete = _dbSet.Find(id) ?? throw new InvalidOperationException();
+        Delete(entityToDelete);
+    }
+
+    public virtual void Delete(TEntity entityToDelete)
+    {
+        if (_context.Entry(entityToDelete).State == EntityState.Detached)
+        {
+            _dbSet.Attach(entityToDelete);
+        }
+        _dbSet.Remove(entityToDelete);
+    }
+
+    public virtual void Update(TEntity entityToUpdate)
+    {
+        _dbSet.Attach(entityToUpdate);
+        _context.Entry(entityToUpdate).State = EntityState.Modified;
     }
 }

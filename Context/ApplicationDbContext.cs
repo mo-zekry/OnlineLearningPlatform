@@ -47,4 +47,7 @@ public class ApplicationDbContext : IdentityDbContext<Student>
         builder.ApplyConfiguration(new EnrollmentConfiguration());
         builder.ApplyConfiguration(new StudentLessonConfiguration());
     }
+
+    public DbSet<OnlineLearningPlatform.ViewModels.CourseViewModel> CourseViewModel { get; set; } =
+        default!;
 }

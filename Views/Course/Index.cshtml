@@ -1,7 +1,8 @@
-@model IEnumerable<OnlineLearningPlatform.ViewModels.CourseViewModel>
+@model IEnumerable<CourseViewModel>
 
 @{
     ViewData["Title"] = "Courses";
+    var categories = ViewData["Categories"] as List<CategoryViewModel>;
 }
 
 <head>
@@ -70,7 +71,7 @@
                         <h5 class="card-title">@course.Name</h5>
                         <p class="card-text">@course.Description</p>
                         <p class="card-text">Price: @course.Price</p>
-                        <p class="card-text">Category: @course.CategoryName </p>
+                        @categories?.FirstOrDefault(c => c.Id == course.CategoryId)?.Name
                         <a
                             class="btn btn-primary"
                             asp-controller="Course"
@@ -84,4 +85,7 @@
     </div>
 </div>
 
-<script src="~/js/course.js"></script>
+
+@section Scripts {
+    <script src="~/js/course.js"></script>
+}

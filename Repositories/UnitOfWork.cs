@@ -12,7 +12,7 @@ public class UnitOfWork : IUnitOfWork
     {
         _context = context;
         Courses = new CourseRepository(_context);
-        Category = new CategoryRepository(_context);
+        Categories = new CategoryRepository(_context);
         Modules = new ModuleRepository(_context);
         Lessons = new LessonRepository(_context);
         Quizzes = new QuizRepository(_context);
@@ -35,7 +35,7 @@ public class UnitOfWork : IUnitOfWork
     public IStudentQuizAttemptRepository StudentQuizAttempts { get; private set; }
     public IStudentLessonRepository StudentLessons { get; private set; }
 
-    public ICategoryRepository Category { get; private set; }
+    public ICategoryRepository Categories { get; private set; }
 
     public async Task<int> SaveChangesAsync()
     {

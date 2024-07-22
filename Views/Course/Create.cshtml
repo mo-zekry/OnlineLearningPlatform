@@ -1,38 +1,115 @@
 @model CourseViewModel
 
-@{
-    ViewData["Title"] = "Create";
-}
-
-<h1>Create</h1>
-
-<h4>Course</h4>
-<hr/>
+<h4>CourseViewModel</h4>
+<hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form
+            asp-action="Create"
+            asp-controller="Course"
+        >
+            <div
+                asp-validation-summary="ModelOnly"
+                class="text-danger"
+            ></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control"/>
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label
+                    asp-for="Name"
+                    class="control-label"
+                ></label>
+                <input
+                    value="@Model.Name"
+                    asp-for="Name"
+                    class="form-control"
+                />
+                <span
+                    asp-validation-for="Name"
+                    class="text-danger"
+                ></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control"/>
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label
+                    asp-for="Description"
+                    class="control-label"
+                ></label>
+                <input
+                    value="@Model.Description"
+                    asp-for="Description"
+                    class="form-control"
+                />
+                <span
+                    asp-validation-for="Description"
+                    class="text-danger"
+                ></span>
             </div>
             <div class="form-group">
-                <label asp-for="ImageUrl" class="control-label"></label>
-                <input asp-for="ImageUrl" class="form-control"/>
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                <label
+                    asp-for="Price"
+                    class="control-label"
+                ></label>
+                <input
+                    type="number"
+                    min="0"
+                    step="100"
+                    max="1000"
+                    value="@Model.Price"
+                    asp-for="Price"
+                    class="form-control"
+                />
+                <span
+                    asp-validation-for="Price"
+                    class="text-danger"
+                ></span>
             </div>
             <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <select asp-for="CategoryId" class="form-control" asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name"))"></select>
+                <label
+                    asp-for="ImageUrl"
+                    class="control-label"
+                ></label>
+                <input
+                    value="@Model.ImageUrl"
+                    asp-for="ImageUrl"
+                    class="form-control"
+                />
+                <span
+                    asp-validation-for="ImageUrl"
+                    class="text-danger"
+                ></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input
+                        type="checkbox"
+                        value="@Model.IsProgressLimited"
+                        class="form-check-input"
+                        asp-for="IsProgressLimited"
+                    /> @Html.DisplayNameFor(model => model.IsProgressLimited)
+                </label>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary"/>
+                <label
+                    asp-for="CategoryId"
+                    class="control-label"
+                ></label>
+                <select
+                    value="@Model.CategoryId"
+                    class="form-control"
+                    asp-for="CategoryId"
+                    asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name"))"
+                >
+                    <option value="">Select Category</option>
+                </select>
+                <span
+                    asp-validation-for="CategoryId"
+                    class="text-danger"
+                ></span>
+            </div>
+            <div class="form-group">
+                <input
+                    type="submit"
+                    value="Create"
+                    class="btn btn-primary"
+                />
             </div>
         </form>
     </div>
@@ -41,3 +118,10 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
+
+@* <Partial name="_ValidationScriptsPartial" /> *@

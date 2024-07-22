@@ -21,6 +21,4 @@ public class CourseViewModel
     [Required]
     public bool IsProgressLimited { get; set; } = false;
     public int CategoryId { get; set; }
-    [Required]
-    public string CategoryName { get; set; } = string.Empty;
 }

@@ -2,23 +2,21 @@ using System.Linq.Expressions;
 
 namespace OnlineLearningPlatform.Repositories.Interface;
 
-public interface IGenericRepository<T>
-    where T : class
+public interface IGenericRepository<TEntity>
+    where TEntity : class
 {
-    IEnumerable<T> Get(
-        Expression<Func<T, bool>>? filter = null,
-        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+    public IEnumerable<TEntity> Get(
+        Expression<Func<TEntity, bool>>? filter = null,
+        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
         string includeProperties = ""
     );
 
-    Task<List<T>> GetIncludingAsync(string includeProperties = "");
-    Task<T> GetByIdAsync(int id);
-    Task<IEnumerable<T>> GetAllAsync();
-    Task<IEnumerable<T>> FindAsync(
-        Expression<Func<T, bool>> predicate,
-        string includeProperties = ""
-    );
-    Task AddAsync(T entity);
-    void Update(T entity);
-    void Remove(T entity);
+    public TEntity GetByID(object id);
+
+    public void Insert(TEntity entity);
+    public void Delete(object id);
+
+    public void Delete(TEntity entityToDelete);
+
+    public void Update(TEntity entityToUpdate);
 }

@@ -6,5 +6,4 @@ public class QuizAnswerViewModel
     public string AnswerText { get; set; } = string.Empty;
     public bool IsCorrect { get; set; } = false;
     public int QuestionId { get; set; }
-    public string QuestionTitle { get; set; } = string.Empty;
 }

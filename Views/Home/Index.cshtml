@@ -1,6 +1,10 @@
-﻿@model IEnumerable<OnlineLearningPlatform.ViewModels.CourseViewModel>
+﻿@model IEnumerable<CourseViewModel>
 @{
     ViewData["Title"] = "Home Page";
+}
+
+@{
+    var categories = ViewData["Categories"] as List<CategoryViewModel>;
 }
 
 <head>
@@ -93,7 +97,8 @@
                         <h5 class="card-title">@course.Name</h5>
                         <p class="card-text">@course.Description</p>
                         <p class="card-text">Price: @course.Price</p>
-                        <p class="card-text">Category: @course.CategoryName </p>
+                        <p class="card-text">Category: @(categories?.FirstOrDefault(c => c.Id == course.CategoryId)?.Name)
+                        </p>
                         <a
                             class="btn btn-primary"
                             asp-controller="Course"
@@ -107,7 +112,10 @@
     </div>
 </div>
 
-<script src="~/js/home.js"></script>
+@section Scripts {
+    <script src="~/js/home.js"></script>
+}
+
 
 <style>
     #search-query {

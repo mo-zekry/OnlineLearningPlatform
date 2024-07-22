@@ -6,7 +6,7 @@ namespace OnlineLearningPlatform.Repositories;
 public interface IUnitOfWork : IDisposable
 {
     ICourseRepository Courses { get; }
-    ICategoryRepository Category { get; }
+    ICategoryRepository Categories { get; }
     IModuleRepository Modules { get; }
     ILessonRepository Lessons { get; }
     IQuizRepository Quizzes { get; }

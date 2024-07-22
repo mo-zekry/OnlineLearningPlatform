@@ -37,10 +37,7 @@ public class Program
         // WebOptimizer javascript bundler configurations
         builder.Services.AddWebOptimizer(pipeline =>
         {
-            pipeline.AddJavaScriptBundle(
-                "/js/bundle.js",
-                "wwwroot/js/*.js"
-            ).UseContentRoot();
+            pipeline.AddJavaScriptBundle("/js/bundle.js", "wwwroot/js/*.js").UseContentRoot();
             pipeline.MinifyJsFiles();
         });
 
@@ -62,7 +59,11 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+        app.MapControllerRoute(
+            name: "default",
+            pattern: "{controller=Home}/{action=Index}/{id:?}",
+            defaults: new { controller = "Home", action = "Index" }
+        );
 
         app.Run();
     }

@@ -9,5 +9,4 @@ public class QuizViewModel
     public int MinPassScore { get; set; } = 0;
     public bool IsPassRequired { get; set; } = false;
     public int CourseId { get; set; }
-    public string CourseName { get; set; } = string.Empty;
 }

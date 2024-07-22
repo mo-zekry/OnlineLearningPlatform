@@ -9,7 +9,7 @@ public class Course
     public string ImageUrl { get; set; } = string.Empty;
     public bool IsProgressLimited { get; set; } = false;
     public int CategoryId { get; set; }
-    
+
     public Category Category { get; set; } = new Category();
     public ICollection<Module> Modules { get; set; } = new List<Module>();
     public ICollection<Quiz> Quizzes { get; set; } = new List<Quiz>();
