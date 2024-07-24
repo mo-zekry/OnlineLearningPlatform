@@ -37,9 +37,9 @@ public class UnitOfWork : IUnitOfWork
 
     public ICategoryRepository Categories { get; private set; }
 
-    public async Task<int> SaveChangesAsync()
+    public int SaveChanges()
     {
-        return await _context.SaveChangesAsync();
+        return _context.SaveChanges();
     }
 
     public void Dispose()

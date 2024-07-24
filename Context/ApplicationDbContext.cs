@@ -3,10 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using OnlineLearningPlatform.Context.Identity;
 using OnlineLearningPlatform.Models;
 using OnlineLearningPlatform.ModelsConfiguration;
+using OnlineLearningPlatform.ViewModels;
 
 namespace OnlineLearningPlatform.Context;
 
-public class ApplicationDbContext : IdentityDbContext<Student>
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     public DbSet<Course> Courses { get; set; }
     public DbSet<Module> Modules { get; set; }
@@ -20,6 +21,10 @@ public class ApplicationDbContext : IdentityDbContext<Student>
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options) { }
+
+    public ApplicationDbContext()
+    {
+    }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -48,6 +53,11 @@ public class ApplicationDbContext : IdentityDbContext<Student>
         builder.ApplyConfiguration(new StudentLessonConfiguration());
     }
 
-    public DbSet<OnlineLearningPlatform.ViewModels.CourseViewModel> CourseViewModel { get; set; } =
-        default!;
+public DbSet<OnlineLearningPlatform.ViewModels.CourseViewModel> CourseViewModel { get; set; } = default!;
+
+public DbSet<OnlineLearningPlatform.ViewModels.CategoryViewModel> CategoryViewModel { get; set; } = default!;
+
+public DbSet<OnlineLearningPlatform.ViewModels.ModuleViewModel> ModuleViewModel { get; set; } = default!;
+
+public DbSet<OnlineLearningPlatform.ViewModels.QuizViewModel> QuizViewModel { get; set; } = default!;
 }

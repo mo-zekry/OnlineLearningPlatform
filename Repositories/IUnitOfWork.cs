@@ -16,5 +16,5 @@ public interface IUnitOfWork : IDisposable
     IEnrollmentRepository Enrollments { get; }
     IStudentQuizAttemptRepository StudentQuizAttempts { get; }
     IStudentLessonRepository StudentLessons { get; }
-    Task<int> SaveChangesAsync();
+    public int SaveChanges();
 }

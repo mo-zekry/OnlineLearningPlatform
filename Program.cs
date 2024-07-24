@@ -24,7 +24,7 @@ public class Program
 
         // Identity Configurations
         builder
-            .Services.AddIdentity<Student, IdentityRole>()
+            .Services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 

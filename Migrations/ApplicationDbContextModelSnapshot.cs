@@ -245,7 +245,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
                 });
 
             modelBuilder.Entity("OnlineLearningPlatform.Models.Course", b =>
@@ -287,7 +287,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Courses", (string)null);
                 });
 
             modelBuilder.Entity("OnlineLearningPlatform.Models.Enrollment", b =>
@@ -310,7 +310,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Enrollments");
+                    b.ToTable("Enrollments", (string)null);
                 });
 
             modelBuilder.Entity("OnlineLearningPlatform.Models.Lesson", b =>
@@ -349,7 +349,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasIndex("ModuleId");
 
-                    b.ToTable("Lessons");
+                    b.ToTable("Lessons", (string)null);
                 });
 
             modelBuilder.Entity("OnlineLearningPlatform.Models.Module", b =>
@@ -375,7 +375,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Modules");
+                    b.ToTable("Modules", (string)null);
                 });
 
             modelBuilder.Entity("OnlineLearningPlatform.Models.Quiz", b =>
@@ -414,7 +414,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Quizzes");
+                    b.ToTable("Quizzes", (string)null);
                 });
 
             modelBuilder.Entity("OnlineLearningPlatform.Models.QuizAnswer", b =>
@@ -442,7 +442,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("QuizAnswers");
+                    b.ToTable("QuizAnswers", (string)null);
                 });
 
             modelBuilder.Entity("OnlineLearningPlatform.Models.QuizQuestion", b =>
@@ -465,7 +465,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasIndex("QuizId");
 
-                    b.ToTable("QuizQuestions");
+                    b.ToTable("QuizQuestions", (string)null);
                 });
 
             modelBuilder.Entity("OnlineLearningPlatform.Models.StudentLesson", b =>
@@ -485,7 +485,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.ToTable("StudentLessons");
+                    b.ToTable("StudentLessons", (string)null);
                 });
 
             modelBuilder.Entity("OnlineLearningPlatform.Models.StudentQuizAttempt", b =>
@@ -508,7 +508,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasIndex("QuizId");
 
-                    b.ToTable("StudentQuizAttempts");
+                    b.ToTable("StudentQuizAttempts", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

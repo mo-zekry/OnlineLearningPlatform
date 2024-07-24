@@ -9,5 +9,5 @@ public class Enrollment
     public DateTime EnrollmentDatetime { get; set; } = DateTime.UtcNow;
     public DateTime? CompletedDatetime { get; set; }
     public Course Course { get; set; } = default!;
-    public Student Student { get; set; } = default!;
+    public ApplicationUser Student { get; set; } = default!;
 }

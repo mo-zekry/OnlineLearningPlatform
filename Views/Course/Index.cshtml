@@ -78,6 +78,22 @@
                             asp-action="Details"
                             asp-route-id="@course.Id"
                         >View Details</a>
+                        <a
+                            class="btn btn-primary"
+                            asp-controller="Course"
+                            asp-action="Edit"
+                            asp-route-id="@course.Id"
+                        >
+                            Edit
+                        </a>
+                        <a
+                            class="btn btn-danger"
+                            asp-controller="Course"
+                            asp-action="Delete"
+                            asp-route-id="@course.Id"
+                        >
+                            Delete
+                        </a>
                     </div>
                 </div>
             </div>

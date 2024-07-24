@@ -83,14 +83,26 @@ public class CourseController : Controller
         var courseCategory = _db.Categories.GetByID(course.CategoryId);
         ViewBag.CategoryName = courseCategory.Name;
 
+        // get modules based on course
         var modules = _db.Modules.Get(filter: x => x.CourseId == id);
         var moduleViewModels = _mapper.Map<IEnumerable<ModuleViewModel>>(modules);
         ViewData["Modules"] = moduleViewModels;
 
+        // get lessons based on module
         var lessons = _db.Lessons.Get(filter: x => x.ModuleId == id);
         var lessonViewModels = _mapper.Map<IEnumerable<LessonViewModel>>(lessons);
         ViewData["Lessons"] = lessonViewModels;
-        
+
+        // get quizzes based on course
+        var quizes = _db.Quizzes.Get(filter: x => x.CourseId == id);
+        var quizViewModels = _mapper.Map<IEnumerable<QuizViewModel>>(quizes);
+        ViewData["Quizzes"] = quizViewModels;
+
+        // get enrollments based on course
+        var enrollments = _db.Enrollments.Get(filter: x => x.CourseId == id);
+        var enrollmentViewModels = _mapper.Map<IEnumerable<EnrollmentViewModel>>(enrollments);
+        ViewData["Enrollments"] = enrollmentViewModels;
+
         return View(courseModel);
     }
 
@@ -106,7 +118,7 @@ public class CourseController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(CourseViewModel courseViewModel)
+    public IActionResult Create(CourseViewModel courseViewModel)
     {
         if (ModelState.IsValid)
         {
@@ -114,7 +126,7 @@ public class CourseController : Controller
             var course = _mapper.Map<Course>(courseViewModel);
             course.Category = category;
             _db.Courses.Insert(course);
-            await _db.SaveChangesAsync();
+            _db.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -122,4 +134,48 @@ public class CourseController : Controller
     }
 
     // edit course
+
+    public IActionResult Edit(int id)
+    {
+        var course = _db.Courses.GetByID(id);
+        if (course == null)
+            return NotFound();
+        var courseModel = _mapper.Map<CourseViewModel>(course);
+        var categories = _db.Categories.Get();
+        ViewBag.Categories = categories;
+
+        return View(courseModel);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Edit(CourseViewModel courseViewModel)
+    {
+        if (ModelState.IsValid)
+        {
+            var category = _db.Categories.GetByID(courseViewModel.CategoryId);
+            var course = _mapper.Map<Course>(courseViewModel);
+            course.Category = category;
+            _db.Courses.Update(course);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        return View("Edit", courseViewModel);
+    }
+
+    // delete course
+
+
+    public IActionResult Delete(int id)
+    {
+        var course = _db.Courses.GetByID(id);
+        if (course == null)
+            return NotFound();
+        _db.Courses.Delete(course);
+        _db.SaveChanges();
+        return RedirectToAction("Index");
+    }
+
+    // enroll course section
 }

@@ -1,0 +1,99 @@
+@model IEnumerable<QuizViewModel>
+
+<!DOCTYPE html>
+
+@* get the name of the course based on the course id in the quiz *@
+
+@{
+    var courses = ViewData["CourseList"] as List<CourseViewModel>;
+}
+
+
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Quiz Name
+            </th>
+            <th>
+                Course Name
+            </th>
+            </th>
+            <th>
+                Number
+            </th>
+            <th>
+                Course Order
+            </th>
+            <th>
+                Min Pass Score
+            </th>
+            <th>
+                Is Pass Required
+            </th>
+
+            <th>
+                Operations
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+
+                @if (courses != null)
+                {
+                    <td>
+                        @courses.FirstOrDefault(c => c.Id == item.CourseId)?.Name
+
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        No Course Assigned
+                    </td>
+                }
+                <td>
+                    @item.Number
+                </td>
+                <td>
+                    @item.CourseOrder
+                </td>
+                <td>
+                    @item.MinPassScore
+                </td>
+                <td>
+                    <input
+                        disabled
+                        type="checkbox"
+                        asp-for="@item.IsPassRequired"
+                        value="@item.IsPassRequired"
+                    >
+                </td>
+                <td>
+                    <a
+                        asp-action="Edit"
+                        asp-route-id="@item.Id"
+                    >Edit</a> |
+                    <a
+                        asp-action="Details"
+                        asp-route-id="@item.Id"
+                    >Details</a> |
+                    <a
+                        asp-action="Delete"
+                        asp-route-id="@item.Id"
+                    >Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

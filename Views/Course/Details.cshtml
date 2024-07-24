@@ -1,34 +1,132 @@
 @model CourseViewModel
 
-@{
-    ViewData["Title"] = "Details";
-}
+<style>
+    .card {
+        border-radius: 0;
+        border: 1px solid #e5e5e5;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-img-top {
+        width: 100%;
+        height: auto;
+    }
+
+    .card-title {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .card-text {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .btn {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: #fff;
+        font-size: 18px;
+        padding: 12px 24px;
+        border-radius: 0;
+    }
+
+    .btn:hover {
+        background-color: #0069d9;
+        border-color: #0062cc;
+    }
+</style>
 
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1 class="text-center">@Model.Name</h1>
+            <h1 class="text-center">Course Details</h1>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-4">
-            <img
-                src="/img/@(Model.ImageUrl).webp"
-                class="img-fluid"
-                alt="Course Image"
-            >
-        </div>
         <div class="col-md-8">
-            <p>@Model.Description</p>
-            <p>Price: @Model.Price</p>
-            <p>Category: @ViewBag.CategoryName</p>
-            <a
-                class="btn btn-primary"
-                asp-controller="Lesson"
-                asp-action="Index"
-                asp-route-id="@Model.Id"
-            >View Lessons</a>
+            <div class="card">
+                <img
+                    src="/img/@(Model.ImageUrl).webp"
+                    class="card-img-top"
+                    alt="Course Image"
+                >
+                <div class="card-body">
+                    <h1 class="card-title">@Model.Name</h1>
+                    <p class="card-text">@Model.Description</p>
+                    <p class="card-text">Price: @Model.Price</p>
+                </div>
+            </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Modules</h2>
+        </div>
+
+        @foreach (var module in ViewData["Modules"] as IEnumerable<ModuleViewModel> ?? new List<ModuleViewModel>())
+        {
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">@module.Name</h3>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Lessons</h2>
+        </div>
+
+        @foreach (var lesson in ViewData["Lessons"] as IEnumerable<LessonViewModel> ?? new List<LessonViewModel>())
+        {
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">@lesson.Name</h3>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Quizzes</h2>
+        </div>
+
+        @foreach (var quiz in ViewData["Quizzes"] as IEnumerable<QuizViewModel> ?? new List<QuizViewModel>())
+        {
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">@quiz.Name</h3>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @* <div class="row">
+    <div class="col-md-12">
+    <h2>Enrollments</h2>
+    </div>
+
+    @foreach (var enrollment in ViewData["Enrollments"] as IEnumerable<EnrollmentViewModel>)
+    {
+    <div class="col-md-4">
+    <div class="card">
+    <div class="card-body">
+    <h3 class="card-title">@enrollment.Student.FirstName @enrollment.Student.LastName</h3>
+    </div>
+    </div>
+    </div>
+    }
+    </div> *@
 </div>
