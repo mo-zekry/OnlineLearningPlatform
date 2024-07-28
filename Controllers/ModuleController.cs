@@ -1,123 +1,138 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OnlineLearningPlatform.Context;
 using OnlineLearningPlatform.Models;
 using OnlineLearningPlatform.Repositories;
 using OnlineLearningPlatform.ViewModels;
 
-namespace OnlineLearningPlatform.Controllers;
-
-public class ModuleController : Controller
+namespace OnlineLearningPlatform.Controllers
 {
-    private readonly IUnitOfWork _db;
-    private readonly IMapper _mapper;
-
-    public ModuleController(IUnitOfWork unitOfWork, IMapper mapper)
+    [Authorize(Roles = "Admin")]
+    public class ModuleController : Controller
     {
-        _db = unitOfWork;
-        _mapper = mapper;
-    }
+        private readonly IUnitOfWork _db;
+        private readonly IMapper _mapper;
 
-    // Display all modules for a specific course
-    public IActionResult Index(int courseId)
-    {
-        var modules = _db.Modules.Get(filter: x => x.CourseId == courseId);
-        var moduleViewModels = _mapper.Map<IEnumerable<ModuleViewModel>>(modules);
-
-        var course = _db.Courses.GetByID(courseId);
-        var courseViewModel = _mapper.Map<CourseViewModel>(course);
-        ViewData["ModulCourse"] = courseViewModel;
-
-        return View(moduleViewModels);
-    }
-
-    // Create a new module (GET)
-    // pass [Moudule/Create?courseId=1]
-    public IActionResult Create(int courseId)
-    {
-        var course = _db.Courses.GetByID(courseId);
-        if (course == null)
-            return NotFound();
-
-        var courseViewModel = _mapper.Map<CourseViewModel>(course);
-        ViewData["CourseList"] = courseViewModel;
-        var moduleViewModel = new ModuleViewModel() { CourseId = courseId };
-
-        // get modeles Numbers
-        var modules = _db.Modules.Get(filter: x => x.CourseId == courseId);
-        moduleViewModel.Number = modules.Count() + 1;
-
-        return View(moduleViewModel);
-    }
-
-    // Create a new module (POST)
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Create(ModuleViewModel model)
-    {
-        if (ModelState.IsValid)
+        public ModuleController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            var module = _mapper.Map<Module>(model);
-            _db.Modules.Insert(module);
-            _db.SaveChanges();
-            return RedirectToAction(nameof(Index), new { courseId = model.CourseId });
+            _db = unitOfWork;
+            _mapper = mapper;
         }
-        return View(model);
-    }
 
-    // Edit an existing module (GET)
-    public IActionResult Edit(int id)
-    {
-        var module = _db.Modules.GetByID(id);
-        if (module == null)
-            return NotFound();
-
-        var moduleViewModel = _mapper.Map<ModuleViewModel>(module);
-
-        return View(moduleViewModel);
-    }
-
-    // Edit an existing module (POST)
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Edit(ModuleViewModel model)
-    {
-        if (ModelState.IsValid)
+        // GET: Module
+        public IActionResult Index(int courseId)
         {
-            var module = _db.Modules.GetByID(model.Id);
-            if (module == null)
+            var modules = _db.Modules.Get(m => m.CourseId == courseId);
+            var moduleViewModels = _mapper.Map<IEnumerable<ModuleViewModel>>(modules);
+            ViewBag.CourseId = courseId;
+            return View(moduleViewModels);
+        }
+
+        // GET: Module/Details/5
+        public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
                 return NotFound();
+            }
 
-            _mapper.Map(model, module);
-            _db.Modules.Update(module);
-            _db.SaveChanges();
-            return RedirectToAction(nameof(Index), new { courseId = model.CourseId });
+            var module = _db.Modules.GetByID(id);
+            if (module == null)
+            {
+                return NotFound();
+            }
+
+            var moduleViewModel = _mapper.Map<ModuleViewModel>(module);
+            return View(moduleViewModel);
         }
-        return View(model);
-    }
 
-    // Delete a module (GET)
-    public IActionResult Delete(int id)
-    {
-        var module = _db.Modules.GetByID(id);
-        if (module == null)
-            return NotFound();
+        // GET: Module/Create
+        public IActionResult Create(int courseId)
+        {
+            ViewBag.CourseId = courseId;
+            return View();
+        }
 
-        var moduleViewModel = _mapper.Map<ModuleViewModel>(module);
-        return View(moduleViewModel);
-    }
+        // POST: Module/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(ModuleViewModel moduleViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var module = _mapper.Map<Module>(moduleViewModel);
+                _db.Modules.Insert(module);
+                _db.SaveChanges();
+                return RedirectToAction(nameof(Index), new { courseId = module.CourseId });
+            }
+            return View(moduleViewModel);
+        }
 
-    // Delete a module (POST)
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public IActionResult DeleteConfirmed(int id)
-    {
-        var module = _db.Modules.GetByID(id);
-        if (module == null)
-            return NotFound();
+        // GET: Module/Edit/5
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        _db.Modules.Delete(module);
-        _db.SaveChanges();
-        return RedirectToAction(nameof(Index), new { courseId = module.CourseId });
+            var module = _db.Modules.GetByID(id);
+            if (module == null)
+            {
+                return NotFound();
+            }
+
+            var moduleViewModel = _mapper.Map<ModuleViewModel>(module);
+            return View(moduleViewModel);
+        }
+
+        // POST: Module/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, ModuleViewModel moduleViewModel)
+        {
+            if (id != moduleViewModel.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var module = _mapper.Map<Module>(moduleViewModel);
+                _db.Modules.Update(module);
+                _db.SaveChanges();
+                return RedirectToAction(nameof(Index), new { courseId = module.CourseId });
+            }
+            return View(moduleViewModel);
+        }
+
+        // GET: Module/Delete/5
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var module = _db.Modules.GetByID(id);
+            if (module == null)
+            {
+                return NotFound();
+            }
+
+            var moduleViewModel = _mapper.Map<ModuleViewModel>(module);
+            return View(moduleViewModel);
+        }
+
+        // POST: Module/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            var module = _db.Modules.GetByID(id);
+            _db.Modules.Delete(module);
+            _db.SaveChanges();
+            return RedirectToAction(nameof(Index), new { courseId = module.CourseId });
+        }
     }
 }

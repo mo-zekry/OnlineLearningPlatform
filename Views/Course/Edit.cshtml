@@ -1,4 +1,5 @@
-@model CourseViewModel
+@model OnlineLearningPlatform.ViewModels.CourseViewModel
+
 
 
 <!DOCTYPE html>
@@ -44,7 +45,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="CategoryId" class="control-label"></label>
-                <select asp-for="CategoryId" class="form-control" asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name"))"></select>
+                <input asp-for="CategoryId" class="form-control" />
                 <span asp-validation-for="CategoryId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -55,7 +56,6 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
     <a asp-action="Index">Back to List</a>
 </div>
 

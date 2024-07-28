@@ -1,105 +1,111 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    />
-    <title>@ViewData["Title"] - OnlineLearningPlatform</title>
-    <link
-        rel="stylesheet"
-        href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-    />
-    <link
-        rel="stylesheet"
-        href="~/css/site.css"
-        asp-append-version="true"
-    />
-    <link
-        rel="stylesheet"
-        href="~/OnlineLearningPlatform.styles.css"
-        asp-append-version="true"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Online Learning Platform</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMINy0Q4KbqCDS5/0isKt4f9ku6V7w4/8cz0Bz0" crossorigin="anonymous" />
 </head>
-
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a
-                    class="navbar-brand"
-                    asp-area=""
-                    asp-controller="Home"
-                    asp-action="Index"
-                >OnlineLearningPlatform</a>
-                <button
-                    class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target=".navbar-collapse"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">Online Learning Platform</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="About">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a>
+                    </li>
+
+                    @* Courses accessible to everyone *@
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Course" asp-action="Index">Courses</a>
+                    </li>
+
+                    @* Conditional links based on user role *@
+                    @if (User.IsInRole("Admin"))
+                    {
                         <li class="nav-item">
-                            <a
-                                class="nav-link text-dark"
-                                asp-area=""
-                                asp-controller="Home"
-                                asp-action="Index"
-                            >Home</a>
+                            <a class="nav-link" asp-controller="Category" asp-action="Index">Categories</a>
                         </li>
                         <li class="nav-item">
-                            <a
-                                class="nav-link text-dark"
-                                asp-action="Index"
-                                asp-controller="Course"
-                            >Courses</a>
+                            <a class="nav-link" asp-controller="Module" asp-action="Index">Modules</a>
                         </li>
-                        <li class="nav-itme">
-                            <a
-                                class="nav-link text-dark"
-                                asp-area=""
-                                asp-controller="Category"
-                                asp-action="Index"
-                            >Categories</a>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Lesson" asp-action="Index">Lessons</a>
                         </li>
-                    </ul>
-                </div>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Quiz" asp-action="Index">Quizzes</a>
+                        </li>
+                    }
+                    else if (User.IsInRole("Student"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Enrollment" asp-action="Index">My Enrollments</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="StudentLesson" asp-action="Index">My Lessons</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="StudentQuizAttempt" asp-action="Index">My Quizzes</a>
+                        </li>
+                    }
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="Profile">
+                                <i class="fas fa-user"></i> @User.Identity.Name
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="form-inline">
+                                <button type="submit" class="btn btn-link nav-link">Logout</button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
+                        </li>
+                    }
+                </ul>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main
-            role="main"
-            class="pb-3"
-        >
+
+    <div class="container mt-4">
+        <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer mt-auto py-3 bg-light">
         <div class="container">
-            &copy; 2024 - OnlineLearningPlatform - <a
-                asp-area=""
-                asp-controller="Home"
-                asp-action="Privacy"
-            >Privacy</a>
+            <span class="text-muted">&copy; 2024 Online Learning Platform</span>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script
-        src="~/js/site.js"
-        asp-append-version="true"
-    ></script>
-    @await RenderSectionAsync(name: "Scripts", required: false)
-</body>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@("popperjs")/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="~/js/site.js"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
 </html>

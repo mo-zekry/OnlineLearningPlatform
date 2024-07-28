@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using OnlineLearningPlatform.Context.Identity;
 using OnlineLearningPlatform.Models;
 using OnlineLearningPlatform.ModelsConfiguration;
-using OnlineLearningPlatform.ViewModels;
 
 namespace OnlineLearningPlatform.Context;
 
@@ -60,4 +59,12 @@ public DbSet<OnlineLearningPlatform.ViewModels.CategoryViewModel> CategoryViewMo
 public DbSet<OnlineLearningPlatform.ViewModels.ModuleViewModel> ModuleViewModel { get; set; } = default!;
 
 public DbSet<OnlineLearningPlatform.ViewModels.QuizViewModel> QuizViewModel { get; set; } = default!;
+
+public DbSet<OnlineLearningPlatform.ViewModels.QuizAnswerViewModel> QuizAnswerViewModel { get; set; } = default!;
+
+public DbSet<OnlineLearningPlatform.Models.Category> Category { get; set; } = default!;
+
+public DbSet<OnlineLearningPlatform.ViewModels.LessonViewModel> LessonViewModel { get; set; } = default!;
+
+public DbSet<OnlineLearningPlatform.ViewModels.QuizQuestionViewModel> QuizQuestionViewModel { get; set; } = default!;
 }

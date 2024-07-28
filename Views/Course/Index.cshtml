@@ -1,107 +1,73 @@
-@model IEnumerable<CourseViewModel>
+@model IEnumerable<OnlineLearningPlatform.ViewModels.CourseViewModel>
 
 @{
-    ViewData["Title"] = "Courses";
     var categories = ViewData["Categories"] as List<CategoryViewModel>;
 }
 
-<head>
-
-    <link
-        rel="stylesheet"
-        href="~/@(nameof(OnlineLearningPlatform)).styles.css"
-        asp-append-version="true"
-    >
-</head>
-
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h1
-                id="course-list-heading"
-                class="text-center"
-            >Courses</h1>
-        </div>
-    </div>
-
-    <!-- Search and Filter -->
-    <div
-        class="row mb-4"
-        id="search-and-filter"
-    >
-        <div class="col-md-8">
-            <input
-                type="text"
-                id="search-query"
-                class="form-control"
-                placeholder="Search for courses..."
-            >
-        </div>
-        <div class="col-md-4">
-            <select
-                name="category"
-                id="category-filter"
-                class="form-control"
-            >
-                <option value="">All Categories</option>
-                @foreach (var category in ViewBag.Categories)
-                {
-                    <option value="@category.Id">@category.Name</option>
-                }
-            </select>
-        </div>
-    </div>
-
-    <!-- Course List -->
-
-    <div
-        id="course-list"
-        class="row"
-    >
-        @foreach (var course in Model)
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImageUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsProgressLimited)
+            </th>
+            <th>
+                Category Name
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
         {
-            <div class="col-md-4">
-                <div class="card mb-4 shadow-sm">
-                    <img
-                        src="/img/@(course.ImageUrl).webp"
-                        class="card-img-top"
-                        alt="Course Image"
-                    >
-                    <div class="card-body">
-                        <h5 class="card-title">@course.Name</h5>
-                        <p class="card-text">@course.Description</p>
-                        <p class="card-text">Price: @course.Price</p>
-                        @categories?.FirstOrDefault(c => c.Id == course.CategoryId)?.Name
-                        <a
-                            class="btn btn-primary"
-                            asp-controller="Course"
-                            asp-action="Details"
-                            asp-route-id="@course.Id"
-                        >View Details</a>
-                        <a
-                            class="btn btn-primary"
-                            asp-controller="Course"
-                            asp-action="Edit"
-                            asp-route-id="@course.Id"
-                        >
-                            Edit
-                        </a>
-                        <a
-                            class="btn btn-danger"
-                            asp-controller="Course"
-                            asp-action="Delete"
-                            asp-route-id="@course.Id"
-                        >
-                            Delete
-                        </a>
-                    </div>
-                </div>
-            </div>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ImageUrl)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsProgressLimited)
+                </td>
+                <td>
+                    @categories.FirstOrDefault(c => c.Id == item.CategoryId)?.Name
+                </td>
+                <td>
+                    <a
+                        asp-action="Edit"
+                        asp-route-id="@item.Id"
+                    >Edit</a> |
+                    <a
+                        asp-action="Details"
+                        asp-route-id="@item.Id"
+                    >Details</a> |
+                    <a
+                        asp-action="Delete"
+                        asp-route-id="@item.Id"
+                    >Delete</a>
+                </td>
+            </tr>
         }
-    </div>
-</div>
-
-
-@section Scripts {
-    <script src="~/js/course.js"></script>
-}
+    </tbody>
+</table>

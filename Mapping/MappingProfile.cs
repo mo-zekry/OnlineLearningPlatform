@@ -9,9 +9,7 @@ namespace OnlineLearningPlatform.Mapping
         public MappingProfile()
         {
             CreateMap<Category, CategoryViewModel>().ReverseMap();
-
             CreateMap<Course, CourseViewModel>().ReverseMap();
-
             CreateMap<Enrollment, EnrollmentViewModel>().ReverseMap();
             CreateMap<Lesson, LessonViewModel>().ReverseMap();
             CreateMap<Module, ModuleViewModel>().ReverseMap();

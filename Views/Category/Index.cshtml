@@ -1,45 +1,41 @@
-@model List<CategoryViewModel>
-@{
-    ViewData["Title"] = "Index";
+@model IEnumerable<OnlineLearningPlatform.ViewModels.CategoryViewModel>
+
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
 }
-
-<h1>Categories</h1>
-
-<div class="container">
-    @foreach (var Category in Model)
-    {
-        <h3>@Category.Name</h3>
-        <div
-            id="course-list"
-            class="row"
-        >
-            @foreach (var course in ViewBag.CourseList)
-            {
-                @if (Category.Id == course.CategoryId)
-                {
-
-                    <div class="col-md-4">
-                        <div class="card mb-4 shadow-sm">
-                            <img
-                                src="/img/@(course.ImageUrl).webp"
-                                class="card-img-top"
-                                alt="Course Image"
-                            >
-                            <div class="card-body">
-                                <h5 class="card-title">@course.Name</h5>
-                                <p class="card-text">@course.Description</p>
-                                <p class="card-text">Price: @course.Price</p>
-                                <a
-                                    class="btn btn-primary"
-                                    asp-controller="Course"
-                                    asp-action="Details"
-                                    asp-route-id="@course.Id"
-                                >View Details</a>
-                            </div>
-                        </div>
-                    </div>
-                }
-            }
-        </div>
-    }
-</div>
+    </tbody>
+</table>
+</body>
+</html>

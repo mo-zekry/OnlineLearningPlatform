@@ -1,181 +1,145 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using OnlineLearningPlatform.Models;
 using OnlineLearningPlatform.Repositories;
+
 using OnlineLearningPlatform.ViewModels;
 
-namespace OnlineLearningPlatform.Controllers;
-
-public class CourseController : Controller
+namespace OnlineLearningPlatform.Controllers
 {
-    private readonly IUnitOfWork _db;
-    private readonly IMapper _mapper;
-
-    public CourseController(IUnitOfWork unitOfWork, IMapper mapper)
+    [Authorize(Roles = "Admin")]
+    public class CourseController : Controller
     {
-        _db = unitOfWork;
-        _mapper = mapper;
-    }
+        private readonly IUnitOfWork _db;
+        private readonly IMapper _mapper;
 
-    public IActionResult Index()
-    {
-        var courses = _db.Courses.Get(includeProperties: "Category");
-
-        var courseViewModels = _mapper.Map<IEnumerable<CourseViewModel>>(courses);
-
-        var categories = _db.Categories.Get();
-        var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
-        ViewData["Categories"] = categoryViewModels;
-
-        return View(courseViewModels);
-    }
-
-    [HttpPost]
-    public IActionResult Search(string query)
-    {
-        var results = _db.Courses.Get(filter: x => x.Name.Contains(query));
-
-        var courseViewModels = _mapper.Map<IEnumerable<CourseViewModel>>(results);
-
-        var categories = _db.Categories.Get();
-        var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
-        ViewData["Categories"] = categoryViewModels;
-
-        return PartialView("_CourseListPartial", courseViewModels);
-    }
-
-    [HttpPost]
-    public IActionResult GetCourses()
-    {
-        var results = _db.Courses.Get();
-
-        var courseViewModels = _mapper.Map<IEnumerable<CourseViewModel>>(results);
-
-        var categories = _db.Categories.Get();
-        var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
-        ViewData["Categories"] = categoryViewModels;
-
-        return PartialView("_CourseListPartial", courseViewModels);
-    }
-
-    [HttpPost]
-    public IActionResult Filter(int id)
-    {
-        var results = _db.Courses.Get(filter: x => x.CategoryId == id);
-
-        var courseViewModels = _mapper.Map<IEnumerable<CourseViewModel>>(results);
-
-        var categories = _db.Categories.Get();
-        var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
-        ViewData["Categories"] = categoryViewModels;
-
-        return PartialView("_CourseListPartial", courseViewModels);
-    }
-
-    // course detailes
-
-    public IActionResult Details(int id)
-    {
-        var course = _db.Courses.GetByID(id);
-        var courseModel = _mapper.Map<CourseViewModel>(course);
-
-        var courseCategory = _db.Categories.GetByID(course.CategoryId);
-        ViewBag.CategoryName = courseCategory.Name;
-
-        // get modules based on course
-        var modules = _db.Modules.Get(filter: x => x.CourseId == id);
-        var moduleViewModels = _mapper.Map<IEnumerable<ModuleViewModel>>(modules);
-        ViewData["Modules"] = moduleViewModels;
-
-        // get lessons based on module
-        var lessons = _db.Lessons.Get(filter: x => x.ModuleId == id);
-        var lessonViewModels = _mapper.Map<IEnumerable<LessonViewModel>>(lessons);
-        ViewData["Lessons"] = lessonViewModels;
-
-        // get quizzes based on course
-        var quizes = _db.Quizzes.Get(filter: x => x.CourseId == id);
-        var quizViewModels = _mapper.Map<IEnumerable<QuizViewModel>>(quizes);
-        ViewData["Quizzes"] = quizViewModels;
-
-        // get enrollments based on course
-        var enrollments = _db.Enrollments.Get(filter: x => x.CourseId == id);
-        var enrollmentViewModels = _mapper.Map<IEnumerable<EnrollmentViewModel>>(enrollments);
-        ViewData["Enrollments"] = enrollmentViewModels;
-
-        return View(courseModel);
-    }
-
-    // create course
-
-    public IActionResult Create()
-    {
-        var categories = _db.Categories.Get();
-        ViewBag.Categories = categories;
-
-        return View(new CourseViewModel());
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Create(CourseViewModel courseViewModel)
-    {
-        if (ModelState.IsValid)
+        public CourseController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            var category = _db.Categories.GetByID(courseViewModel.CategoryId);
-            var course = _mapper.Map<Course>(courseViewModel);
-            course.Category = category;
-            _db.Courses.Insert(course);
-            _db.SaveChanges();
-            return RedirectToAction("Index");
+            _db = unitOfWork;
+            _mapper = mapper;
         }
 
-        return View("Create", courseViewModel);
-    }
-
-    // edit course
-
-    public IActionResult Edit(int id)
-    {
-        var course = _db.Courses.GetByID(id);
-        if (course == null)
-            return NotFound();
-        var courseModel = _mapper.Map<CourseViewModel>(course);
-        var categories = _db.Categories.Get();
-        ViewBag.Categories = categories;
-
-        return View(courseModel);
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Edit(CourseViewModel courseViewModel)
-    {
-        if (ModelState.IsValid)
+        // GET: Course
+        [AllowAnonymous]
+        public IActionResult Index()
         {
-            var category = _db.Categories.GetByID(courseViewModel.CategoryId);
-            var course = _mapper.Map<Course>(courseViewModel);
-            course.Category = category;
-            _db.Courses.Update(course);
-            _db.SaveChanges();
-            return RedirectToAction("Index");
+            var courses = _db.Courses.Get();
+            var courseViewModels = _mapper.Map<IEnumerable<CourseViewModel>>(courses);
+
+            var categories = _db.Categories.Get();
+            var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
+            ViewData["Categories"] = categoryViewModels;
+
+            return View(courseViewModels);
         }
 
-        return View("Edit", courseViewModel);
+        // GET: Course/Details/5
+        [AllowAnonymous]
+        public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var course = _db.Courses.GetByID(id);
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            var courseViewModel = _mapper.Map<CourseViewModel>(course);
+            return View(courseViewModel);
+        }
+
+        // GET: Course/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Course/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public IActionResult Create(CourseViewModel courseViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var course = _mapper.Map<Course>(courseViewModel);
+                _db.Courses.Insert(course);
+                _db.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(courseViewModel);
+        }
+
+        // GET: Course/Edit/5
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var course = _db.Courses.GetByID(id);
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            var courseViewModel = _mapper.Map<CourseViewModel>(course);
+            return View(courseViewModel);
+        }
+
+        // POST: Course/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, CourseViewModel courseViewModel)
+        {
+            if (id != courseViewModel.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var course = _mapper.Map<Course>(courseViewModel);
+                _db.Courses.Update(course);
+                _db.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(courseViewModel);
+        }
+
+        // GET: Course/Delete/5
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var course = _db.Courses.GetByID(id);
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            var courseViewModel = _mapper.Map<CourseViewModel>(course);
+            return View(courseViewModel);
+        }
+
+        // POST: Course/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            var course = _db.Courses.GetByID(id);
+            _db.Courses.Delete(course);
+            _db.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
     }
-
-    // delete course
-
-
-    public IActionResult Delete(int id)
-    {
-        var course = _db.Courses.GetByID(id);
-        if (course == null)
-            return NotFound();
-        _db.Courses.Delete(course);
-        _db.SaveChanges();
-        return RedirectToAction("Index");
-    }
-
-    // enroll course section
 }

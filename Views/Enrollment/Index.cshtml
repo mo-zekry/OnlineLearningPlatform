@@ -1,0 +1,38 @@
+@model IEnumerable<OnlineLearningPlatform.ViewModels.EnrollmentViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var courses = ViewData["CoursesList"] as IEnumerable<CourseViewModel>;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">Enrollments</h1>
+        </div>
+    </div>
+    <div class="row">
+        @foreach (var enrollment in Model)
+        {
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@(courses?.FirstOrDefault(x => x.Id == enrollment.CourseId)?.Name)</h5>
+                        <p class="card-text"></p>
+                        <a
+                            asp-action="Details"
+                            asp-controller="Course"
+                            asp-route-id="@enrollment.CourseId"
+                            class="btn btn-primary"
+                        >View</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+</div>
+

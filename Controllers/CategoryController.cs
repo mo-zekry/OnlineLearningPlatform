@@ -1,119 +1,138 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineLearningPlatform.Models;
 using OnlineLearningPlatform.Repositories;
 using OnlineLearningPlatform.ViewModels;
 
-namespace OnlineLearningPlatform.Controllers;
-
-public class CategoryController : Controller
+namespace OnlineLearningPlatform.Controllers
 {
-    private readonly IUnitOfWork _db;
-    private readonly IMapper _mapper;
-
-    public CategoryController(IUnitOfWork unitOfWork, IMapper mapper)
+    [Authorize(Roles = "Admin")]
+    public class CategoryController : Controller
     {
-        _db = unitOfWork;
-        _mapper = mapper;
-    }
+        private readonly IUnitOfWork _db;
+        private readonly IMapper _mapper;
 
-    // Display all categories
-    public IActionResult Index()
-    {
-        var categories = _db.Categories.Get();
-        var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
-
-        var courses = _db.Courses.Get();
-        var coursesViewModels = _mapper.Map<IEnumerable<CourseViewModel>>(courses);
-        ViewData["CourseList"] = coursesViewModels;
-
-        return View(categoryViewModels);
-    }
-
-    // Display details of a specific category
-    public IActionResult Details(int id)
-    {
-        var category = _db.Categories.GetByID(id);
-        if (category == null)
-            return NotFound();
-
-        var categoryViewModel = _mapper.Map<CategoryViewModel>(category);
-        return View(categoryViewModel);
-    }
-
-    // Create a new category (GET)
-    public IActionResult Create()
-    {
-        return View(new CategoryViewModel());
-    }
-
-    // Create a new category (POST)
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Create(CategoryViewModel model)
-    {
-        if (ModelState.IsValid)
+        public CategoryController(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            var category = _mapper.Map<Category>(model);
-            _db.Categories.Insert(category);
-            _db.SaveChanges();
-            return RedirectToAction(nameof(Index), model);
+            _db = unitOfWork;
+            _mapper = mapper;
         }
-        return View(model);
-    }
 
-    // Edit an existing category (GET)
-    public IActionResult Edit(int id)
-    {
-        var category = _db.Categories.GetByID(id);
-        if (category == null)
-            return NotFound();
-
-        var categoryViewModel = _mapper.Map<CategoryViewModel>(category);
-
-        return View(categoryViewModel);
-    }
-
-    // Edit an existing category (POST)
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Edit(CategoryViewModel model)
-    {
-        if (ModelState.IsValid)
+        // GET: Category
+        [AllowAnonymous]
+        public IActionResult Index()
         {
-            var category = _db.Categories.GetByID(model.Id);
-            if (category == null)
+            var categories = _db.Categories.Get();
+            var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
+            return View(categoryViewModels);
+        }
+
+        // GET: Category/Details/5
+        [AllowAnonymous]
+        public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
                 return NotFound();
-            _mapper.Map(model, category);
-            _db.Categories.Update(category);
-            _db.SaveChanges();
-            return RedirectToAction(nameof(Index), model);
+            }
+
+            var category = _db.Categories.GetByID(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            var categoryViewModel = _mapper.Map<CategoryViewModel>(category);
+            return View(categoryViewModel);
         }
-        return View(model);
-    }
 
-    // Delete a category (GET)
-    public IActionResult Delete(int id)
-    {
-        var category = _db.Categories.GetByID(id);
-        if (category == null)
-            return NotFound();
+        // GET: Category/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
 
-        var categoryViewModel = _mapper.Map<CategoryViewModel>(category);
-        return View(categoryViewModel);
-    }
+        // POST: Category/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(CategoryViewModel categoryViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var category = _mapper.Map<Category>(categoryViewModel);
+                _db.Categories.Insert(category);
+                _db.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(categoryViewModel);
+        }
 
-    // Delete a category (POST)
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public IActionResult DeleteConfirmed(int id)
-    {
-        var category = _db.Categories.GetByID(id);
-        if (category == null)
-            return NotFound();
+        // GET: Category/Edit/5
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        _db.Categories.Delete(category);
-        _db.SaveChanges();
-        return RedirectToAction(nameof(Index));
+            var category = _db.Categories.GetByID(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            var categoryViewModel = _mapper.Map<CategoryViewModel>(category);
+            return View(categoryViewModel);
+        }
+
+        // POST: Category/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, CategoryViewModel categoryViewModel)
+        {
+            if (id != categoryViewModel.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var category = _mapper.Map<Category>(categoryViewModel);
+                _db.Categories.Update(category);
+                _db.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(categoryViewModel);
+        }
+
+        // GET: Category/Delete/5
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var category = _db.Categories.GetByID(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            var categoryViewModel = _mapper.Map<CategoryViewModel>(category);
+            return View(categoryViewModel);
+        }
+
+        // POST: Category/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            var category = _db.Categories.GetByID(id);
+            _db.Categories.Delete(category);
+            _db.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

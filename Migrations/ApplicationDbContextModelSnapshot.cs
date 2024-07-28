@@ -155,7 +155,7 @@ namespace OnlineLearningPlatform.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("OnlineLearningPlatform.Context.Identity.Student", b =>
+            modelBuilder.Entity("OnlineLearningPlatform.Context.Identity.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -245,7 +245,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("OnlineLearningPlatform.Models.Course", b =>
@@ -287,7 +287,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("OnlineLearningPlatform.Models.Enrollment", b =>
@@ -310,7 +310,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Enrollments", (string)null);
+                    b.ToTable("Enrollments");
                 });
 
             modelBuilder.Entity("OnlineLearningPlatform.Models.Lesson", b =>
@@ -349,7 +349,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasIndex("ModuleId");
 
-                    b.ToTable("Lessons", (string)null);
+                    b.ToTable("Lessons");
                 });
 
             modelBuilder.Entity("OnlineLearningPlatform.Models.Module", b =>
@@ -375,7 +375,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Modules", (string)null);
+                    b.ToTable("Modules");
                 });
 
             modelBuilder.Entity("OnlineLearningPlatform.Models.Quiz", b =>
@@ -414,7 +414,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Quizzes", (string)null);
+                    b.ToTable("Quizzes");
                 });
 
             modelBuilder.Entity("OnlineLearningPlatform.Models.QuizAnswer", b =>
@@ -442,7 +442,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("QuizAnswers", (string)null);
+                    b.ToTable("QuizAnswers");
                 });
 
             modelBuilder.Entity("OnlineLearningPlatform.Models.QuizQuestion", b =>
@@ -465,7 +465,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasIndex("QuizId");
 
-                    b.ToTable("QuizQuestions", (string)null);
+                    b.ToTable("QuizQuestions");
                 });
 
             modelBuilder.Entity("OnlineLearningPlatform.Models.StudentLesson", b =>
@@ -485,7 +485,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasIndex("LessonId");
 
-                    b.ToTable("StudentLessons", (string)null);
+                    b.ToTable("StudentLessons");
                 });
 
             modelBuilder.Entity("OnlineLearningPlatform.Models.StudentQuizAttempt", b =>
@@ -508,7 +508,195 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasIndex("QuizId");
 
-                    b.ToTable("StudentQuizAttempts", (string)null);
+                    b.ToTable("StudentQuizAttempts");
+                });
+
+            modelBuilder.Entity("OnlineLearningPlatform.ViewModels.CategoryViewModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CategoryViewModel");
+                });
+
+            modelBuilder.Entity("OnlineLearningPlatform.ViewModels.CourseViewModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<bool>("IsProgressLimited")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CourseViewModel");
+                });
+
+            modelBuilder.Entity("OnlineLearningPlatform.ViewModels.LessonViewModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseOrder")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LessonDetails")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ModuleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VideoUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LessonViewModel");
+                });
+
+            modelBuilder.Entity("OnlineLearningPlatform.ViewModels.ModuleViewModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ModuleViewModel");
+                });
+
+            modelBuilder.Entity("OnlineLearningPlatform.ViewModels.QuizAnswerViewModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AnswerText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsCorrect")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("QuizAnswerViewModel");
+                });
+
+            modelBuilder.Entity("OnlineLearningPlatform.ViewModels.QuizQuestionViewModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("QuestionTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("QuizId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("QuizQuestionViewModel");
+                });
+
+            modelBuilder.Entity("OnlineLearningPlatform.ViewModels.QuizViewModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseOrder")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsPassRequired")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MinPassScore")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("QuizViewModel");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -522,7 +710,7 @@ namespace OnlineLearningPlatform.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("OnlineLearningPlatform.Context.Identity.Student", null)
+                    b.HasOne("OnlineLearningPlatform.Context.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -531,7 +719,7 @@ namespace OnlineLearningPlatform.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("OnlineLearningPlatform.Context.Identity.Student", null)
+                    b.HasOne("OnlineLearningPlatform.Context.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -546,7 +734,7 @@ namespace OnlineLearningPlatform.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OnlineLearningPlatform.Context.Identity.Student", null)
+                    b.HasOne("OnlineLearningPlatform.Context.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -555,7 +743,7 @@ namespace OnlineLearningPlatform.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("OnlineLearningPlatform.Context.Identity.Student", null)
+                    b.HasOne("OnlineLearningPlatform.Context.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -581,7 +769,7 @@ namespace OnlineLearningPlatform.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OnlineLearningPlatform.Context.Identity.Student", "Student")
+                    b.HasOne("OnlineLearningPlatform.Context.Identity.ApplicationUser", "Student")
                         .WithMany("Enrollments")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -655,7 +843,7 @@ namespace OnlineLearningPlatform.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OnlineLearningPlatform.Context.Identity.Student", "Student")
+                    b.HasOne("OnlineLearningPlatform.Context.Identity.ApplicationUser", "Student")
                         .WithMany("StudentLessons")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -674,7 +862,7 @@ namespace OnlineLearningPlatform.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OnlineLearningPlatform.Context.Identity.Student", "Student")
+                    b.HasOne("OnlineLearningPlatform.Context.Identity.ApplicationUser", "Student")
                         .WithMany("StudentQuizAttempts")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -685,7 +873,7 @@ namespace OnlineLearningPlatform.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("OnlineLearningPlatform.Context.Identity.Student", b =>
+            modelBuilder.Entity("OnlineLearningPlatform.Context.Identity.ApplicationUser", b =>
                 {
                     b.Navigation("Enrollments");
 
