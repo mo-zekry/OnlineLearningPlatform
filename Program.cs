@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OnlineLearningPlatform.Context;
@@ -13,7 +14,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Identity Options Configurations
+        // Identity Password Configurations
         builder.Services.Configure<IdentityOptions>(options =>
         {
             options.Password.RequireDigit = true;
@@ -26,6 +27,11 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
+
+        builder.Services.Configure<FormOptions>(options =>
+        {
+            options.MultipartBodyLengthLimit = 10485760; // 10 MB limit
+        });
 
         // Injecting the db context
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -46,14 +52,15 @@ public class Program
         builder.Services.AddAutoMapper(typeof(MappingProfile));
 
         // WebOptimizer javascript bundler configurations
-        builder.Services.AddWebOptimizer(pipeline =>
-        {
-            pipeline.AddJavaScriptBundle("/js/bundle.js", "wwwroot/js/*.js").UseContentRoot();
-            pipeline.MinifyJsFiles();
-        });
+        // builder.Services.AddWebOptimizer(pipeline =>
+        // {
+        //     pipeline.AddJavaScriptBundle("/js/bundle.js", "wwwroot/js/*.js").UseContentRoot();
+        //     pipeline.MinifyJsFiles();
+        // });
 
         var app = builder.Build();
 
+        // Data Seeding
         using (var scope = app.Services.CreateScope())
         {
             var services = scope.ServiceProvider;
@@ -67,7 +74,7 @@ public class Program
             app.UseHsts();
         }
 
-        app.UseWebOptimizer();
+        // app.UseWebOptimizer();
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 

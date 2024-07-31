@@ -1,6 +1,8 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OnlineLearningPlatform.Context.Identity;
 using OnlineLearningPlatform.Models;
 using OnlineLearningPlatform.Repositories;
 using OnlineLearningPlatform.ViewModels;
@@ -8,12 +10,12 @@ using OnlineLearningPlatform.ViewModels;
 namespace OnlineLearningPlatform.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class ModuleController : Controller
+    public class ModuleController : BaseController
     {
         private readonly IUnitOfWork _db;
         private readonly IMapper _mapper;
 
-        public ModuleController(IUnitOfWork unitOfWork, IMapper mapper)
+        public ModuleController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager) : base(userManager)
         {
             _db = unitOfWork;
             _mapper = mapper;

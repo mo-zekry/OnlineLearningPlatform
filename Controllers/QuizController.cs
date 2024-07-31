@@ -1,17 +1,19 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OnlineLearningPlatform.Context.Identity;
 using OnlineLearningPlatform.Models;
 using OnlineLearningPlatform.Repositories;
 using OnlineLearningPlatform.ViewModels;
 
 namespace OnlineLearningPlatform.Controllers;
 
-public class QuizController : Controller
+public class QuizController : BaseController
 {
     private readonly IUnitOfWork _db;
     private readonly IMapper _mapper;
 
-    public QuizController(IUnitOfWork unitOfWork, IMapper mapper)
+    public QuizController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager) : base(userManager)
     {
         _db = unitOfWork;
         _mapper = mapper;
@@ -19,8 +21,8 @@ public class QuizController : Controller
 
     public IActionResult Index()
     {
-        var quizes = _db.Quizzes.Get();
-        var quizViewModels = _mapper.Map<IEnumerable<QuizViewModel>>(quizes);
+        var quizzes = _db.Quizzes.Get();
+        var quizViewModels = _mapper.Map<IEnumerable<QuizViewModel>>(quizzes);
 
         // get courses related to each quiz
         this.GetCourses();

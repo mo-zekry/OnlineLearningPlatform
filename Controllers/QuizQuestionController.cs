@@ -4,14 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineLearningPlatform.Models;
 using OnlineLearningPlatform.ViewModels;
 using OnlineLearningPlatform.Repositories;
+using OnlineLearningPlatform.Context.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace OnlineLearningPlatform.Controllers {
     [Authorize(Roles = "Admin")]
-    public class QuizQuestionController : Controller {
+    public class QuizQuestionController : BaseController {
         private readonly IUnitOfWork _db;
         private readonly IMapper _mapper;
 
-        public QuizQuestionController(IUnitOfWork unitOfWork, IMapper mapper) {
+        public QuizQuestionController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager) : base(userManager) {
             _db = unitOfWork;
             _mapper = mapper;
         }

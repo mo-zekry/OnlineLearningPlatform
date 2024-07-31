@@ -1,30 +1,29 @@
-@model IEnumerable<CourseViewModel>
+@model IEnumerable<OnlineLearningPlatform.ViewModels.CourseViewModel>
 
 @{
-  var categories = ViewData["Categories"] as List<CategoryViewModel>;
+    var categories = ViewData["Categories"] as List<OnlineLearningPlatform.ViewModels.CategoryViewModel>;
 }
 
-@foreach (var course in Model)
-{
-  <div class="col-md-4">
-    <div class="card mb-4 shadow-sm">
-      <img
-        src="~/img/@(course.ImageUrl).webp"
-        class="card-img-top"
-        alt="Course Image"
-      >
-      <div class="card-body">
-        <h5 class="card-title">@course.Name</h5>
-        <p class="card-text">@course.Description</p>
-        <p class="card-text">Price: @course.Price</p>
-        <p class="card-text">Category: @categories?.FirstOrDefault(c => c.Id == course.CategoryId)?.Name </p>
-        <a
-          class="btn btn-primary"
-          asp-controller="Course"
-          asp-action="Details"
-          asp-route-id="@course.Id"
-        >View Details</a>
-      </div>
-    </div>
-  </div>
+@section StyleSheets {
+    <link href="~/css/home.css" rel="stylesheet">
 }
+
+<div class="row">
+    @foreach (var course in Model)
+    {
+        <div id="course-card" class="col-md-4 mb-4">
+            <div class="card custom-card h-100">
+                <img src="@course.ImageUrl" class="card-img-top custom-card-img" alt="Course Image">
+                <div class="card-body custom-card-body d-flex flex-column">
+                    <h5 class="card-title custom-card-title">@course.Name</h5>
+                    <p class="card-text custom-card-text text-truncate-multiline">@course.Description</p>
+                    <p class="card-text custom-card-text">Price: @course.Price</p>
+                    <p class="card-text custom-card-text">Category: @(categories?.FirstOrDefault(c => c.Id == course.CategoryId)?.Name)</p>
+                    <div class="mt-auto">
+                        <a class="btn custom-btn w-100" asp-controller="Course" asp-action="Details" asp-route-id="@course.Id">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

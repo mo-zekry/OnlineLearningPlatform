@@ -4,31 +4,94 @@
     ViewData["Title"] = "Profile";
 }
 
-<h2>@ViewData["Title"]</h2>
-
-<form asp-action="Profile" method="post">
-    <div class="form-group">
-        <label asp-for="FirstName"></label>
-        <input asp-for="FirstName" class="form-control" />
-        <span asp-validation-for="FirstName" class="text-danger"></span>
+<div class="container">
+    <h1 class="mt-5">Profile</h1>
+    <hr />
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <form
+                asp-action="Profile"
+                method="post"
+                enctype="multipart/form-data"
+            >
+                <div class="form-group">
+                    <label
+                        asp-for="Email"
+                        class="control-label"
+                    ></label>
+                    <input
+                        asp-for="Email"
+                        class="form-control"
+                        readonly
+                    />
+                    <span
+                        asp-validation-for="Email"
+                        class="text-danger"
+                    ></span>
+                </div>
+                <div class="form-group">
+                    <label
+                        asp-for="FirstName"
+                        class="control-label"
+                    ></label>
+                    <input
+                        asp-for="FirstName"
+                        class="form-control"
+                    />
+                    <span
+                        asp-validation-for="FirstName"
+                        class="text-danger"
+                    ></span>
+                </div>
+                <div class="form-group">
+                    <label
+                        asp-for="LastName"
+                        class="control-label"
+                    ></label>
+                    <input
+                        asp-for="LastName"
+                        class="form-control"
+                    />
+                    <span
+                        asp-validation-for="LastName"
+                        class="text-danger"
+                    ></span>
+                </div>
+                <div class="form-group">
+                    <label
+                        asp-for="ProfilePictureUrl"
+                        class="control-label"
+                    ></label>
+                    <input
+                        asp-for="ProfilePictureUrl"
+                        class="form-control-file"
+                        type="file"
+                    />
+                    <span
+                        asp-validation-for="ProfilePictureUrl"
+                        class="text-danger"
+                    ></span>
+                </div>
+                @if (Model.ProfilePictureBase64 != null)
+                {
+                    <div class="form-group">
+                        <label>Current Profile Picture</label>
+                        <img
+                            src="data:image/jpeg;base64,@Model.ProfilePictureBase64"
+                            class="img-thumbnail"
+                        />
+                    </div>
+                }
+                <div class="form-group mt-3">
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >Save</button>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="LastName"></label>
-        <input asp-for="LastName" class="form-control" />
-        <span asp-validation-for="LastName" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" readonly />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ProfilePictureUrl"></label>
-        <input asp-for="ProfilePictureUrl" class="form-control" />
-        <span asp-validation-for="ProfilePictureUrl" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Update</button>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

@@ -21,9 +21,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options) { }
 
-    public ApplicationDbContext()
-    {
-    }
+    public ApplicationDbContext() { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -50,21 +48,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         builder.ApplyConfiguration(new StudentQuizAttemptConfiguration());
         builder.ApplyConfiguration(new EnrollmentConfiguration());
         builder.ApplyConfiguration(new StudentLessonConfiguration());
+
+        // convert the profile picture to base64 string
+        builder
+            .Entity<ApplicationUser>()
+            .Property(e => e.ProfilePictureUrl)
+            .HasConversion(
+                v => v == null ? null : Convert.ToBase64String(v),
+                v => v == null ? null : Convert.FromBase64String(v)
+            );
     }
-
-public DbSet<OnlineLearningPlatform.ViewModels.CourseViewModel> CourseViewModel { get; set; } = default!;
-
-public DbSet<OnlineLearningPlatform.ViewModels.CategoryViewModel> CategoryViewModel { get; set; } = default!;
-
-public DbSet<OnlineLearningPlatform.ViewModels.ModuleViewModel> ModuleViewModel { get; set; } = default!;
-
-public DbSet<OnlineLearningPlatform.ViewModels.QuizViewModel> QuizViewModel { get; set; } = default!;
-
-public DbSet<OnlineLearningPlatform.ViewModels.QuizAnswerViewModel> QuizAnswerViewModel { get; set; } = default!;
-
-public DbSet<OnlineLearningPlatform.Models.Category> Category { get; set; } = default!;
-
-public DbSet<OnlineLearningPlatform.ViewModels.LessonViewModel> LessonViewModel { get; set; } = default!;
-
-public DbSet<OnlineLearningPlatform.ViewModels.QuizQuestionViewModel> QuizQuestionViewModel { get; set; } = default!;
 }

@@ -30,6 +30,6 @@ namespace OnlineLearningPlatform.ViewModels.Account
 
         [Url]
         [Display(Name = "Profile Picture URL")]
-        public string? ProfilePictureUrl { get; set; }
+        public byte[]? ProfilePictureUrl { get; set; }
     }
 }

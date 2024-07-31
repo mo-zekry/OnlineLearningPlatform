@@ -17,8 +17,10 @@ namespace OnlineLearningPlatform.ViewModels.Account
         [Display(Name = "Last Name")]
         public string LastName { get; set; } = "";
 
-        [Url]
-        [Display(Name = "Profile Picture URL")]
-        public string? ProfilePictureUrl { get; set; }
+        [Display(Name = "Profile Picture")]
+        [DataType(DataType.Upload)]
+        public IFormFile? ProfilePictureUrl { get; set; }
+
+        public string? ProfilePictureBase64 { get; set; }
     }
 }

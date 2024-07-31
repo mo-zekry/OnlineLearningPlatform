@@ -51,7 +51,9 @@
                     @Html.DisplayFor(modelItem => item.IsProgressLimited)
                 </td>
                 <td>
+                    @if (categories != null){
                     @categories.FirstOrDefault(c => c.Id == item.CategoryId)?.Name
+                    }
                 </td>
                 <td>
                     <a

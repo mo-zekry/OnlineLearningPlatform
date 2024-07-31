@@ -3,25 +3,30 @@ namespace OnlineLearningPlatform.Controllers;
 using AutoMapper;
 using Context.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ViewModels.Account;
 
-public class AccountController : Controller
+public class AccountController : BaseController
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IMapper _mapper;
+    private readonly IWebHostEnvironment _hostingEnvironment;
 
     public AccountController(
-        UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
-        IMapper mapper
+        IMapper mapper,
+        UserManager<ApplicationUser> userManager,
+        IWebHostEnvironment hostingEnvironment
     )
+        : base(userManager)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _mapper = mapper;
+        _hostingEnvironment = hostingEnvironment;
     }
 
     // GET: /Account/Register
@@ -64,7 +69,7 @@ public class AccountController : Controller
 
     // GET: /Account/Login
     [AllowAnonymous]
-    public IActionResult Login(string returnUrl = null)
+    public IActionResult Login(string? returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
         return View();
@@ -74,7 +79,7 @@ public class AccountController : Controller
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+    public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
     {
         ViewData["ReturnUrl"] = returnUrl;
         if (ModelState.IsValid)
@@ -87,7 +92,7 @@ public class AccountController : Controller
             );
             if (result.Succeeded)
             {
-                return RedirectToLocal(returnUrl);
+                return RedirectToLocal(returnUrl ?? "/");
             }
 
             if (result.IsLockedOut)
@@ -119,12 +124,18 @@ public class AccountController : Controller
     public async Task<IActionResult> Profile()
     {
         var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
         var model = new ProfileViewModel()
         {
             FirstName = user.FirstName,
-            Email = user.Email,
+            Email = user.Email ?? "",
             LastName = user.LastName,
-            ProfilePictureUrl = user.ProfilePictureUrl
+            ProfilePictureUrl = null, // Set to null initially
+            ProfilePictureBase64 = user.ProfilePictureUrl == null ? null : Convert.ToBase64String(user.ProfilePictureUrl)
         };
 
         return View(model);
@@ -134,27 +145,50 @@ public class AccountController : Controller
     [HttpPost]
     [Authorize]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Profile(ProfileViewModel model)
+    public async Task<IActionResult> Profile(ProfileViewModel model, IFormFile? profilePictureUrl)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
+            return View(model);
+        }
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
+        if (profilePictureUrl != null)
+        {
+            using (var memoryStream = new MemoryStream())
             {
-                return NotFound();
+                await profilePictureUrl.CopyToAsync(memoryStream);
+
+                // Upload the file if less than 2 MB
+                if (memoryStream.Length < 2097152)
+                {
+                    user.ProfilePictureUrl = memoryStream.ToArray();
+                }
+                else
+                {
+                    ModelState.AddModelError("File", "The file is too large.");
+                    return View(model);
+                }
             }
+        }
 
-            user.FirstName = model.FirstName;
-            user.LastName = model.LastName;
-            user.ProfilePictureUrl = model.ProfilePictureUrl;
+        user.FirstName = model.FirstName;
+        user.LastName = model.LastName;
 
-            var result = await _userManager.UpdateAsync(user);
-            if (result.Succeeded)
-            {
-                return RedirectToAction("Profile");
-            }
+        var result = await _userManager.UpdateAsync(user);
+        if (result.Succeeded)
+        {
+            return RedirectToAction("Profile");
+        }
 
-            AddErrors(result);
+        foreach (var error in result.Errors)
+        {
+            ModelState.AddModelError(string.Empty, error.Description);
         }
 
         return View(model);

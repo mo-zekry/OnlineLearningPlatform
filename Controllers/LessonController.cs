@@ -3,16 +3,18 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineLearningPlatform.ViewModels;
 using OnlineLearningPlatform.Repositories;
 using OnlineLearningPlatform.Models;
+using OnlineLearningPlatform.Context.Identity;
+using Microsoft.AspNetCore.Identity;
 
 namespace OnlineLearningPlatform.Controllers
 {
     // [Authorize(Roles = "Admin")]
-    public class LessonController : Controller
+    public class LessonController : BaseController
     {
         private readonly IUnitOfWork _db;
         private readonly IMapper _mapper;
 
-        public LessonController(IUnitOfWork unitOfWork, IMapper mapper)
+        public LessonController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager) : base(userManager)
         {
             _db = unitOfWork;
             _mapper = mapper;

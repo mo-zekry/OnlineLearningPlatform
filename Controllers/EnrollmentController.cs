@@ -10,7 +10,7 @@ using OnlineLearningPlatform.ViewModels;
 namespace OnlineLearningPlatform.Controllers
 {
     [Authorize(Roles = "Admin,Student")]
-    public class EnrollmentController : Controller
+    public class EnrollmentController : BaseController
     {
         private readonly IUnitOfWork _db;
         private readonly IMapper _mapper;
@@ -21,6 +21,7 @@ namespace OnlineLearningPlatform.Controllers
             IMapper mapper,
             UserManager<ApplicationUser> userManager
         )
+            : base(userManager)
         {
             _db = unitOfWork;
             _mapper = mapper;
@@ -45,24 +46,27 @@ namespace OnlineLearningPlatform.Controllers
         public IActionResult Create(int courseId)
         {
             var userId = _userManager.GetUserId(User);
-            var enrollmentExists = _db
-                .Enrollments.Get(e => e.CourseId == courseId && e.StudentId == userId)
-                .Any();
-
-            if (enrollmentExists)
+            if (userId != null)
             {
-                return RedirectToAction(nameof(Index));
+                var enrollmentExists = _db
+                    .Enrollments.Get(e => e.CourseId == courseId && e.StudentId == userId)
+                    .Any();
+
+                if (enrollmentExists)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+
+                var enrollment = new Enrollment
+                {
+                    CourseId = courseId,
+                    StudentId = userId,
+                    EnrollmentDatetime = DateTime.UtcNow
+                };
+
+                _db.Enrollments.Insert(enrollment);
+                _db.SaveChanges();
             }
-
-            var enrollment = new Enrollment
-            {
-                CourseId = courseId,
-                StudentId = userId,
-                EnrollmentDatetime = DateTime.UtcNow
-            };
-
-            _db.Enrollments.Insert(enrollment);
-            _db.SaveChanges();
 
             return RedirectToAction(nameof(Index));
         }
@@ -93,8 +97,11 @@ namespace OnlineLearningPlatform.Controllers
             var enrollment = _db
                 .Enrollments.Get(e => e.CourseId == courseId && e.StudentId == studentId)
                 .FirstOrDefault();
-            _db.Enrollments.Delete(enrollment);
-            _db.SaveChanges();
+            if (enrollment != null)
+            {
+                _db.Enrollments.Delete(enrollment);
+                _db.SaveChanges();
+            }
             return RedirectToAction(nameof(Index));
         }
     }

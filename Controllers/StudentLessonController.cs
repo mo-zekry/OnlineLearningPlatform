@@ -8,13 +8,12 @@ using OnlineLearningPlatform.Repositories;
 
 namespace OnlineLearningPlatform.Controllers {
     [Authorize(Roles = "Student")]
-    public class StudentLessonController : Controller {
+    public class StudentLessonController : BaseController {
         private readonly IUnitOfWork _db;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public StudentLessonController(IUnitOfWork unitOfWork, IMapper mapper,
-            UserManager<ApplicationUser> userManager) {
+        public StudentLessonController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager) : base(userManager) {
             _db = unitOfWork;
             _mapper = mapper;
             _userManager = userManager;

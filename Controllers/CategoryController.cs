@@ -1,45 +1,44 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OnlineLearningPlatform.Context.Identity;
 using OnlineLearningPlatform.Models;
 using OnlineLearningPlatform.Repositories;
 using OnlineLearningPlatform.ViewModels;
 
-namespace OnlineLearningPlatform.Controllers
-{
+namespace OnlineLearningPlatform.Controllers {
     [Authorize(Roles = "Admin")]
-    public class CategoryController : Controller
-    {
+    public class CategoryController : BaseController {
         private readonly IUnitOfWork _db;
         private readonly IMapper _mapper;
 
-        public CategoryController(IUnitOfWork unitOfWork, IMapper mapper)
-        {
+        public CategoryController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager) : base(userManager) {
             _db = unitOfWork;
             _mapper = mapper;
         }
 
         // GET: Category
         [AllowAnonymous]
-        public IActionResult Index()
-        {
+        public IActionResult Index() {
             var categories = _db.Categories.Get();
             var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
+
+            // get the courses related to each category
+            var listOfCourses = _db.Courses.Get();
+            var courseViewModels = _mapper.Map<IEnumerable<CourseViewModel>>(listOfCourses);
+            ViewData["CoursesList"] = courseViewModels;
             return View(categoryViewModels);
         }
 
         // GET: Category/Details/5
-        [AllowAnonymous]
-        public IActionResult Details(int? id)
-        {
-            if (id == null)
-            {
+        public IActionResult Details(int? id) {
+            if (id == null) {
                 return NotFound();
             }
 
             var category = _db.Categories.GetByID(id);
-            if (category == null)
-            {
+            if (category == null) {
                 return NotFound();
             }
 
@@ -48,37 +47,32 @@ namespace OnlineLearningPlatform.Controllers
         }
 
         // GET: Category/Create
-        public IActionResult Create()
-        {
+        public IActionResult Create() {
             return View();
         }
 
         // POST: Category/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CategoryViewModel categoryViewModel)
-        {
-            if (ModelState.IsValid)
-            {
+        public IActionResult Create(CategoryViewModel categoryViewModel) {
+            if (ModelState.IsValid) {
                 var category = _mapper.Map<Category>(categoryViewModel);
                 _db.Categories.Insert(category);
                 _db.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(categoryViewModel);
         }
 
         // GET: Category/Edit/5
-        public IActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
+        public IActionResult Edit(int? id) {
+            if (id == null) {
                 return NotFound();
             }
 
             var category = _db.Categories.GetByID(id);
-            if (category == null)
-            {
+            if (category == null) {
                 return NotFound();
             }
 
@@ -89,34 +83,29 @@ namespace OnlineLearningPlatform.Controllers
         // POST: Category/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, CategoryViewModel categoryViewModel)
-        {
-            if (id != categoryViewModel.Id)
-            {
+        public IActionResult Edit(int id, CategoryViewModel categoryViewModel) {
+            if (id != categoryViewModel.Id) {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            if (ModelState.IsValid) {
                 var category = _mapper.Map<Category>(categoryViewModel);
                 _db.Categories.Update(category);
                 _db.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(categoryViewModel);
         }
 
         // GET: Category/Delete/5
-        public IActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
+        public IActionResult Delete(int? id) {
+            if (id == null) {
                 return NotFound();
             }
 
             var category = _db.Categories.GetByID(id);
-            if (category == null)
-            {
+            if (category == null) {
                 return NotFound();
             }
 
@@ -127,8 +116,7 @@ namespace OnlineLearningPlatform.Controllers
         // POST: Category/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
-        {
+        public IActionResult DeleteConfirmed(int id) {
             var category = _db.Categories.GetByID(id);
             _db.Categories.Delete(category);
             _db.SaveChanges();

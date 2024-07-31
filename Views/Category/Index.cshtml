@@ -1,41 +1,49 @@
 @model IEnumerable<OnlineLearningPlatform.ViewModels.CategoryViewModel>
 
-
-
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@{
+    var courses = ViewData["CoursesList"] as IList<CourseViewModel>;
 }
-    </tbody>
-</table>
-</body>
-</html>
+
+@section StyleSheets {
+    <link
+        href="~/css/home.css"
+        rel="stylesheet"
+    >
+}
+
+<div class="album py-5">
+    <div class="container">
+        <h1>Categories</h1>
+        <div class="row">
+            @foreach (var category in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@category.Name</h5>
+                            @if (courses != null)
+                            {
+                                @foreach (var course in @courses.Where(c => c.CategoryId == category.Id))
+    {
+        <div id="course-card" class=" mb-4">
+            <div class="card custom-card h-100">
+                <img src="@course.ImageUrl" class="card-img-top custom-card-img" alt="Course Image">
+                <div class="card-body custom-card-body d-flex flex-column">
+                    <h5 class="card-title custom-card-title">@course.Name</h5>
+                    <p class="card-text custom-card-text text-truncate-multiline">@course.Description</p>
+                    <p class="card-text custom-card-text">Price: @course.Price</p>
+                    <div class="mt-auto">
+                        <a class="btn custom-btn w-100" asp-controller="Course" asp-action="Details" asp-route-id="@course.Id">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

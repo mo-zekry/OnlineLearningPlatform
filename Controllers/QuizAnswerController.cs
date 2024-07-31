@@ -1,26 +1,27 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OnlineLearningPlatform.Context.Identity;
 using OnlineLearningPlatform.Models;
 using OnlineLearningPlatform.Repositories;
 using OnlineLearningPlatform.ViewModels;
 
 namespace OnlineLearningPlatform.Controllers {
     [Authorize(Roles = "Admin")]
-    public class QuizAnswerController : Controller {
+    public class QuizAnswerController : BaseController {
         private readonly IUnitOfWork _db;
         private readonly IMapper _mapper;
 
-        public QuizAnswerController(IUnitOfWork unitOfWork, IMapper mapper) {
+        public QuizAnswerController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager) : base(userManager) {
             _db = unitOfWork;
             _mapper = mapper;
         }
 
         // GET: QuizAnswer
         public IActionResult Index(int questionId) {
-            var answers = _db.QuizAnswers.Get(a => a.QuestionId == questionId);
+            var answers = _db.QuizAnswers.Get();
             var answerViewModels = _mapper.Map<IEnumerable<QuizAnswerViewModel>>(answers);
-            ViewBag.QuestionId = questionId;
             return View(answerViewModels);
         }
 

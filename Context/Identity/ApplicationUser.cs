@@ -7,7 +7,7 @@ public class ApplicationUser : IdentityUser
 {
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
-    public string? ProfilePictureUrl { get; set; }
+    public byte[]? ProfilePictureUrl { get; set; }
     public ICollection<StudentQuizAttempt> StudentQuizAttempts { get; set; } =
         new List<StudentQuizAttempt>();
 

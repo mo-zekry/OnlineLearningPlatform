@@ -10,13 +10,12 @@ using OnlineLearningPlatform.Repositories;
 
 namespace OnlineLearningPlatform.Controllers {
     [Authorize(Roles = "Student")]
-    public class StudentQuizAttemptController : Controller {
+    public class StudentQuizAttemptController : BaseController {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public StudentQuizAttemptController(IUnitOfWork unitOfWork, IMapper mapper,
-            UserManager<ApplicationUser> userManager) {
+        public StudentQuizAttemptController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager) : base(userManager) {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _userManager = userManager;

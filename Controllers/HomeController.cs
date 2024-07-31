@@ -1,18 +1,25 @@
 using System.Diagnostics;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OnlineLearningPlatform.Context.Identity;
 using OnlineLearningPlatform.Models;
 using OnlineLearningPlatform.Repositories;
 using OnlineLearningPlatform.ViewModels;
 
 namespace OnlineLearningPlatform.Controllers;
 
-public class HomeController : Controller
+public class HomeController : BaseController
 {
     private readonly IUnitOfWork _db;
     private readonly IMapper _mapper;
 
-    public HomeController(IUnitOfWork unitOfWork, IMapper mapper)
+    public HomeController(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        UserManager<ApplicationUser> userManager
+    )
+        : base(userManager)
     {
         _db = unitOfWork;
         _mapper = mapper;

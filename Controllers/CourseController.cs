@@ -1,20 +1,21 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using OnlineLearningPlatform.Context.Identity;
 using OnlineLearningPlatform.Models;
 using OnlineLearningPlatform.Repositories;
-
 using OnlineLearningPlatform.ViewModels;
 
 namespace OnlineLearningPlatform.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class CourseController : Controller
+    public class CourseController : BaseController
     {
         private readonly IUnitOfWork _db;
         private readonly IMapper _mapper;
 
-        public CourseController(IUnitOfWork unitOfWork, IMapper mapper)
+        public CourseController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager) : base(userManager)
         {
             _db = unitOfWork;
             _mapper = mapper;
@@ -42,12 +43,22 @@ namespace OnlineLearningPlatform.Controllers
             {
                 return NotFound();
             }
-
             var course = _db.Courses.GetByID(id);
             if (course == null)
             {
                 return NotFound();
             }
+
+            // course modules and lessons
+            var modules = _db.Modules.Get(
+                filter: m => m.CourseId == id,
+                includeProperties: "Lessons"
+            );
+            ViewData["Modules"] = modules;
+
+            // course quizzes
+            var Quizzes = _db.Quizzes.Get(filter: q => q.CourseId == id);
+            ViewData["Quizzes"] = Quizzes;
 
             var courseViewModel = _mapper.Map<CourseViewModel>(course);
             return View(courseViewModel);
