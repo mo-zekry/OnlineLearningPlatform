@@ -4,37 +4,135 @@
     ViewData["Title"] = "Register";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2 class="text-center mt-4">@ViewData["Title"]</h2>
 
-<form asp-action="Register" method="post">
-    <div class="form-group">
-        <label asp-for="FirstName"></label>
-        <input asp-for="FirstName" class="form-control" />
-        <span asp-validation-for="FirstName" class="text-danger"></span>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form asp-action="Register" method="post" id="registerForm" novalidate>
+                <div class="mb-3">
+                    <label asp-for="FirstName" class="form-label"></label>
+                    <input asp-for="FirstName" class="form-control" placeholder="Enter your first name" required/>
+                    <div class="invalid-feedback">Please enter your first name.</div>
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="LastName" class="form-label"></label>
+                    <input asp-for="LastName" class="form-control" placeholder="Enter your last name" required/>
+                    <div class="invalid-feedback">Please enter your last name.</div>
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" placeholder="Enter your email" required/>
+                    <div class="invalid-feedback" id="emailError">Please enter a valid email address.</div>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" required minlength="6"/>
+                    <div class="invalid-feedback" id="passwordError">Password must be at least 6 characters long.</div>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="ConfirmPassword" class="form-label"></label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm your password" required/>
+                    <div class="invalid-feedback" id="confirmPasswordError">Passwords must match.</div>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="LastName"></label>
-        <input asp-for="LastName" class="form-control" />
-        <span asp-validation-for="LastName" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ConfirmPassword"></label>
-        <input asp-for="ConfirmPassword" class="form-control" />
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Register</button>
-</form>
+</div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial"/>
+    <script>
+        // Real-time validation script
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('registerForm');
+
+            form.addEventListener('input', function (event) {
+                const firstNameInput = form.querySelector('input[name="FirstName"]');
+                const lastNameInput = form.querySelector('input[name="LastName"]');
+                const emailInput = form.querySelector('input[name="Email"]');
+                const passwordInput = form.querySelector('input[name="Password"]');
+                const confirmPasswordInput = form.querySelector('input[name="ConfirmPassword"]');
+
+                if (firstNameInput) {
+                    if (firstNameInput.value.trim() !== "") {
+                        firstNameInput.classList.remove('is-invalid');
+                        firstNameInput.classList.add('is-valid');
+                    } else {
+                        firstNameInput.classList.remove('is-valid');
+                        firstNameInput.classList.add('is-invalid');
+                    }
+                }
+
+                if (lastNameInput) {
+                    if (lastNameInput.value.trim() !== "") {
+                        lastNameInput.classList.remove('is-invalid');
+                        lastNameInput.classList.add('is-valid');
+                    } else {
+                        lastNameInput.classList.remove('is-valid');
+                        lastNameInput.classList.add('is-invalid');
+                    }
+                }
+
+                if (emailInput) {
+                    const emailValue = emailInput.value;
+                    const emailError = document.getElementById('emailError');
+                    if (emailValue && /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/.test(emailValue)) {
+                        emailInput.classList.remove('is-invalid');
+                        emailInput.classList.add('is-valid');
+                        emailError.style.display = 'none';
+                    } else {
+                        emailInput.classList.remove('is-valid');
+                        emailInput.classList.add('is-invalid');
+                        emailError.style.display = 'block';
+                    }
+                }
+
+                if (passwordInput) {
+                    const passwordValue = passwordInput.value;
+                    const passwordError = document.getElementById('passwordError');
+                    if (passwordValue.length >= 6) {
+                        passwordInput.classList.remove('is-invalid');
+                        passwordInput.classList.add('is-valid');
+                        passwordError.style.display = 'none';
+                    } else {
+                        passwordInput.classList.remove('is-valid');
+                        passwordInput.classList.add('is-invalid');
+                        passwordError.style.display = 'block';
+                    }
+                }
+
+                if (confirmPasswordInput) {
+                    const confirmPasswordValue = confirmPasswordInput.value;
+                    const confirmPasswordError = document.getElementById('confirmPasswordError');
+                    if (confirmPasswordValue === passwordInput.value && confirmPasswordValue.length >= 6) {
+                        confirmPasswordInput.classList.remove('is-invalid');
+                        confirmPasswordInput.classList.add('is-valid');
+                        confirmPasswordError.style.display = 'none';
+                    } else {
+                        confirmPasswordInput.classList.remove('is-valid');
+                        confirmPasswordInput.classList.add('is-invalid');
+                        confirmPasswordError.style.display = 'block';
+                    }
+                }
+            });
+
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+
+                form.classList.add('was-validated');
+            }, false);
+        });
+    </script>
 }

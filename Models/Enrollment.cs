@@ -2,8 +2,7 @@ using OnlineLearningPlatform.Context.Identity;
 
 namespace OnlineLearningPlatform.Models;
 
-public class Enrollment
-{
+public class Enrollment {
     public int CourseId { get; set; }
     public string StudentId { get; set; } = default!;
     public DateTime EnrollmentDatetime { get; set; } = DateTime.UtcNow;

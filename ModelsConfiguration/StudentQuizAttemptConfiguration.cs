@@ -1,9 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OnlineLearningPlatform.Models;
 
 namespace OnlineLearningPlatform.ModelsConfiguration;
-
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 public class StudentQuizAttemptConfiguration : IEntityTypeConfiguration<StudentQuizAttempt>
 {
@@ -15,14 +14,19 @@ public class StudentQuizAttemptConfiguration : IEntityTypeConfiguration<StudentQ
             e.QuizId,
             e.AttemptDatetime
         });
+
         builder.Property(e => e.ScoreAchieved).IsRequired().HasDefaultValue(0);
+
         builder
             .HasOne(e => e.Student)
             .WithMany(s => s.StudentQuizAttempts)
-            .HasForeignKey(e => e.StudentId);
+            .HasForeignKey(e => e.StudentId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder
             .HasOne(e => e.Quiz)
             .WithMany(q => q.StudentQuizAttempts)
-            .HasForeignKey(e => e.QuizId);
+            .HasForeignKey(e => e.QuizId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

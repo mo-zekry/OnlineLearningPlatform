@@ -3,8 +3,7 @@ using System.Linq.Expressions;
 namespace OnlineLearningPlatform.Repositories.Interface;
 
 public interface IGenericRepository<TEntity>
-    where TEntity : class
-{
+    where TEntity : class {
     public IEnumerable<TEntity> Get(
         Expression<Func<TEntity, bool>>? filter = null,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,

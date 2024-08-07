@@ -1,0 +1,24 @@
+@model OnlineLearningPlatform.ViewModels.PaymentViewModel
+
+@{
+    ViewData["Title"] = "Payment";
+}
+
+<h2>Payment</h2>
+
+<p>Please review the course details and proceed to payment.</p>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h4 class="card-title">@Model.CourseName</h4>
+        <p class="card-text">Amount: $@Model.Amount</p>
+    </div>
+</div>
+
+<form asp-action="ProcessPayment" method="post">
+    <input type="hidden" asp-for="CourseId"/>
+    <input type="hidden" asp-for="Amount"/>
+    <input type="hidden" asp-for="CourseName"/>
+
+    <button type="submit" class="btn btn-primary">Proceed to Payment</button>
+</form>

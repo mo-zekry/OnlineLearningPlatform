@@ -3,8 +3,7 @@ using OnlineLearningPlatform.Repositories.Interface;
 
 namespace OnlineLearningPlatform.Repositories;
 
-public interface IUnitOfWork : IDisposable
-{
+public interface IUnitOfWork : IDisposable {
     ICourseRepository Courses { get; }
     ICategoryRepository Categories { get; }
     IModuleRepository Modules { get; }

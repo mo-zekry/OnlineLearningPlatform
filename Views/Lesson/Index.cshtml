@@ -1,66 +1,121 @@
-@model IEnumerable<OnlineLearningPlatform.ViewModels.LessonViewModel>
+@model IEnumerable<LessonViewModel>
 
 @{
-    ViewData["Title"] = "Inedx";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Lesson Management";
+    var modules = ViewData["Module"] as List<ModuleViewModel>;
+    var moduleName = modules?.FirstOrDefault()?.Name ?? "Lessons";
 }
 
-<h1>Inedx</h1>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">@moduleName</h2>
+        <a asp-action="Create" asp-route-moduleId="@Model.FirstOrDefault()?.ModuleId" class="btn btn-primary btn-lg">
+            <i class="fas fa-plus-circle"></i> Create New Lesson
+        </a>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Number)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VideoUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LessonDetails)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CourseOrder)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModuleId)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Number)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VideoUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LessonDetails)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CourseOrder)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModuleId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="row">
+        @foreach (var lesson in Model)
+        {
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card shadow-lg h-100 border-0">
+                    <div class="card-body bg-light rounded-top">
+                        <h5 class="card-title text-dark font-weight-bold">@lesson.Name</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Number: <span class="text-dark">@lesson.Number</span></h6>
+                        <p class="card-text"><strong>Video URL:</strong> <a href="@lesson.VideoUrl" target="_blank">@lesson.VideoUrl</a></p>
+                        <p class="card-text"><strong>Details:</strong> @lesson.LessonDetails</p>
+                        <p class="card-text"><strong>Order:</strong> @lesson.CourseOrder</p>
+                        <div class="mt-4">
+                            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editModal-@lesson.Id">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#detailsModal-@lesson.Id">
+                                <i class="fas fa-info-circle"></i> Details
+                            </button>
+                            <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@lesson.Id">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Modal -->
+            <div class="modal fade" id="editModal-@lesson.Id" tabindex="-1" aria-labelledby="editModalLabel-@lesson.Id" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editModalLabel-@lesson.Id">Edit Lesson - @lesson.Name</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form asp-action="Edit" asp-route-id="@lesson.Id">
+                                <div class="mb-3">
+                                    <label asp-for="@lesson.Name" class="form-label">Name</label>
+                                    <input asp-for="@lesson.Name" class="form-control" value="@lesson.Name" />
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="@lesson.Number" class="form-label">Number</label>
+                                    <input asp-for="@lesson.Number" class="form-control" value="@lesson.Number" />
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="@lesson.VideoUrl" class="form-label">Video URL</label>
+                                    <input asp-for="@lesson.VideoUrl" class="form-control" value="@lesson.VideoUrl" />
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="@lesson.LessonDetails" class="form-label">Lesson Details</label>
+                                    <textarea asp-for="@lesson.LessonDetails" class="form-control">@lesson.LessonDetails</textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label asp-for="@lesson.CourseOrder" class="form-label">Course Order</label>
+                                    <input asp-for="@lesson.CourseOrder" class="form-control" value="@lesson.CourseOrder" />
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details Modal -->
+            <div class="modal fade" id="detailsModal-@lesson.Id" tabindex="-1" aria-labelledby="detailsModalLabel-@lesson.Id" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="detailsModalLabel-@lesson.Id">Lesson Details - @lesson.Name</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h6>Name: <span class="text-dark">@lesson.Name</span></h6>
+                            <h6>Number: <span class="text-dark">@lesson.Number</span></h6>
+                            <p><strong>Video URL:</strong> <a href="@lesson.VideoUrl" target="_blank">@lesson.VideoUrl</a></p>
+                            <p><strong>Lesson Details:</strong> @lesson.LessonDetails</p>
+                            <p><strong>Course Order:</strong> @lesson.CourseOrder</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete Modal -->
+            <div class="modal fade" id="deleteModal-@lesson.Id" tabindex="-1" aria-labelledby="deleteModalLabel-@lesson.Id" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel-@lesson.Id">Delete Confirmation</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete <strong>@lesson.Name</strong>?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <form asp-action="Delete" asp-route-id="@lesson.Id" method="post">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

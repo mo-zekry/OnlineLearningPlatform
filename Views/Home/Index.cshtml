@@ -11,42 +11,32 @@
 @section StyleSheets {
     <link
         href="~/css/home.css"
-        rel="stylesheet"
-    >
+        rel="stylesheet">
 }
 
 <div
     id="hero"
-    class="p-5 text-center bg-image hero container-fluid"
->
+    class="p-5 text-center bg-image hero container-fluid">
     <div class="container d-flex justify-content-center align-items-center hero-inner">
         <div class="row w-100">
             <div class="col-md-6 hero-text">
-                <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeIn animate__delay-1s">Elevate Your
-                    Learning Experience</h1>
-                <p class="lead mb-4 animate__animated animate__fadeIn animate__delay-2s">
+                <h1 class="display-3 fw-bold mb-4">
+                    Elevate Your
+                    Learning Experience
+                </h1>
+                <p class="lead mb-4">
                     Discover a wide range of courses tailored to enhance your skills and knowledge. Engage with experts
                     and unlock your potential today.
                 </p>
-                @if (!(User.Identity != null && User.Identity.IsAuthenticated))
-                {
+                @if (!(User.Identity != null && User.Identity.IsAuthenticated)) {
                     <a
-                        class="btn btn-primary btn-lg animate__animated animate__fadeIn animate__delay-3s"
+                        class="btn btn-primary btn-lg join-now"
                         asp-action="Register"
-                        asp-controller="Account"
-                    >Join Now</a>
+                        asp-controller="Account">
+                        Join Now
+                    </a>
                 }
             </div>
-            @if ((User.Identity != null && User.Identity.IsAuthenticated && ViewData["ProfilePictureUrl"] != null))
-            {
-                <div class="col-md-6 d-flex justify-content-center align-items-center">
-                    <img
-                        src="data:image/jpeg;base64,@ViewData["ProfilePictureUrl"]"
-                        alt="Hero Image"
-                        class="img-fluid animate__animated animate__fadeIn animate__delay-4s"
-                    >
-                </div>
-            }
         </div>
     </div>
 </div>
@@ -56,72 +46,175 @@
     <section class="categories">
         <h2
             id="category-heading"
-            class="mb-5 mt-5 fs-1 text-center text-primary"
-        >Categories</h2>
-        <div class="row mb-4 container-fluid g-4">
-            @foreach (var category in ViewBag.Categories)
-            {
+            class="mb-4 mt-4 display-5 text-center">
+            Categories
+        </h2>
+        <div class="row mb-5 mt-4 container-fluid g-4">
+            @foreach (var category in ViewBag.Categories) {
                 <div class="col-md-4 d-flex align-items-stretch">
                     <div class="card custom-category-card h-100">
                         <div class="card-body text-center card-category d-flex flex-column justify-content-center">
                             <a
-                                class="card-title custom-card-category-title text-decoration-none p-md-4"
+                                class="card-title custom-card-category-title text-decoration-none"
                                 asp-action="Details"
                                 asp-controller="Category"
-                                asp-route-id="@category.Id"
-                            >@category.Name</a>
+                                asp-route-id="@category.Id">
+                                @category.Name
+                            </a>
                         </div>
                     </div>
                 </div>
             }
         </div>
     </section>
+</div>
 
-    <!-- Courses Section -->
-    <section class="courses">
+<!-- Courses Section -->
+<section class=" container-fluid courses bg-light d-flex flex-column align-items-center">
+    <h2
+        id="course-list-heading"
+        class="mb-4 mt-4 display-5 text-center">
+        Our Courses
+    </h2>
+    <div
+        id="course-list"
+        class="container row g-4 mt-5">
+        <partial
+            name="_CourseListPartial"
+            model="Model"/>
+    </div>
+</section>
+
+<section id="about" class="about mt-5 mb-5 text-center text-lg-start custom-about-section">
+    <div class="container">
+
         <h2
-            id="course-list-heading"
-            class="mb-5 mt-5 fs-1 text-center"
-        >Our Courses</h2>
-            <div
-                id="course-list"
-                class="row g-4"
-            >
-                <partial
-                    name="_CourseListPartial"
-                    model="Model"
-                />
+            id="about-heading"
+            class="mb-4 display-5 text-center">
+            About Us
+        </h2>
+        <div class="row mt-lg-5 d-flex align-items-center justify-content-center">
+            <div class="col-md-6">
+                <p class="lead mb-4 text-center  lh-lg text-capitalize">
+                    We are a team of passionate educators and technology enthusiasts. Our platform
+                    is
+                    dedicated to providing you with access to a wide range of online courses. At LearnHub, we
+                    believe that learning should be accessible to everyone. That's why we strive to create courses
+                    that are engaging, informative, and tailored to your needs. Whether you're a beginner or an
+                    experienced learner, we have something for you.
+                </p>
+                <hr class="w-75 mx-auto">
+                <hr class="w-50 mx-auto">
+                <hr class="w-25 mx-auto">
             </div>
-    </section>
+            <div class="col-md-6 rounded-5">
+                <img
+                    src="https://img.freepik.com/free-photo/student-wearing-red-headphones-e-learning-concept_23-2148552237.jpg?w=900&t=st=1722460482~exp=1722461082~hmac=42477eaf7e2203a9ca62f8f7756b1301876aa586e3323b39726e862fd5676e6d"
+                    alt="About Us"
+                    class="img-fluid rounded-5 ">
+            </div>
+        </div>
+    </div>
+</section>
 
-    <section class="about mt-5 mb-5 text-center text-lg-start custom-about-section">
-        <div class="container">
+@* contact section *@
 
-            <h2
-                id="about-heading"
-                class="mb-5 mt-5 fs-1 text-center"
-            >About Us</h2>
-            <div class="row mt-lg-5">
-                <div class="col-md-6">
-                    <p class="lead mb-4">We are a team of passionate educators and technology enthusiasts. Our platform
-                        is
-                        dedicated to providing you with access to a wide range of online courses. At LearnHub, we
-                        believe that learning should be accessible to everyone. That's why we strive to create courses
-                        that are engaging, informative, and tailored to your needs. Whether you're a beginner or an
-                        experienced learner, we have something for you.</p>
-                </div>
-                <div class="col-md-6">
-                    <img
-                        src="~/img/course_1.webp"
-                        alt="About Us"
-                        class="img-fluid"
-                    >
+<section class="bg-light py-3 py-md-5" id="contact">
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-12 col-md-10 col-lg-8 col-xl-7 col-xxl-6">
+                <h2 class="mb-4 display-5 text-center">Contact Us</h2>
+                <p class="text-secondary mb-5 text-center">
+                    The best way to contact us is to use our contact form below.
+                    Please fill out all of the required fields and we will get back to you as soon as possible.
+                </p>
+                <hr class="w-50 mx-auto mb-5 mb-xl-9 border-dark-subtle">
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-lg-center">
+            <div class="col-12 col-lg-9">
+                <div class="bg-white border rounded shadow-sm overflow-hidden">
+                    <form
+                        id="contact-form"
+                        method="post"
+                        action="/Home/SendEmail">
+                        <div class="row gy-4 gy-xl-5 p-4 p-xl-5">
+                            <div class="col-12">
+                                <label
+                                    for="fullname"
+                                    class="form-label">
+                                    Full Name <span class="text-danger">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="fullname"
+                                    name="fullname"
+                                    required>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label
+                                    for="email"
+                                    class="form-label">
+                                    Email <span class="text-danger">*</span>
+                                </label>
+                                <input
+                                    type="email"
+                                    class="form-control"
+                                    id="email"
+                                    name="email"
+                                    required>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label
+                                    for="phone"
+                                    class="form-label">
+                                    Phone Number
+                                </label>
+                                <input
+                                    type="tel"
+                                    class="form-control"
+                                    id="phone"
+                                    name="phone">
+                            </div>
+                            <div class="col-12">
+                                <label
+                                    for="message"
+                                    class="form-label">
+                                    Message <span class="text-danger">*</span>
+                                </label>
+                                <textarea
+                                    class="form-control"
+                                    id="message"
+                                    name="message"
+                                    rows="3"
+                                    required
+                                ></textarea>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-grid">
+                                    <button
+                                        class="btn btn-primary btn-lg contact-form-submit"
+                                        type="submit">
+                                        Submit
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    @if (ViewBag.Message != null) {
+                        <div class="alert alert-info mt-4">@ViewBag.Message</div>
+                    }
+
                 </div>
             </div>
         </div>
-    </section>
-
-</div>
+    </div>
+</section>
 
 @section Scripts {
     <script src="~/js/home.js"></script>

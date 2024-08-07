@@ -1,19 +1,17 @@
-namespace OnlineLearningPlatform.Controllers;
-
 using AutoMapper;
-using Context.Identity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using ViewModels.Account;
+using OnlineLearningPlatform.Context.Identity;
+using OnlineLearningPlatform.ViewModels.Account;
 
-public class AccountController : BaseController
-{
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly IMapper _mapper;
+namespace OnlineLearningPlatform.Controllers;
+
+public class AccountController : BaseController {
     private readonly IWebHostEnvironment _hostingEnvironment;
+    private readonly IMapper _mapper;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<ApplicationUser> _userManager;
 
     public AccountController(
         SignInManager<ApplicationUser> signInManager,
@@ -21,8 +19,7 @@ public class AccountController : BaseController
         UserManager<ApplicationUser> userManager,
         IWebHostEnvironment hostingEnvironment
     )
-        : base(userManager)
-    {
+        : base(userManager) {
         _userManager = userManager;
         _signInManager = signInManager;
         _mapper = mapper;
@@ -31,8 +28,7 @@ public class AccountController : BaseController
 
     // GET: /Account/Register
     [AllowAnonymous]
-    public IActionResult Register()
-    {
+    public IActionResult Register() {
         return View();
     }
 
@@ -40,23 +36,19 @@ public class AccountController : BaseController
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Register(RegisterViewModel model)
-    {
-        if (ModelState.IsValid)
-        {
-            var user = new ApplicationUser
-            {
+    public async Task<IActionResult> Register(RegisterViewModel model) {
+        if (ModelState.IsValid) {
+            var user = new ApplicationUser {
                 UserName = model.Email,
                 Email = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName
             };
             var result = await _userManager.CreateAsync(user, model.Password);
-            if (result.Succeeded)
-            {
+            if (result.Succeeded) {
                 await _userManager.AddToRoleAsync(user, "Student"); // Default role for new users
 
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                await _signInManager.SignInAsync(user, false);
                 return RedirectToAction("Index", "Home");
             }
 
@@ -69,8 +61,7 @@ public class AccountController : BaseController
 
     // GET: /Account/Login
     [AllowAnonymous]
-    public IActionResult Login(string? returnUrl = null)
-    {
+    public IActionResult Login(string? returnUrl = null) {
         ViewData["ReturnUrl"] = returnUrl;
         return View();
     }
@@ -79,31 +70,21 @@ public class AccountController : BaseController
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
-    {
+    public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null) {
         ViewData["ReturnUrl"] = returnUrl;
-        if (ModelState.IsValid)
-        {
+        if (ModelState.IsValid) {
             var result = await _signInManager.PasswordSignInAsync(
                 model.Email,
                 model.Password,
                 model.RememberMe,
-                lockoutOnFailure: false
+                false
             );
-            if (result.Succeeded)
-            {
-                return RedirectToLocal(returnUrl ?? "/");
-            }
+            if (result.Succeeded) return RedirectToLocal(returnUrl ?? "/");
 
-            if (result.IsLockedOut)
-            {
-                return View("Lockout");
-            }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                return View(model);
-            }
+            if (result.IsLockedOut) return View("Lockout");
+
+            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            return View(model);
         }
 
         // If we got this far, something failed, redisplay form
@@ -113,29 +94,24 @@ public class AccountController : BaseController
     // POST: /Account/Logout
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Logout()
-    {
+    public async Task<IActionResult> Logout() {
         await _signInManager.SignOutAsync();
         return RedirectToAction("Index", "Home");
     }
 
     // GET: /Account/Profile
     [Authorize]
-    public async Task<IActionResult> Profile()
-    {
+    public async Task<IActionResult> Profile() {
         var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-        {
-            return RedirectToAction("Index", "Home");
-        }
+        if (user == null) return RedirectToAction("Index", "Home");
 
-        var model = new ProfileViewModel()
-        {
+        var model = new ProfileViewModel {
             FirstName = user.FirstName,
             Email = user.Email ?? "",
             LastName = user.LastName,
             ProfilePictureUrl = null, // Set to null initially
-            ProfilePictureBase64 = user.ProfilePictureUrl == null ? null : Convert.ToBase64String(user.ProfilePictureUrl)
+            ProfilePictureBase64 =
+                user.ProfilePictureUrl == null ? null : Convert.ToBase64String(user.ProfilePictureUrl)
         };
 
         return View(model);
@@ -145,75 +121,47 @@ public class AccountController : BaseController
     [HttpPost]
     [Authorize]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Profile(ProfileViewModel model, IFormFile? profilePictureUrl)
-    {
-        if (!ModelState.IsValid)
-        {
-            return View(model);
-        }
+    public async Task<IActionResult> Profile(ProfileViewModel model, IFormFile? profilePictureUrl) {
+        if (!ModelState.IsValid) return View(model);
 
         var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-        {
-            return RedirectToAction("Index", "Home");
-        }
+        if (user == null) return RedirectToAction("Index", "Home");
 
         if (profilePictureUrl != null)
-        {
-            using (var memoryStream = new MemoryStream())
-            {
+            using (var memoryStream = new MemoryStream()) {
                 await profilePictureUrl.CopyToAsync(memoryStream);
 
                 // Upload the file if less than 2 MB
-                if (memoryStream.Length < 2097152)
-                {
+                if (memoryStream.Length < 2097152) {
                     user.ProfilePictureUrl = memoryStream.ToArray();
                 }
-                else
-                {
+                else {
                     ModelState.AddModelError("File", "The file is too large.");
                     return View(model);
                 }
             }
-        }
 
         user.FirstName = model.FirstName;
         user.LastName = model.LastName;
 
         var result = await _userManager.UpdateAsync(user);
-        if (result.Succeeded)
-        {
-            return RedirectToAction("Profile");
-        }
+        if (result.Succeeded) return RedirectToAction("Profile");
 
-        foreach (var error in result.Errors)
-        {
-            ModelState.AddModelError(string.Empty, error.Description);
-        }
+        foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
 
         return View(model);
     }
 
     #region Helpers
 
-    private void AddErrors(IdentityResult result)
-    {
-        foreach (var error in result.Errors)
-        {
-            ModelState.AddModelError(string.Empty, error.Description);
-        }
+    private void AddErrors(IdentityResult result) {
+        foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
     }
 
-    private IActionResult RedirectToLocal(string returnUrl)
-    {
+    private IActionResult RedirectToLocal(string returnUrl) {
         if (Url.IsLocalUrl(returnUrl))
-        {
             return Redirect(returnUrl);
-        }
-        else
-        {
-            return RedirectToAction(nameof(HomeController.Index), "Home");
-        }
+        return RedirectToAction(nameof(HomeController.Index), "Home");
     }
 
     #endregion

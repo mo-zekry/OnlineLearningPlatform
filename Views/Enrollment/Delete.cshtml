@@ -1,1 +1,18 @@
-@model EnrollmentViewModel
+@model OnlineLearningPlatform.ViewModels.EnrollmentViewModel
+
+@{
+    ViewData["Title"] = "Unenroll from Course";
+}
+
+<h2>Unenroll from Course</h2>
+
+<div class="alert alert-warning" role="alert">
+    <h4 class="alert-heading">Warning!</h4>
+    <p>Are you sure you want to unenroll from the course <strong>@Model.CourseName</strong>?</p>
+    <hr>
+    <form asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" asp-for="CourseId"/>
+        <button type="submit" class="btn btn-danger">Unenroll</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

@@ -6,8 +6,7 @@ namespace OnlineLearningPlatform.Repositories.Class;
 
 public class StudentQuizAttemptRepository
     : GenericRepository<StudentQuizAttempt>,
-        IStudentQuizAttemptRepository
-{
+        IStudentQuizAttemptRepository {
     public StudentQuizAttemptRepository(ApplicationDbContext context)
         : base(context) { }
 }

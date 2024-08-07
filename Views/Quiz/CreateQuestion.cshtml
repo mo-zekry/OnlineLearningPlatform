@@ -1,0 +1,34 @@
+@model OnlineLearningPlatform.ViewModels.QuizQuestionViewModel
+
+@{
+    ViewData["Title"] = "Create Question";
+}
+
+<h2>Create a New Quiz Question</h2>
+
+<form asp-action="CreateQuestion" method="post" class="form-horizontal" role="form">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="QuestionTitle" class="control-label col-md-2"></label>
+        <div class="col-md-10">
+            <input asp-for="QuestionTitle" class="form-control" />
+            <span asp-validation-for="QuestionTitle" class="text-danger"></span>
+        </div>
+    </div>
+
+    <!-- Hidden input for QuizId -->
+    <input type="hidden" asp-for="QuizId" />
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create Question" class="btn btn-primary" />
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

@@ -1,14 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OnlineLearningPlatform.Models;
 
 namespace OnlineLearningPlatform.ModelsConfiguration;
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-public class StudentLessonConfiguration : IEntityTypeConfiguration<StudentLesson>
-{
-    public void Configure(EntityTypeBuilder<StudentLesson> builder)
-    {
+public class StudentLessonConfiguration : IEntityTypeConfiguration<StudentLesson> {
+    public void Configure(EntityTypeBuilder<StudentLesson> builder) {
         builder.HasKey(e => new { e.StudentId, e.LessonId });
         builder.Property(e => e.CompletedDatetime).IsRequired().HasDefaultValueSql("getutcdate()");
         builder

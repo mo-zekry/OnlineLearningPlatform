@@ -1,14 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OnlineLearningPlatform.Models;
 
 namespace OnlineLearningPlatform.ModelsConfiguration;
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-public class QuizConfiguration : IEntityTypeConfiguration<Quiz>
-{
-    public void Configure(EntityTypeBuilder<Quiz> builder)
-    {
+public class QuizConfiguration : IEntityTypeConfiguration<Quiz> {
+    public void Configure(EntityTypeBuilder<Quiz> builder) {
         builder.HasKey(e => e.Id);
         builder.Property(e => e.Name).IsRequired().HasMaxLength(100);
         builder.Property(e => e.Number).IsRequired();

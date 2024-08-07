@@ -3,11 +3,11 @@ using OnlineLearningPlatform.Models;
 
 namespace OnlineLearningPlatform.Context.Identity;
 
-public class ApplicationUser : IdentityUser
-{
+public class ApplicationUser : IdentityUser {
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public byte[]? ProfilePictureUrl { get; set; }
+
     public ICollection<StudentQuizAttempt> StudentQuizAttempts { get; set; } =
         new List<StudentQuizAttempt>();
 

@@ -1,14 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OnlineLearningPlatform.Models;
 
 namespace OnlineLearningPlatform.ModelsConfiguration;
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-public class EnrollmentConfiguration : IEntityTypeConfiguration<Enrollment>
-{
-    public void Configure(EntityTypeBuilder<Enrollment> builder)
-    {
+public class EnrollmentConfiguration : IEntityTypeConfiguration<Enrollment> {
+    public void Configure(EntityTypeBuilder<Enrollment> builder) {
         // has no key
         builder.HasNoKey();
         builder.HasKey(e => new { e.CourseId, e.StudentId });

@@ -1,98 +1,238 @@
 @model IEnumerable<QuizViewModel>
 
-<!DOCTYPE html>
-
-@* get the name of the course based on the course id in the quiz *@
-
 @{
-    var courses = ViewData["CourseList"] as List<CourseViewModel>;
+    ViewData["Title"] = "Admin Quiz Page";
+    var courses = ViewData["CoursesViewModel"] as IEnumerable<CourseViewModel>;
 }
 
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">Quizzes Management</h2>
+        <button
+            type="button"
+            class="btn btn-primary btn-lg"
+            data-bs-toggle="modal"
+            data-bs-target="#createQuizModal"
+        >
+            <i class="fas fa-plus-circle"></i> Create Quiz
+        </button>
+    </div>
 
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Quiz Name
-            </th>
-            <th>
-                Course Name
-            </th>
-            <th>
-                Number
-            </th>
-            <th>
-                Course Order
-            </th>
-            <th>
-                Min Pass Score
-            </th>
-            <th>
-                Is Pass Required
-            </th>
-
-            <th>
-                Operations
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+    <div class="row">
+        @foreach (var quiz in Model.ToList())
         {
-            <tr>
-                <td>
-                    @item.Name
-                </td>
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body bg-light rounded-top">
+                        <h5 class="card-title text-dark font-weight-bold">@quiz.Name</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Number: <span class="text-dark">@quiz.Number</span></h6>
+                        <p class="card-text">
+                            <strong>Course Order:</strong> <span class="text-primary">@quiz.CourseOrder</span>
+                        </p>
+                        <p class="card-text">
+                            <strong>Pass Score:</strong> <span class="text-success">@quiz.MinPassScore</span>
+                        </p>
+                        <p class="card-text">
+                            <strong>Pass Required:</strong> <span class="text-danger">@quiz.IsPassRequired</span>
+                        </p>
+                        <p class="card-text">
+                            <strong>Course:</strong>
+                            @if (courses != null)
+                            {
+                                <span class="text-info">@courses.FirstOrDefault(c => c.Id == quiz.CourseId)?.Name</span>
+                            }
+                        </p>
+                        <div class="d-flex justify-content-between mt-3">
+                            <a
+                                asp-action="Edit"
+                                asp-route-id="@quiz.Id"
+                                class="btn btn-outline-primary btn-sm"
+                            >
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <button
+                                class="btn btn-outline-danger btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteQuizModal_@quiz.Id"
+                            >
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </button>
+                            <a
+                                class="btn btn-outline-success btn-sm"
+                                asp-action="Index"
+                                asp-controller="QuizQuestion"
+                                asp-route-quizId="@quiz.Id"
+                            >
+                                <i class="fas fa-question-circle"></i> Questions
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                @if (courses != null)
-                {
-                    <td>
-                        @courses.FirstOrDefault(c => c.Id == item.CourseId)?.Name
-
-                    </td>
-                }
-                else
-                {
-                    <td>
-                        No Course Assigned
-                    </td>
-                }
-                <td>
-                    @item.Number
-                </td>
-                <td>
-                    @item.CourseOrder
-                </td>
-                <td>
-                    @item.MinPassScore
-                </td>
-                <td>
-                    <input
-                        disabled
-                        type="checkbox"
-                        asp-for="@item.IsPassRequired"
-                        value="@item.IsPassRequired"
-                    >
-                </td>
-                <td>
-                    <a
-                        asp-action="Edit"
-                        asp-route-id="@item.Id"
-                    >Edit</a> |
-                    <a
-                        asp-action="Details"
-                        asp-route-id="@item.Id"
-                    >Details</a> |
-                    <a
-                        asp-action="Delete"
-                        asp-route-id="@item.Id"
-                    >Delete</a>
-                </td>
-            </tr>
+            <!-- Delete Quiz Modal -->
+            <div
+                class="modal fade"
+                id="deleteQuizModal_@quiz.Id"
+                tabindex="-1"
+                aria-labelledby="deleteQuizModalLabel_@quiz.Id"
+                aria-hidden="true"
+            >
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5
+                                class="modal-title text-danger"
+                                id="deleteQuizModalLabel_@quiz.Id"
+                            >Confirm Delete</h5>
+                            <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div class="modal-body text-dark">
+                            Are you sure you want to delete the quiz "<strong>@quiz.Name</strong>"?
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                            >Cancel</button>
+                            <a
+                                asp-action="Delete"
+                                asp-route-id="@quiz.Id"
+                                class="btn btn-danger"
+                            >Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
-    </tbody>
-</table>
+    </div>
+</div>
+
+<!-- Create Quiz Modal -->
+<div
+    class="modal fade"
+    id="createQuizModal"
+    tabindex="-1"
+    aria-labelledby="createQuizModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5
+                    class="modal-title text-primary"
+                    id="createQuizModalLabel"
+                >Create New Quiz</h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="CreateQuiz">
+                    <div
+                        asp-validation-summary="ModelOnly"
+                        class="text-danger mb-3"
+                    ></div>
+                    <div class="form-group mb-3">
+                        <label class="form-label font-weight-bold">Quiz Name</label>
+                        <input
+                            asp-for="@Model.Last().Name"
+                            class="form-control"
+                        />
+                        <span
+                            asp-validation-for="@Model.Last().Name"
+                            class="text-danger"
+                        ></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="form-label font-weight-bold">Number</label>
+                        <input
+                            asp-for="@Model.Last().Number"
+                            class="form-control"
+                        />
+                        <span
+                            asp-validation-for="@Model.Last().Number"
+                            class="text-danger"
+                        ></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="form-label font-weight-bold">Course Order</label>
+                        <input
+                            asp-for="@Model.Last().CourseOrder"
+                            class="form-control"
+                        />
+                        <span
+                            asp-validation-for="@Model.Last().CourseOrder"
+                            class="text-danger"
+                        ></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="form-label font-weight-bold">Pass Score</label>
+                        <input
+                            asp-for="@Model.Last().MinPassScore"
+                            class="form-control"
+                        />
+                        <span
+                            asp-validation-for="@Model.Last().MinPassScore"
+                            class="text-danger"
+                        ></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="form-label font-weight-bold">Pass Required</label>
+                        <select
+                            asp-for="@Model.Last().IsPassRequired"
+                            class="form-control"
+                        >
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                        <span
+                            asp-validation-for="@Model.Last().IsPassRequired"
+                            class="text-danger"
+                        ></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="form-label font-weight-bold">Course</label>
+                        <select
+                            asp-for="@Model.Last().CourseId"
+                            class="form-control"
+                        >
+                            @if (courses != null)
+                            {
+
+                                @foreach (var course in courses)
+                                {
+                                    <option value="@course.Id">@course.Name</option>
+                                }
+                            }
+                        </select>
+                        <span
+                            asp-validation-for="@Model.Last().CourseId"
+                            class="text-danger"
+                        ></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                        >Close</button>
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >Create Quiz</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

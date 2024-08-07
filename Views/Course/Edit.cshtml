@@ -1,63 +1,70 @@
 @model OnlineLearningPlatform.ViewModels.CourseViewModel
 
+@{
+    var categories = ViewData["CategoriesList"] as List<CategoryViewModel>;
+}
 
-
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Edit</title>
-</head>
-<body>
-
-<h4>CourseViewModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="col-md-8">
+        <h4 class="mb-4 mt-4 text-center">Edit Course</h4>
+        <hr />
         <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4" role="alert"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">Course Name</label>
+                <input asp-for="Name" class="form-control" placeholder="Enter course name" />
+                <div class="invalid-feedback">
+                    <span asp-validation-for="Name"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">Course Description</label>
+                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Enter course description"></textarea>
+                <div class="invalid-feedback">
+                    <span asp-validation-for="Description"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
+
+            <div class="mb-3">
+                <label asp-for="Price" class="form-label">Price</label>
+                <input asp-for="Price" class="form-control" placeholder="Enter course price" />
+                <div class="invalid-feedback">
+                    <span asp-validation-for="Price"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="ImageUrl" class="control-label"></label>
-                <input asp-for="ImageUrl" class="form-control" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+
+            <div class="mb-3">
+                <label asp-for="ImageUrl" class="form-label">Image URL</label>
+                <input asp-for="ImageUrl" class="form-control" placeholder="Enter image URL" />
+                <div class="invalid-feedback">
+                    <span asp-validation-for="ImageUrl"></span>
+                </div>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsProgressLimited" /> @Html.DisplayNameFor(model => model.IsProgressLimited)
+
+            <div class="mb-3 form-check">
+                <input class="form-check-input" asp-for="IsProgressLimited" id="IsProgressLimited" />
+                <label class="form-check-label" for="IsProgressLimited">
+                    @Html.DisplayNameFor(model => model.IsProgressLimited)
                 </label>
             </div>
-            <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <input asp-for="CategoryId" class="form-control" />
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
+
+            <div class="mb-3">
+                <label asp-for="CategoryId" class="form-label">Category</label>
+                <select asp-for="CategoryId" class="form-select" asp-items="@(new SelectList(categories, "Id", "Name"))">
+                    <option value="">Select Category</option>
+                </select>
+                <div class="invalid-feedback">
+                    <span asp-validation-for="CategoryId"></span>
+                </div>
             </div>
-            <div class="form-group">
+
+            <div class="d-flex justify-content-between">
                 <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
             </div>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-</body>
-</html>

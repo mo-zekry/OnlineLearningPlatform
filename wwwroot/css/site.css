@@ -1,97 +1,97 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 :root {
-  --blue: #6074fd;
-  --orange: #ff9f67;
+    --blue: #6074fd;
+    --orange: #ff9f67;
 }
 
 header {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
 }
 
 .custom-navbar {
-  background-color: var(--blue);
-  color: #fff;
+    background-color: var(--blue);
+    color: #fff;
 }
 
 .navbar-brand {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .custom-logo {
-  height: 40px;
+    height: 40px;
 }
 
 .navbar-toggler {
-  border: none;
+    border: none;
 }
 
 .navbar-toggler-icon {
-  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" fill="white"><path d="M4 7h22M4 15h22M4 23h22"/></svg>');
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" fill="white"><path d="M4 7h22M4 15h22M4 23h22"/></svg>');
 }
 
 .custom-nav .nav-item {
-  position: relative;
+    position: relative;
 }
 
 .custom-nav .nav-link {
-  color: #fff;
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  transition: color 0.3s, transform 0.3s;
+    color: #fff;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s, transform 0.3s;
 }
 
 .custom-nav .nav-link:hover {
-  color: var(--orange);
-  transform: scale(1.1);
+    color: var(--orange);
+    transform: scale(1.1);
 }
 
 .register a,
 .register button {
-  color: var(--orange);
-  border: 1px solid var(--orange);
-  border-radius: 5px;
-  padding: 5px 10px;
-  font-weight: 500;
-  margin: 0 10px;
-  transition: color 0.3s, background-color 0.3s, transform 0.3s;
+    color: var(--orange);
+    border: 1px solid var(--orange);
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-weight: 500;
+    margin: 0 10px;
+    transition: color 0.3s, background-color 0.3s, transform 0.3s;
 }
 
 .register a:hover,
 .register button:hover {
-  background-color: var(--blue);
-  color: #fff;
-  transform: translateY(-2px);
+    background-color: var(--blue);
+    color: #fff;
+    transform: translateY(-2px);
 }
 
 .register a.btn-link,
 .register button.btn-link {
-  border: none;
-  padding: 0;
-  background: none;
-  color: var(--orange);
+    border: none;
+    padding: 0;
+    background: none;
+    color: var(--orange);
 }
 
 .register a.btn-link:hover,
 .register button.btn-link:hover {
-  background: none;
-  color: #fff;
+    background: none;
+    color: #fff;
 }
 
 .profile-picture {
-  width: 30px;
-  height: 30px;
-  object-fit: cover;
-  border-radius: 50%;
-  margin-right: 10px;
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 10px;
 }

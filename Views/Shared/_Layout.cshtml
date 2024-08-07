@@ -1,4 +1,4 @@
-﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment _env
+﻿@inject IWebHostEnvironment _env
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,6 +13,11 @@
     rel="stylesheet"
     href="~/css/site.css"
     /> *@
+    @* font awesome *@
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    >
     <link
         rel="stylesheet"
         href="~/lib/bootstrap/css/bootstrap.min.css"
@@ -22,7 +27,7 @@
         href="~/css/site.css"
     />
     <environment names="Development">
-        @RenderSection("StyleSheets", required: false)
+        @RenderSection("StyleSheets", false)
     </environment>
     @if (_env.EnvironmentName == "Development" && IsSectionDefined("StyleSheets"))
     {
@@ -67,28 +72,60 @@
                                 class="nav-link"
                                 asp-controller="Home"
                                 asp-action="Index"
-                            >Home</a>
+                            >
+                                Home
+                            </a>
                         </li>
-                        <li class="nav-item p-lg-2">
-                            <a
-                                class="nav-link"
-                                asp-controller="Home"
-                                asp-action="About"
-                            >About</a>
-                        </li>
-                        <li class="nav-item p-lg-2">
-                            <a
-                                class="nav-link"
-                                asp-controller="Home"
-                                asp-action="Contact"
-                            >Contact</a>
-                        </li>
+                        @if (ViewContext.RouteData.Values["controller"]?.ToString() == "Home" &&
+                        ViewContext.RouteData.Values["action"]?.ToString() == "Index")
+                        {
+                            <li class="nav-item p-lg-2">
+                                <a
+                                    class="nav-link about-nav"
+                                    href="#about"
+                                >
+                                    About
+                                </a>
+                            </li>
+                            <li class="nav-item p-lg-2">
+                                <a
+                                    class="nav-link contact-nav"
+                                    href="#contact"
+                                >
+                                    Contact
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item p-lg-2">
+                                <a
+                                    href=""
+                                    class="nav-link about-nav"
+                                    onclick="window.open(`${window.location.origin}/#about`, '_self'); return false;"
+                                >
+                                    About
+                                </a>
+                            </li>
+                            <li class="nav-item p-lg-2">
+                                <a
+                                    href=""
+                                    class="nav-link contact-nav"
+                                    onclick="window.open(`${window.location.origin}/#contact`, '_self'); return false;"
+                                >
+                                    Contact
+                                </a>
+                            </li>
+                        }
+
                         <li class="nav-item p-lg-2">
                             <a
                                 class="nav-link"
                                 asp-controller="Course"
                                 asp-action="Index"
-                            >Courses</a>
+                            >
+                                Courses
+                            </a>
                         </li>
                         @if (User.IsInRole("Admin"))
                         {
@@ -97,28 +134,27 @@
                                     class="nav-link"
                                     asp-controller="Category"
                                     asp-action="Index"
-                                >Categories</a>
+                                >
+                                    Categories
+                                </a>
                             </li>
                             <li class="nav-item p-lg-2">
                                 <a
                                     class="nav-link"
                                     asp-controller="Module"
                                     asp-action="Index"
-                                >Modules</a>
-                            </li>
-                            <li class="nav-item p-lg-2">
-                                <a
-                                    class="nav-link"
-                                    asp-controller="Lesson"
-                                    asp-action="Index"
-                                >Lessons</a>
+                                >
+                                    Modules
+                                </a>
                             </li>
                             <li class="nav-item p-lg-2">
                                 <a
                                     class="nav-link"
                                     asp-controller="Quiz"
                                     asp-action="Index"
-                                >Quizzes</a>
+                                >
+                                    Quizzes
+                                </a>
                             </li>
                         }
                         else if (User.IsInRole("Student"))
@@ -128,21 +164,27 @@
                                     class="nav-link"
                                     asp-controller="Enrollment"
                                     asp-action="Index"
-                                >My Enrollments</a>
+                                >
+                                    My Enrollments
+                                </a>
                             </li>
                             <li class="nav-item p-lg-2">
                                 <a
                                     class="nav-link"
                                     asp-controller="StudentLesson"
                                     asp-action="Index"
-                                >My Lessons</a>
+                                >
+                                    My Lessons
+                                </a>
                             </li>
                             <li class="nav-item p-lg-2">
                                 <a
                                     class="nav-link"
                                     asp-controller="StudentQuizAttempt"
                                     asp-action="Index"
-                                >My Quizzes</a>
+                                >
+                                    My Quizzes
+                                </a>
                             </li>
                         }
                     </ul>
@@ -174,7 +216,9 @@
                                 <button
                                     type="submit"
                                     class="nav-link p-lg-2 btn-link"
-                                >Logout</button>
+                                >
+                                    Logout
+                                </button>
                             </form>
                         }
                         else
@@ -183,12 +227,16 @@
                                 class="nav-link p-lg-2 mx-2"
                                 asp-controller="Account"
                                 asp-action="Login"
-                            >Login</a>
+                            >
+                                Login
+                            </a>
                             <a
                                 class="nav-link p-lg-2"
                                 asp-controller="Account"
                                 asp-action="Register"
-                            >Register</a>
+                            >
+                                Register
+                            </a>
                         }
                     </div>
                 </div>
@@ -196,28 +244,107 @@
         </nav>
     </header>
 
-    <div class="">
-        <main
-            role="main"
-            class="pb-3"
-        >
+    <div>
+        <main role="main">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="footer mt-auto py-3 bg-light">
-        <div class="container">
-            <span class="text-muted">&copy; 2024 Online Learning Platform</span>
-        </div>
-    </footer>
+    @* custom footer *@
 
-    <script src="~/lib/jquery/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <footer
+        class="bg-body-tertiary text-center"
+        style="background-color: rgba(0, 0, 0, 0.05);"
+    >
+
+        <div class="container p-4 pb-0">
+            <section class="mb-4">
+                <!-- Facebook -->
+                <a
+                    data-mdb-ripple-init
+                    class="btn text-white btn-floating m-1"
+                    style="background-color: #3b5998;"
+                    href="#!"
+                    role="button"
+                >
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+
+                <!-- Twitter -->
+                <a
+                    data-mdb-ripple-init
+                    class="btn text-white btn-floating m-1"
+                    style="background-color: #55acee;"
+                    href="#!"
+                    role="button"
+                >
+                    <i class="fab fa-twitter"></i>
+                </a>
+
+                <!-- Google -->
+                <a
+                    data-mdb-ripple-init
+                    class="btn text-white btn-floating m-1"
+                    style="background-color: #dd4b39;"
+                    href="#!"
+                    role="button"
+                >
+                    <i class="fab fa-google"></i>
+                </a>
+
+                <!-- Instagram -->
+                <a
+                    data-mdb-ripple-init
+                    class="btn text-white btn-floating m-1"
+                    style="background-color: #ac2bac;"
+                    href="#!"
+                    role="button"
+                >
+                    <i class="fab fa-instagram"></i>
+                </a>
+
+                <!-- Linkedin -->
+                <a
+                    data-mdb-ripple-init
+                    class="btn text-white btn-floating m-1"
+                    style="background-color: #0082ca;"
+                    href="#!"
+                    role="button"
+                >
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <!-- Github -->
+                <a
+                    data-mdb-ripple-init
+                    class="btn text-white btn-floating m-1"
+                    style="background-color: #333333;"
+                    href="#!"
+                    role="button"
+                >
+                    <i class="fab fa-github"></i>
+                </a>
+            </section>
+        </div>
+
+        <!-- Copyright -->
+        <div
+            class="text-center p-3"
+            style="background-color: rgba(0, 0, 0, 0.05);"
+        >
+            © @DateTime.Now.Year Copyright:
+            <a class="text-body text-decoration-none">Online Learning Platform ❤️</a>
+        </div>
+        <!-- Copyright -->
+    </footer>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script
         src="~/js/site.js"
         asp-append-version="true"
     ></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    @await RenderSectionAsync("Scripts", false)
 </body>
 
 </html>

@@ -1,43 +1,29 @@
-@model OnlineLearningPlatform.ViewModels.QuizQuestionViewModel
+@model QuizQuestionViewModel
 
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Edit Question</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
+                <input type="hidden" asp-for="Id" />
 
-<!DOCTYPE html>
+                <div class="mb-3">
+                    <label asp-for="QuestionTitle" class="form-label"></label>
+                    <input asp-for="QuestionTitle" class="form-control" />
+                    <span asp-validation-for="QuestionTitle" class="text-danger"></span>
+                </div>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Edit</title>
-</head>
-<body>
+                <input type="hidden" asp-for="QuizId" />
 
-<h4>QuizQuestionViewModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="QuestionTitle" class="control-label"></label>
-                <input asp-for="QuestionTitle" class="form-control" />
-                <span asp-validation-for="QuestionTitle" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="QuizId" class="control-label"></label>
-                <input asp-for="QuizId" class="form-control" />
-                <span asp-validation-for="QuizId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a class="btn btn-secondary" asp-action="Index" asp-route-quizId="@Model?.QuizId">Back to List</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-</body>
-</html>

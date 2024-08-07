@@ -1,4 +1,4 @@
-@model IEnumerable<OnlineLearningPlatform.ViewModels.CategoryViewModel>
+@model IEnumerable<CategoryViewModel>
 
 @{
     var courses = ViewData["CoursesList"] as IList<CourseViewModel>;
@@ -7,38 +7,34 @@
 @section StyleSheets {
     <link
         href="~/css/home.css"
-        rel="stylesheet"
-    >
+        rel="stylesheet">
 }
 
 <div class="album py-5">
     <div class="container">
         <h1>Categories</h1>
         <div class="row">
-            @foreach (var category in Model)
-            {
+            @foreach (var category in Model) {
                 <div class="col-md-4 mb-4">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">@category.Name</h5>
-                            @if (courses != null)
-                            {
-                                @foreach (var course in @courses.Where(c => c.CategoryId == category.Id))
-    {
-        <div id="course-card" class=" mb-4">
-            <div class="card custom-card h-100">
-                <img src="@course.ImageUrl" class="card-img-top custom-card-img" alt="Course Image">
-                <div class="card-body custom-card-body d-flex flex-column">
-                    <h5 class="card-title custom-card-title">@course.Name</h5>
-                    <p class="card-text custom-card-text text-truncate-multiline">@course.Description</p>
-                    <p class="card-text custom-card-text">Price: @course.Price</p>
-                    <div class="mt-auto">
-                        <a class="btn custom-btn w-100" asp-controller="Course" asp-action="Details" asp-route-id="@course.Id">View Details</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
+                            @if (courses != null) {
+                                @foreach (var course in courses.Where(c => c.CategoryId == category.Id)) {
+                                    <div id="course-card" class=" mb-4">
+                                        <div class="card custom-card h-100">
+                                            <img src="@course.ImageUrl" class="card-img-top custom-card-img" alt="Course Image">
+                                            <div class="card-body custom-card-body d-flex flex-column">
+                                                <h5 class="card-title custom-card-title">@course.Name</h5>
+                                                <p class="card-text custom-card-text text-truncate-multiline">@course.Description</p>
+                                                <p class="card-text custom-card-text">Price: @course.Price</p>
+                                                <div class="mt-auto">
+                                                    <a class="btn custom-btn w-100" asp-controller="Course" asp-action="Details" asp-route-id="@course.Id">View Details</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
                             }
                         </div>
                     </div>

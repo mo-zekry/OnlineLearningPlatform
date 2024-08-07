@@ -1,37 +1,227 @@
-@model IEnumerable<OnlineLearningPlatform.ViewModels.QuizQuestionViewModel>
+@model IEnumerable<QuizQuestionViewModel>
 
-
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.QuestionTitle)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.QuizId)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.QuestionTitle)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QuizId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@{
+    var answers = ViewBag.Answers as IEnumerable<QuizAnswer> ?? Enumerable.Empty<QuizAnswer>();
+    var hasQuestions = Model.Any();
+    int targetQuestionId = 0;
+    int targetAnswerId = 0;
 }
-    </tbody>
-</table>
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Quiz Questions</h2>
+        <a
+            class="btn btn-primary"
+            asp-action="Create"
+            asp-controller="QuizQuestion"
+            asp-route-quizId="@ViewBag.QuizId"
+        >
+            <i class="fas fa-plus-circle"></i> Create New
+        </a>
+    </div>
+
+    @if (hasQuestions)
+    {
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                // get the target question
+                targetQuestionId = item.Id;
+
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="card-title mb-0">@item.QuestionTitle</h5>
+                        </div>
+                        <div class="card-body">
+                            @if (answers.Any(a => a.QuestionId == item.Id))
+                            {
+                                <ul class="list-group">
+                                    @foreach (var answer in answers.Where(a => a.QuestionId == item.Id))
+                                    {
+                                        // get the target answer
+                                        targetAnswerId = answer.Id;
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            @if (answer.IsCorrect)
+                                            {
+                                                <span class="badge bg-success">@answer.AnswerText</span>
+                                            }
+                                            else
+                                            {
+                                                @answer.AnswerText
+                                            }
+                                            <div class="dropdown">
+                                                <button
+                                                    class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                                    type="button"
+                                                    id="dropdownMenuButton_@answer.Id"
+                                                    data-bs-toggle="dropdown"
+                                                    aria-expanded="false"
+                                                >
+                                                    Actions
+                                                </button>
+                                                <ul
+                                                    class="dropdown-menu"
+                                                    aria-labelledby="dropdownMenuButton_@answer.Id"
+                                                >
+                                                    <li>
+                                                        <a
+                                                            class="dropdown-item"
+                                                            asp-action="Edit"
+                                                            asp-route-id="@answer.Id"
+                                                            asp-controller="QuizAnswer"
+                                                        >
+                                                            <i class="fas fa-edit"></i> Edit
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a
+                                                            class="dropdown-item"
+                                                            asp-action="DeleteAnswer"
+                                                            asp-route-id="@targetAnswerId"
+                                                            asp-controller="QuizAnswer"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#deleteAnswerModal"
+                                                        >
+                                                            <i class="fas fa-trash-alt"></i> Delete
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <p class="text-muted">No answers available</p>
+                            }
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between">
+                                <div
+                                    class="btn-group"
+                                    role="group"
+                                    aria-label="Basic example"
+                                >
+                                    <a
+                                        class="btn btn-outline-primary"
+                                        asp-action="Edit"
+                                        asp-route-id="@item.Id"
+                                    >
+                                        <i class="fas fa-edit"></i> Edit Question
+                                    </a>
+                                    <a
+                                        class="btn btn-outline-secondary"
+                                        asp-action="Details"
+                                        asp-route-id="@item.Id"
+                                    >
+                                        <i class="fas fa-info-circle"></i> Details
+                                    </a>
+                                    <a
+                                        asp-action="DeleteQuestion"
+                                        asp-route-id="@targetQuestionId"
+                                        class="btn btn-outline-danger"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteQuestionModal"
+                                    >
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </a>
+                                    <a
+                                        class="btn btn-outline-info"
+                                        asp-action="Create"
+                                        asp-controller="QuizAnswer"
+                                        asp-route-questionId="@item.Id"
+                                    >
+                                        <i class="fas fa-plus-circle"></i> Add Answers
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div
+            class="alert alert-warning"
+            role="alert"
+        >
+            <strong>No questions available.</strong> You can start by creating a new question.
+        </div>
+    }
+</div>
+
+<!-- Delete Question Modal -->
+<div
+    class="modal fade"
+    id="deleteQuestionModal"
+    tabindex="-1"
+    aria-labelledby="deleteQuestionModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>Are you sure that you need to delete this question?</p>
+            </div>
+            <div class="modal-footer">
+                <form
+                    asp-action="DeleteQuestion"
+                    asp-controller="QuizQuestion"
+                    asp-route-id="@targetQuestionId"
+                >
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >Close</button>
+                    <button
+                        type="submit"
+                        class="btn btn-danger"
+                    >Confirm Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Answer Modal -->
+<div
+    class="modal fade"
+    id="deleteAnswerModal"
+    tabindex="-1"
+    aria-labelledby="deleteAnswerModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                Are you sure that you need to delete this answer?
+            </div>
+            <div class="modal-footer">
+                <form
+                    asp-action="DeleteAnswer"
+                    asp-controller="QuizAnswer"
+                    asp-route-id="@targetAnswerId"
+                >
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >Close</button>
+                    <button
+                        type="Submit"
+                        class="btn btn-primary"
+                    >Confirm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+}

@@ -4,8 +4,4 @@ using OnlineLearningPlatform.Repositories.Class;
 
 namespace OnlineLearningPlatform.Repositories.Interface;
 
-public class ModuleRepository : GenericRepository<Module>, IModuleRepository
-{
-    public ModuleRepository(ApplicationDbContext context)
-        : base(context) { }
-}
+public interface IModuleRepository : IGenericRepository<Module> { }

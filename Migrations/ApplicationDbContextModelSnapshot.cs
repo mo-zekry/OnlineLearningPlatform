@@ -378,6 +378,40 @@ namespace OnlineLearningPlatform.Migrations
                     b.ToTable("Modules");
                 });
 
+            modelBuilder.Entity("OnlineLearningPlatform.Models.Payment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("StripePaymentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StudentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Payments");
+                });
+
             modelBuilder.Entity("OnlineLearningPlatform.Models.Quiz", b =>
                 {
                     b.Property<int>("Id")
@@ -614,6 +648,25 @@ namespace OnlineLearningPlatform.Migrations
                     b.Navigation("Course");
                 });
 
+            modelBuilder.Entity("OnlineLearningPlatform.Models.Payment", b =>
+                {
+                    b.HasOne("OnlineLearningPlatform.Models.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OnlineLearningPlatform.Context.Identity.ApplicationUser", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("OnlineLearningPlatform.Models.Quiz", b =>
                 {
                     b.HasOne("OnlineLearningPlatform.Models.Course", "Course")
@@ -671,13 +724,13 @@ namespace OnlineLearningPlatform.Migrations
                     b.HasOne("OnlineLearningPlatform.Models.Quiz", "Quiz")
                         .WithMany("StudentQuizAttempts")
                         .HasForeignKey("QuizId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("OnlineLearningPlatform.Context.Identity.ApplicationUser", "Student")
                         .WithMany("StudentQuizAttempts")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Quiz");

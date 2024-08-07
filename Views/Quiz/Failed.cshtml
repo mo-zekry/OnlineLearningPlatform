@@ -1,0 +1,17 @@
+@model OnlineLearningPlatform.Models.StudentQuizAttempt
+
+@{
+    ViewData["Title"] = "Failed";
+}
+
+  <div class="container mt-5">
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Oops!</h4>
+            <p>You did not pass the quiz this time.</p>
+            <hr>
+            <p class="mb-0">Your score: <strong>@Model.ScoreAchieved</strong></p>
+            <p>Quiz ID: <strong>@Model.QuizId</strong></p>
+            <p>Date and Time: <strong>@Model.AttemptDatetime</strong></p>
+        </div>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Back to Home</a>
+    </div>

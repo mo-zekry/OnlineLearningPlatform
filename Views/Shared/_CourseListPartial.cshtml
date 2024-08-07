@@ -1,7 +1,7 @@
-@model IEnumerable<OnlineLearningPlatform.ViewModels.CourseViewModel>
+@model IEnumerable<CourseViewModel>
 
 @{
-    var categories = ViewData["Categories"] as List<OnlineLearningPlatform.ViewModels.CategoryViewModel>;
+    var categories = ViewData["Categories"] as List<CategoryViewModel>;
 }
 
 @section StyleSheets {
@@ -9,8 +9,7 @@
 }
 
 <div class="row">
-    @foreach (var course in Model)
-    {
+    @foreach (var course in Model) {
         <div id="course-card" class="col-md-4 mb-4">
             <div class="card custom-card h-100">
                 <img src="@course.ImageUrl" class="card-img-top custom-card-img" alt="Course Image">

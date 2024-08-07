@@ -1,7 +1,6 @@
 namespace OnlineLearningPlatform.ViewModels;
 
-public class LessonViewModel
-{
+public class LessonViewModel {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public int Number { get; set; }
@@ -9,5 +8,4 @@ public class LessonViewModel
     public string LessonDetails { get; set; } = string.Empty;
     public int CourseOrder { get; set; }
     public int ModuleId { get; set; }
-
 }

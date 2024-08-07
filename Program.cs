@@ -1,22 +1,22 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OnlineLearningPlatform.Context;
 using OnlineLearningPlatform.Context.Identity;
+using OnlineLearningPlatform.Handlers;
 using OnlineLearningPlatform.Mapping;
 using OnlineLearningPlatform.Repositories;
+using OnlineLearningPlatform.Requirements;
 
 namespace OnlineLearningPlatform;
 
-public class Program
-{
-    public static async Task Main(string[] args)
-    {
+public static class Program {
+    public static async Task Main(string[] args) {
         var builder = WebApplication.CreateBuilder(args);
 
         // Identity Password Configurations
-        builder.Services.Configure<IdentityOptions>(options =>
-        {
+        builder.Services.Configure<IdentityOptions>(options => {
             options.Password.RequireDigit = true;
             options.Password.RequiredLength = 8;
             options.Password.RequireNonAlphanumeric = false;
@@ -28,14 +28,8 @@ public class Program
         // Add services to the container.
         builder.Services.AddControllersWithViews();
 
-        builder.Services.Configure<FormOptions>(options =>
-        {
-            options.MultipartBodyLengthLimit = 10485760; // 10 MB limit
-        });
-
         // Injecting the db context
-        builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        {
+        builder.Services.AddDbContext<ApplicationDbContext>(options => {
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
 
@@ -51,25 +45,30 @@ public class Program
         // Auto Mapper Configurations
         builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-        // WebOptimizer javascript bundler configurations
-        // builder.Services.AddWebOptimizer(pipeline =>
-        // {
-        //     pipeline.AddJavaScriptBundle("/js/bundle.js", "wwwroot/js/*.js").UseContentRoot();
-        //     pipeline.MinifyJsFiles();
-        // });
+        // stripe payment configurations
+        Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+
+        // Configure Authorization
+        builder.Services.AddAuthorization(options => {
+            options.AddPolicy(
+                "EnrolledInCourse",
+                policy => policy.Requirements.Add(new EnrolledInCourseRequirement())
+            );
+        });
+
+        // Register the authorization handler as a scoped service
+        builder.Services.AddScoped<IAuthorizationHandler, EnrolledInCourseHandler>();
 
         var app = builder.Build();
 
         // Data Seeding
-        using (var scope = app.Services.CreateScope())
-        {
+        using (var scope = app.Services.CreateScope()) {
             var services = scope.ServiceProvider;
             await SeedData.Initialize(services);
         }
 
         // Configure the HTTP request pipeline.
-        if (!app.Environment.IsDevelopment())
-        {
+        if (!app.Environment.IsDevelopment()) {
             app.UseExceptionHandler("/Home/Error");
             app.UseHsts();
         }
@@ -84,9 +83,9 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllerRoute(
-            name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id:?}",
-            defaults: new { controller = "Home", action = "Index" }
+            "default",
+            "{controller=Home}/{action=Index}/{id:?}",
+            new { controller = "Home", action = "Index" }
         );
 
         app.Run();

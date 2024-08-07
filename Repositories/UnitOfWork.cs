@@ -4,12 +4,10 @@ using OnlineLearningPlatform.Repositories.Interface;
 
 namespace OnlineLearningPlatform.Repositories;
 
-public class UnitOfWork : IUnitOfWork
-{
+public class UnitOfWork : IUnitOfWork {
     private readonly ApplicationDbContext _context;
 
-    public UnitOfWork(ApplicationDbContext context)
-    {
+    public UnitOfWork(ApplicationDbContext context) {
         _context = context;
         Courses = new CourseRepository(_context);
         Categories = new CategoryRepository(_context);
@@ -24,26 +22,24 @@ public class UnitOfWork : IUnitOfWork
         StudentLessons = new StudentLessonRepository(_context);
     }
 
-    public ICourseRepository Courses { get; private set; }
-    public IModuleRepository Modules { get; private set; }
-    public ILessonRepository Lessons { get; private set; }
-    public IQuizRepository Quizzes { get; private set; }
-    public IQuizQuestionRepository QuizQuestions { get; private set; }
-    public IQuizAnswerRepository QuizAnswers { get; private set; }
-    public IStudentRepository Students { get; private set; }
-    public IEnrollmentRepository Enrollments { get; private set; }
-    public IStudentQuizAttemptRepository StudentQuizAttempts { get; private set; }
-    public IStudentLessonRepository StudentLessons { get; private set; }
+    public ICourseRepository Courses { get; }
+    public IModuleRepository Modules { get; }
+    public ILessonRepository Lessons { get; }
+    public IQuizRepository Quizzes { get; }
+    public IQuizQuestionRepository QuizQuestions { get; }
+    public IQuizAnswerRepository QuizAnswers { get; }
+    public IStudentRepository Students { get; }
+    public IEnrollmentRepository Enrollments { get; }
+    public IStudentQuizAttemptRepository StudentQuizAttempts { get; }
+    public IStudentLessonRepository StudentLessons { get; }
 
-    public ICategoryRepository Categories { get; private set; }
+    public ICategoryRepository Categories { get; }
 
-    public int SaveChanges()
-    {
+    public int SaveChanges() {
         return _context.SaveChanges();
     }
 
-    public void Dispose()
-    {
+    public void Dispose() {
         _context.Dispose();
     }
 }

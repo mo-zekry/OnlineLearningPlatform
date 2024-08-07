@@ -3,11 +3,16 @@ using Microsoft.EntityFrameworkCore;
 using OnlineLearningPlatform.Context.Identity;
 using OnlineLearningPlatform.Models;
 using OnlineLearningPlatform.ModelsConfiguration;
+using OnlineLearningPlatform.ViewModels;
 
 namespace OnlineLearningPlatform.Context;
 
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
-{
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser> {
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options) { }
+
+    public ApplicationDbContext() { }
+
     public DbSet<Course> Courses { get; set; }
     public DbSet<Module> Modules { get; set; }
     public DbSet<Lesson> Lessons { get; set; }
@@ -17,14 +22,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<StudentQuizAttempt> StudentQuizAttempts { get; set; }
     public DbSet<Enrollment> Enrollments { get; set; }
     public DbSet<StudentLesson> StudentLessons { get; set; }
+    public DbSet<Payment> Payments { get; set; }
 
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        : base(options) { }
-
-    public ApplicationDbContext() { }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         base.OnConfiguring(optionsBuilder);
 
         var connectionString = new ConfigurationBuilder()
@@ -35,8 +35,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         optionsBuilder.UseSqlServer(connectionString);
     }
 
-    protected override void OnModelCreating(ModelBuilder builder)
-    {
+    protected override void OnModelCreating(ModelBuilder builder) {
         base.OnModelCreating(builder);
 
         builder.ApplyConfiguration(new CourseConfiguration());

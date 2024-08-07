@@ -1,111 +1,65 @@
 @model OnlineLearningPlatform.ViewModels.QuizViewModel
 
-<h4>QuizViewModel</h4>
+@{
+    ViewData["Title"] = "Edit Quiz";
+    var courses = ViewData["CourseList"] as IEnumerable<CourseViewModel>;
+}
 
-<hr />
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Edit Quiz</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div
-                asp-validation-summary="ModelOnly"
-                class="text-danger"
-            ></div>
-            <input
-                type="hidden"
-                asp-for="Id"
-            />
-            <div class="form-group">
-                <label class="control-label">
-                    Quiz Name
-                </label>
-                <input
-                    asp-for="Name"
-                    class="form-control"
-                />
-                <span
-                    asp-validation-for="Name"
-                    class="text-danger"
-                ></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">
-                    Number
-                </label>
-                <input
-                    asp-for="Number"
-                    class="form-control"
-                />
-                <span
-                    asp-validation-for="Number"
-                    class="text-danger"
-                ></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">
-                    Course Order
-                </label>
-                <input
-                    asp-for="CourseOrder"
-                    class="form-control"
-                />
-                <span
-                    asp-validation-for="CourseOrder"
-                    class="text-danger"
-                ></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">
-                    Min Pass Score
-                </label>
-                <input
-                    asp-for="MinPassScore"
-                    class="form-control"
-                />
-                <span
-                    asp-validation-for="MinPassScore"
-                    class="text-danger"
-                ></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input
-                        class="form-check-input"
-                        asp-for="IsPassRequired"
-                    /> Is Pass Required
-                </label>
-            </div>
-            <div class="form-group">
-                <label
-                    class="control-label"
-                >
-                    Course Name
-                </label>
-                <select
-                    class="form-control"
-                    asp-for="CourseId"
-                    asp-items="@(new SelectList(ViewBag.CourseList, "Id", "Name"))"
-                ></select>
-                <span
-                    asp-validation-for="CourseId"
-                    class="text-danger"
-                ></span>
-            </div>
-            <div class="form-group">
-                <input
-                    type="submit"
-                    value="Save"
-                    class="btn btn-primary"
-                />
-            </div>
-        </form>
+                <input type="hidden" asp-for="Id" />
+
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Number" class="form-label"></label>
+                    <input asp-for="Number" class="form-control" />
+                    <span asp-validation-for="Number" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="CourseOrder" class="form-label"></label>
+                    <input asp-for="CourseOrder" class="form-control" />
+                    <span asp-validation-for="CourseOrder" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="MinPassScore" class="form-label"></label>
+                    <input asp-for="MinPassScore" class="form-control" />
+                    <span asp-validation-for="MinPassScore" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input asp-for="IsPassRequired" class="form-check-input" type="checkbox" id="isPassRequired" />
+                    <label class="form-check-label" for="isPassRequired">
+                        @Html.DisplayNameFor(model => model.IsPassRequired)
+                    </label>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="CourseId" class="form-label">Course</label>
+                    <select asp-for="CourseId" asp-items="@(new SelectList(courses, "Id", "Name"))" class="form-select">
+                        <option value="">Select a course</option>
+                    </select>
+                    <span asp-validation-for="CourseId" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a class="btn btn-secondary" asp-action="Index">Back to List</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

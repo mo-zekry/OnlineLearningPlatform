@@ -6,87 +6,80 @@
 
 <div class="container">
     <h1 class="mt-5">Profile</h1>
-    <hr />
+    <hr/>
     <div class="row">
         <div class="col-md-6 offset-md-3">
+            <div class="text-center mb-4">
+                @if (!string.IsNullOrEmpty(Model.ProfilePictureBase64)) {
+                    <img src="data:image/jpeg;base64,@Model.ProfilePictureBase64" class="rounded-circle img-thumbnail mb-3" alt="Profile Picture" style="width: 120px; height: 120px;" id="profilePic"/>
+                } else {
+                    <img src="https://via.placeholder.com/120" class="rounded-circle img-thumbnail mb-3" alt="Default Profile Picture" id="profilePic"/>
+                }
+            </div>
             <form
                 asp-action="Profile"
                 method="post"
-                enctype="multipart/form-data"
-            >
+                enctype="multipart/form-data">
                 <div class="form-group">
                     <label
                         asp-for="Email"
-                        class="control-label"
-                    ></label>
+                        class="control-label">
+                    </label>
                     <input
                         asp-for="Email"
                         class="form-control"
-                        readonly
-                    />
+                        readonly/>
                     <span
                         asp-validation-for="Email"
-                        class="text-danger"
-                    ></span>
+                        class="text-danger">
+                    </span>
                 </div>
                 <div class="form-group">
                     <label
                         asp-for="FirstName"
-                        class="control-label"
-                    ></label>
+                        class="control-label">
+                    </label>
                     <input
                         asp-for="FirstName"
-                        class="form-control"
-                    />
+                        class="form-control"/>
                     <span
                         asp-validation-for="FirstName"
-                        class="text-danger"
-                    ></span>
+                        class="text-danger">
+                    </span>
                 </div>
                 <div class="form-group">
                     <label
                         asp-for="LastName"
-                        class="control-label"
-                    ></label>
+                        class="control-label">
+                    </label>
                     <input
                         asp-for="LastName"
-                        class="form-control"
-                    />
+                        class="form-control"/>
                     <span
                         asp-validation-for="LastName"
-                        class="text-danger"
-                    ></span>
+                        class="text-danger">
+                    </span>
                 </div>
                 <div class="form-group">
                     <label
                         asp-for="ProfilePictureUrl"
-                        class="control-label"
-                    ></label>
+                        class="control-label">
+                    </label>
                     <input
                         asp-for="ProfilePictureUrl"
                         class="form-control-file"
-                        type="file"
-                    />
+                        type="file"/>
                     <span
                         asp-validation-for="ProfilePictureUrl"
-                        class="text-danger"
-                    ></span>
+                        class="text-danger">
+                    </span>
                 </div>
-                @if (Model.ProfilePictureBase64 != null)
-                {
-                    <div class="form-group">
-                        <label>Current Profile Picture</label>
-                        <img
-                            src="data:image/jpeg;base64,@Model.ProfilePictureBase64"
-                            class="img-thumbnail"
-                        />
-                    </div>
-                }
                 <div class="form-group mt-3">
                     <button
                         type="submit"
-                        class="btn btn-primary"
-                    >Save</button>
+                        class="btn btn-primary">
+                        Save
+                    </button>
                 </div>
             </form>
         </div>
@@ -94,5 +87,5 @@
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial"/>
 }
