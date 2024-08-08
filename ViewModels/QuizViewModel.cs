@@ -16,5 +16,4 @@ public class QuizViewModel {
     [Required] public bool IsPassRequired { get; set; } = false;
 
     [Required] public int CourseId { get; set; }
-
 }

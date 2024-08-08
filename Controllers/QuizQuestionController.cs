@@ -10,8 +10,7 @@ using OnlineLearningPlatform.ViewModels;
 namespace OnlineLearningPlatform.Controllers;
 
 [Authorize(Roles = "Admin")]
-public class QuizQuestionController : BaseController
-{
+public class QuizQuestionController : BaseController {
     private readonly IUnitOfWork _db;
     private readonly IMapper _mapper;
 
@@ -20,25 +19,20 @@ public class QuizQuestionController : BaseController
         IMapper mapper,
         UserManager<ApplicationUser> userManager
     )
-        : base(userManager)
-    {
+        : base(userManager) {
         _db = unitOfWork;
         _mapper = mapper;
     }
 
     // GET: QuizQuestion
-    public IActionResult Index(int quizId)
-    {
+    public IActionResult Index(int quizId) {
         var questions = _db.QuizQuestions.Get(q => q.QuizId == quizId);
         var questionViewModels = _mapper.Map<IEnumerable<QuizQuestionViewModel>>(questions);
         ViewBag.QuizId = quizId;
 
         // get the answer related this quiz
         List<QuizAnswer> answers = [];
-        foreach (var item in questions)
-        {
-            answers.AddRange(_db.QuizAnswers.Get(a => a.QuestionId == item.Id));
-        }
+        foreach (var item in questions) answers.AddRange(_db.QuizAnswers.Get(a => a.QuestionId == item.Id));
 
         ViewBag.Answers = answers;
 
@@ -46,8 +40,7 @@ public class QuizQuestionController : BaseController
     }
 
     // GET: QuizQuestion/Details/5
-    public IActionResult Details(int? id)
-    {
+    public IActionResult Details(int? id) {
         if (id == null)
             return NotFound();
 
@@ -68,8 +61,7 @@ public class QuizQuestionController : BaseController
     }
 
     // GET: QuizQuestion/Create
-    public IActionResult Create(int quizId)
-    {
+    public IActionResult Create(int quizId) {
         ViewBag.QuizId = quizId;
         return View(new QuizQuestionViewModel());
     }
@@ -77,10 +69,8 @@ public class QuizQuestionController : BaseController
     // POST: QuizQuestion/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(QuizQuestionViewModel questionViewModel)
-    {
-        if (ModelState.IsValid)
-        {
+    public IActionResult Create(QuizQuestionViewModel questionViewModel) {
+        if (ModelState.IsValid) {
             var question = _mapper.Map<QuizQuestion>(questionViewModel);
             _db.QuizQuestions.Insert(question);
             _db.SaveChanges();
@@ -91,8 +81,7 @@ public class QuizQuestionController : BaseController
     }
 
     // GET: QuizQuestion/Edit/5
-    public IActionResult Edit(int? id)
-    {
+    public IActionResult Edit(int? id) {
         if (id == null)
             return NotFound();
 
@@ -107,13 +96,11 @@ public class QuizQuestionController : BaseController
     // POST: QuizQuestion/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(int id, QuizQuestionViewModel questionViewModel)
-    {
+    public IActionResult Edit(int id, QuizQuestionViewModel questionViewModel) {
         if (id != questionViewModel.Id)
             return NotFound();
 
-        if (ModelState.IsValid)
-        {
+        if (ModelState.IsValid) {
             var question = _mapper.Map<QuizQuestion>(questionViewModel);
             _db.QuizQuestions.Update(question);
             _db.SaveChanges();
@@ -127,17 +114,13 @@ public class QuizQuestionController : BaseController
     [HttpPost]
     [ValidateAntiForgeryToken]
     [ActionName("DeleteQuestion")]
-    public IActionResult Delete(int id)
-    {
+    public IActionResult Delete(int id) {
         var question = _db.QuizQuestions.GetByID(id);
         _db.QuizQuestions.Delete(question);
         _db.SaveChanges();
 
         // get answers related to question
-        foreach (var item in _db.QuizAnswers.Get(a => a.QuestionId == id))
-        {
-            _db.QuizAnswers.Delete(item);
-        }
+        foreach (var item in _db.QuizAnswers.Get(a => a.QuestionId == id)) _db.QuizAnswers.Delete(item);
         _db.SaveChanges();
 
         return RedirectToAction(nameof(Index), new { quizId = question.QuizId });

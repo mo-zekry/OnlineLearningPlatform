@@ -6,42 +6,42 @@
             <h4 class="mb-0">Create New Question</h4>
         </div>
         <div class="card-body">
-            <form asp-action="Create">
+            <form asp-action="Create" method="post">
                 <div
                     asp-validation-summary="ModelOnly"
-                    class="text-danger mb-3"
-                ></div>
+                    class="text-danger mb-3">
+                </div>
 
                 <div class="mb-3">
                     <label
                         asp-for="QuestionTitle"
-                        class="form-label"
-                    ></label>
+                        class="form-label">
+                    </label>
                     <input
                         asp-for="QuestionTitle"
-                        class="form-control"
-                    />
+                        class="form-control"/>
                     <span
                         asp-validation-for="QuestionTitle"
-                        class="text-danger"
-                    ></span>
+                        class="text-danger">
+                    </span>
                 </div>
 
                 <input
                     type="hidden"
-                    asp-for="QuizId"
-                />
+                    asp-for="QuizId"/>
 
                 <div class="d-flex justify-content-between">
                     <button
                         type="submit"
-                        class="btn btn-primary"
-                    >Create</button>
+                        class="btn btn-primary">
+                        Create
+                    </button>
                     <a
                         class="btn btn-secondary"
                         asp-action="Index"
-                        asp-route-quizId="@Model?.QuizId"
-                    >Back to List</a>
+                        asp-route-quizId="@Model?.QuizId">
+                        Back to List
+                    </a>
                 </div>
             </form>
         </div>

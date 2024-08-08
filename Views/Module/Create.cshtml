@@ -6,24 +6,23 @@
 
 <div class="row">
     <div class="col-md-6 offset-md-3">
-<h4 class="mb-4 mt-4 text-center">Create New Module</h4>
-<hr />
-        <form asp-action="Create">
+        <h4 class="mb-4 mt-4 text-center">Create New Module</h4>
+        <hr/>
+        <form asp-action="Create" method="post"> 
             <div
                 asp-validation-summary="ModelOnly"
-                class="alert alert-danger"
-            ></div>
+                class="alert alert-danger">
+            </div>
 
             <div class="mb-3">
                 <label
                     asp-for="Name"
-                    class="form-label"
-                ></label>
+                    class="form-label">
+                </label>
                 <input
                     value="@Model.Name"
                     asp-for="Name"
-                    class="form-control"
-                />
+                    class="form-control"/>
                 <div class="form-text text-danger">
                     <span asp-validation-for="Name"></span>
                 </div>
@@ -32,14 +31,13 @@
             <div class="mb-3">
                 <label
                     asp-for="Number"
-                    class="form-label"
-                ></label>
+                    class="form-label">
+                </label>
                 <input
-                @Model.Number
+                    @Model.Number
                     min="1"
                     asp-for="Number"
-                    class="form-control"
-                />
+                    class="form-control"/>
                 <div class="form-text text-danger">
                     <span asp-validation-for="Number"></span>
                 </div>
@@ -48,24 +46,25 @@
             <div class="mb-3">
                 <label
                     asp-for="CourseId"
-                    class="form-label"
-                >Course</label>
+                    class="form-label">
+                    Course
+                </label>
                 <select
                     asp-for="CourseId"
                     asp-items="@(new SelectList(courses, "Id", "Name"))"
-                    class="form-select"
-                ></select>
+                    class="form-select">
+                </select>
             </div>
             <div class="mb-5 mt-4 d-flex justify-content-evenly align-items-center">
-                    <input
-                        type="submit"
-                        value="Create"
-                        class="btn btn-primary"
-                    />
-                    <a
-                        asp-action="Index"
-                        class="btn btn-secondary"
-                    >Back to List</a>
+                <input
+                    type="submit"
+                    value="Create"
+                    class="btn btn-primary"/>
+                <a
+                    asp-action="Index"
+                    class="btn btn-secondary">
+                    Back to List
+                </a>
             </div>
         </form>
     </div>

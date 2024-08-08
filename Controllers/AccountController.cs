@@ -7,7 +7,8 @@ using OnlineLearningPlatform.ViewModels.Account;
 
 namespace OnlineLearningPlatform.Controllers;
 
-public class AccountController : BaseController {
+public class AccountController : BaseController
+{
     private readonly IWebHostEnvironment _hostingEnvironment;
     private readonly IMapper _mapper;
     private readonly SignInManager<ApplicationUser> _signInManager;
@@ -19,7 +20,8 @@ public class AccountController : BaseController {
         UserManager<ApplicationUser> userManager,
         IWebHostEnvironment hostingEnvironment
     )
-        : base(userManager) {
+        : base(userManager)
+    {
         _userManager = userManager;
         _signInManager = signInManager;
         _mapper = mapper;
@@ -28,7 +30,13 @@ public class AccountController : BaseController {
 
     // GET: /Account/Register
     [AllowAnonymous]
-    public IActionResult Register() {
+    public IActionResult Register()
+    {
+        // Check if the user is already logged in
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            return RedirectToAction("Index", "Home");
+        }
         return View();
     }
 
@@ -36,20 +44,31 @@ public class AccountController : BaseController {
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Register(RegisterViewModel model) {
-        if (ModelState.IsValid) {
-            var user = new ApplicationUser {
+    public async Task<IActionResult> Register(RegisterViewModel model)
+    {
+        if (EmailExists(model.Email))
+        {
+            // Return a JSON response indicating that the email is already registered
+            return Json(new { emailExists = true });
+        }
+
+        if (ModelState.IsValid)
+        {
+            var user = new ApplicationUser
+            {
                 UserName = model.Email,
                 Email = model.Email,
                 FirstName = model.FirstName,
                 LastName = model.LastName
             };
+
             var result = await _userManager.CreateAsync(user, model.Password);
-            if (result.Succeeded) {
+            if (result.Succeeded)
+            {
                 await _userManager.AddToRoleAsync(user, "Student"); // Default role for new users
 
                 await _signInManager.SignInAsync(user, false);
-                return RedirectToAction("Index", "Home");
+                return Json(new { success = true });
             }
 
             AddErrors(result);
@@ -61,7 +80,13 @@ public class AccountController : BaseController {
 
     // GET: /Account/Login
     [AllowAnonymous]
-    public IActionResult Login(string? returnUrl = null) {
+    public IActionResult Login(string? returnUrl = null)
+    {
+        // Check if the user is already logged in
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            return RedirectToAction("Index", "Home");
+        }
         ViewData["ReturnUrl"] = returnUrl;
         return View();
     }
@@ -70,18 +95,34 @@ public class AccountController : BaseController {
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null) {
+    public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
+    {
         ViewData["ReturnUrl"] = returnUrl;
-        if (ModelState.IsValid) {
+
+        if (!EmailExists(model.Email))
+        {
+            // Return a JSON response indicating that the email does not exist
+            return Json(new { emailExists = false });
+        }
+
+        if (ModelState.IsValid)
+        {
             var result = await _signInManager.PasswordSignInAsync(
                 model.Email,
                 model.Password,
                 model.RememberMe,
                 false
             );
-            if (result.Succeeded) return RedirectToLocal(returnUrl ?? "/");
 
-            if (result.IsLockedOut) return View("Lockout");
+            if (result.Succeeded)
+            {
+                return RedirectToLocal(returnUrl ?? "/");
+            }
+
+            if (result.IsLockedOut)
+            {
+                return View("Lockout");
+            }
 
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             return View(model);
@@ -94,24 +135,35 @@ public class AccountController : BaseController {
     // POST: /Account/Logout
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Logout() {
-        await _signInManager.SignOutAsync();
+    public async Task<IActionResult> Logout()
+    {
+        // Check if the user is already logged in
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            await _signInManager.SignOutAsync();
+        }
+
         return RedirectToAction("Index", "Home");
     }
 
     // GET: /Account/Profile
     [Authorize]
-    public async Task<IActionResult> Profile() {
+    public async Task<IActionResult> Profile()
+    {
         var user = await _userManager.GetUserAsync(User);
-        if (user == null) return RedirectToAction("Index", "Home");
+        if (user == null)
+            return RedirectToAction("Index", "Home");
 
-        var model = new ProfileViewModel {
+        var model = new ProfileViewModel
+        {
             FirstName = user.FirstName,
             Email = user.Email ?? "",
             LastName = user.LastName,
             ProfilePictureUrl = null, // Set to null initially
             ProfilePictureBase64 =
-                user.ProfilePictureUrl == null ? null : Convert.ToBase64String(user.ProfilePictureUrl)
+                user.ProfilePictureUrl == null
+                    ? null
+                    : Convert.ToBase64String(user.ProfilePictureUrl)
         };
 
         return View(model);
@@ -121,21 +173,27 @@ public class AccountController : BaseController {
     [HttpPost]
     [Authorize]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Profile(ProfileViewModel model, IFormFile? profilePictureUrl) {
-        if (!ModelState.IsValid) return View(model);
+    public async Task<IActionResult> Profile(ProfileViewModel model, IFormFile? profilePictureUrl)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
 
         var user = await _userManager.GetUserAsync(User);
-        if (user == null) return RedirectToAction("Index", "Home");
+        if (user == null)
+            return RedirectToAction("Index", "Home");
 
         if (profilePictureUrl != null)
-            using (var memoryStream = new MemoryStream()) {
+            using (var memoryStream = new MemoryStream())
+            {
                 await profilePictureUrl.CopyToAsync(memoryStream);
 
                 // Upload the file if less than 2 MB
-                if (memoryStream.Length < 2097152) {
+                if (memoryStream.Length < 2097152)
+                {
                     user.ProfilePictureUrl = memoryStream.ToArray();
                 }
-                else {
+                else
+                {
                     ModelState.AddModelError("File", "The file is too large.");
                     return View(model);
                 }
@@ -145,20 +203,33 @@ public class AccountController : BaseController {
         user.LastName = model.LastName;
 
         var result = await _userManager.UpdateAsync(user);
-        if (result.Succeeded) return RedirectToAction("Profile");
+        if (result.Succeeded)
+            return RedirectToAction("Profile");
 
-        foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
+        foreach (var error in result.Errors)
+            ModelState.AddModelError(string.Empty, error.Description);
 
         return View(model);
     }
 
     #region Helpers
 
-    private void AddErrors(IdentityResult result) {
-        foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
+    // Method to check if the email exists in the database
+    private bool EmailExists(string email)
+    {
+        // Replace this with your actual logic to check if the email exists
+        var user = _userManager.FindByEmailAsync(email).Result;
+        return user != null;
     }
 
-    private IActionResult RedirectToLocal(string returnUrl) {
+    private void AddErrors(IdentityResult result)
+    {
+        foreach (var error in result.Errors)
+            ModelState.AddModelError(string.Empty, error.Description);
+    }
+
+    private IActionResult RedirectToLocal(string returnUrl)
+    {
         if (Url.IsLocalUrl(returnUrl))
             return Redirect(returnUrl);
         return RedirectToAction(nameof(HomeController.Index), "Home");

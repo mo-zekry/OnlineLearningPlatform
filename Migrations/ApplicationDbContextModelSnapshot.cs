@@ -245,7 +245,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("OnlineLearningPlatform.Models.Course", b =>

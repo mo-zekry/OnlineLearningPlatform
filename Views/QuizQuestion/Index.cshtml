@@ -3,8 +3,8 @@
 @{
     var answers = ViewBag.Answers as IEnumerable<QuizAnswer> ?? Enumerable.Empty<QuizAnswer>();
     var hasQuestions = Model.Any();
-    int targetQuestionId = 0;
-    int targetAnswerId = 0;
+    var targetQuestionId = 0;
+    var targetAnswerId = 0;
 }
 
 <div class="container my-5">
@@ -14,17 +14,14 @@
             class="btn btn-primary"
             asp-action="Create"
             asp-controller="QuizQuestion"
-            asp-route-quizId="@ViewBag.QuizId"
-        >
+            asp-route-quizId="@ViewBag.QuizId">
             <i class="fas fa-plus-circle"></i> Create New
         </a>
     </div>
 
-    @if (hasQuestions)
-    {
+    @if (hasQuestions) {
         <div class="row">
-            @foreach (var item in Model)
-            {
+            @foreach (var item in Model) {
                 // get the target question
                 targetQuestionId = item.Id;
 
@@ -34,20 +31,15 @@
                             <h5 class="card-title mb-0">@item.QuestionTitle</h5>
                         </div>
                         <div class="card-body">
-                            @if (answers.Any(a => a.QuestionId == item.Id))
-                            {
+                            @if (answers.Any(a => a.QuestionId == item.Id)) {
                                 <ul class="list-group">
-                                    @foreach (var answer in answers.Where(a => a.QuestionId == item.Id))
-                                    {
+                                    @foreach (var answer in answers.Where(a => a.QuestionId == item.Id)) {
                                         // get the target answer
                                         targetAnswerId = answer.Id;
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            @if (answer.IsCorrect)
-                                            {
+                                            @if (answer.IsCorrect) {
                                                 <span class="badge bg-success">@answer.AnswerText</span>
-                                            }
-                                            else
-                                            {
+                                            } else {
                                                 @answer.AnswerText
                                             }
                                             <div class="dropdown">
@@ -56,21 +48,18 @@
                                                     type="button"
                                                     id="dropdownMenuButton_@answer.Id"
                                                     data-bs-toggle="dropdown"
-                                                    aria-expanded="false"
-                                                >
+                                                    aria-expanded="false">
                                                     Actions
                                                 </button>
                                                 <ul
                                                     class="dropdown-menu"
-                                                    aria-labelledby="dropdownMenuButton_@answer.Id"
-                                                >
+                                                    aria-labelledby="dropdownMenuButton_@answer.Id">
                                                     <li>
                                                         <a
                                                             class="dropdown-item"
                                                             asp-action="Edit"
                                                             asp-route-id="@answer.Id"
-                                                            asp-controller="QuizAnswer"
-                                                        >
+                                                            asp-controller="QuizAnswer">
                                                             <i class="fas fa-edit"></i> Edit
                                                         </a>
                                                     </li>
@@ -81,8 +70,7 @@
                                                             asp-route-id="@targetAnswerId"
                                                             asp-controller="QuizAnswer"
                                                             data-bs-toggle="modal"
-                                                            data-bs-target="#deleteAnswerModal"
-                                                        >
+                                                            data-bs-target="#deleteAnswerModal">
                                                             <i class="fas fa-trash-alt"></i> Delete
                                                         </a>
                                                     </li>
@@ -91,9 +79,7 @@
                                         </li>
                                     }
                                 </ul>
-                            }
-                            else
-                            {
+                            } else {
                                 <p class="text-muted">No answers available</p>
                             }
                         </div>
@@ -102,20 +88,17 @@
                                 <div
                                     class="btn-group"
                                     role="group"
-                                    aria-label="Basic example"
-                                >
+                                    aria-label="Basic example">
                                     <a
                                         class="btn btn-outline-primary"
                                         asp-action="Edit"
-                                        asp-route-id="@item.Id"
-                                    >
+                                        asp-route-id="@item.Id">
                                         <i class="fas fa-edit"></i> Edit Question
                                     </a>
                                     <a
                                         class="btn btn-outline-secondary"
                                         asp-action="Details"
-                                        asp-route-id="@item.Id"
-                                    >
+                                        asp-route-id="@item.Id">
                                         <i class="fas fa-info-circle"></i> Details
                                     </a>
                                     <a
@@ -123,16 +106,14 @@
                                         asp-route-id="@targetQuestionId"
                                         class="btn btn-outline-danger"
                                         data-bs-toggle="modal"
-                                        data-bs-target="#deleteQuestionModal"
-                                    >
+                                        data-bs-target="#deleteQuestionModal">
                                         <i class="fas fa-trash-alt"></i> Delete
                                     </a>
                                     <a
                                         class="btn btn-outline-info"
                                         asp-action="Create"
                                         asp-controller="QuizAnswer"
-                                        asp-route-questionId="@item.Id"
-                                    >
+                                        asp-route-questionId="@item.Id">
                                         <i class="fas fa-plus-circle"></i> Add Answers
                                     </a>
                                 </div>
@@ -142,13 +123,10 @@
                 </div>
             }
         </div>
-    }
-    else
-    {
+    } else {
         <div
             class="alert alert-warning"
-            role="alert"
-        >
+            role="alert">
             <strong>No questions available.</strong> You can start by creating a new question.
         </div>
     }
@@ -160,8 +138,7 @@
     id="deleteQuestionModal"
     tabindex="-1"
     aria-labelledby="deleteQuestionModalLabel"
-    aria-hidden="true"
->
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
@@ -169,19 +146,21 @@
             </div>
             <div class="modal-footer">
                 <form
+                    method="post"
                     asp-action="DeleteQuestion"
                     asp-controller="QuizQuestion"
-                    asp-route-id="@targetQuestionId"
-                >
+                    asp-route-id="@targetQuestionId">
                     <button
                         type="button"
                         class="btn btn-secondary"
-                        data-bs-dismiss="modal"
-                    >Close</button>
+                        data-bs-dismiss="modal">
+                        Close
+                    </button>
                     <button
                         type="submit"
-                        class="btn btn-danger"
-                    >Confirm Delete</button>
+                        class="btn btn-danger">
+                        Confirm Delete
+                    </button>
                 </form>
             </div>
         </div>
@@ -194,8 +173,7 @@
     id="deleteAnswerModal"
     tabindex="-1"
     aria-labelledby="deleteAnswerModalLabel"
-    aria-hidden="true"
->
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
@@ -203,19 +181,21 @@
             </div>
             <div class="modal-footer">
                 <form
+                    method="post"
                     asp-action="DeleteAnswer"
                     asp-controller="QuizAnswer"
-                    asp-route-id="@targetAnswerId"
-                >
+                    asp-route-id="@targetAnswerId">
                     <button
                         type="button"
                         class="btn btn-secondary"
-                        data-bs-dismiss="modal"
-                    >Close</button>
+                        data-bs-dismiss="modal">
+                        Close
+                    </button>
                     <button
                         type="Submit"
-                        class="btn btn-primary"
-                    >Confirm</button>
+                        class="btn btn-primary">
+                        Confirm
+                    </button>
                 </form>
             </div>
         </div>

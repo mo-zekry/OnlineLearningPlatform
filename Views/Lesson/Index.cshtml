@@ -15,16 +15,21 @@
     </div>
 
     <div class="row">
-        @foreach (var lesson in Model)
-        {
+        @foreach (var lesson in Model) {
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card shadow-lg h-100 border-0">
                     <div class="card-body bg-light rounded-top">
                         <h5 class="card-title text-dark font-weight-bold">@lesson.Name</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Number: <span class="text-dark">@lesson.Number</span></h6>
-                        <p class="card-text"><strong>Video URL:</strong> <a href="@lesson.VideoUrl" target="_blank">@lesson.VideoUrl</a></p>
-                        <p class="card-text"><strong>Details:</strong> @lesson.LessonDetails</p>
-                        <p class="card-text"><strong>Order:</strong> @lesson.CourseOrder</p>
+                        <p class="card-text">
+                            <strong>Video URL:</strong> <a href="@lesson.VideoUrl" target="_blank">@lesson.VideoUrl</a>
+                        </p>
+                        <p class="card-text">
+                            <strong>Details:</strong> @lesson.LessonDetails
+                        </p>
+                        <p class="card-text">
+                            <strong>Order:</strong> @lesson.CourseOrder
+                        </p>
                         <div class="mt-4">
                             <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editModal-@lesson.Id">
                                 <i class="fas fa-edit"></i> Edit
@@ -49,18 +54,18 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form asp-action="Edit" asp-route-id="@lesson.Id">
+                            <form asp-action="Edit" method="post" asp-route-id="@lesson.Id">
                                 <div class="mb-3">
                                     <label asp-for="@lesson.Name" class="form-label">Name</label>
-                                    <input asp-for="@lesson.Name" class="form-control" value="@lesson.Name" />
+                                    <input asp-for="@lesson.Name" class="form-control" value="@lesson.Name"/>
                                 </div>
                                 <div class="mb-3">
                                     <label asp-for="@lesson.Number" class="form-label">Number</label>
-                                    <input asp-for="@lesson.Number" class="form-control" value="@lesson.Number" />
+                                    <input asp-for="@lesson.Number" class="form-control" value="@lesson.Number"/>
                                 </div>
                                 <div class="mb-3">
                                     <label asp-for="@lesson.VideoUrl" class="form-label">Video URL</label>
-                                    <input asp-for="@lesson.VideoUrl" class="form-control" value="@lesson.VideoUrl" />
+                                    <input asp-for="@lesson.VideoUrl" class="form-control" value="@lesson.VideoUrl"/>
                                 </div>
                                 <div class="mb-3">
                                     <label asp-for="@lesson.LessonDetails" class="form-label">Lesson Details</label>
@@ -68,7 +73,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label asp-for="@lesson.CourseOrder" class="form-label">Course Order</label>
-                                    <input asp-for="@lesson.CourseOrder" class="form-control" value="@lesson.CourseOrder" />
+                                    <input asp-for="@lesson.CourseOrder" class="form-control" value="@lesson.CourseOrder"/>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Save changes</button>
                             </form>
@@ -88,9 +93,15 @@
                         <div class="modal-body">
                             <h6>Name: <span class="text-dark">@lesson.Name</span></h6>
                             <h6>Number: <span class="text-dark">@lesson.Number</span></h6>
-                            <p><strong>Video URL:</strong> <a href="@lesson.VideoUrl" target="_blank">@lesson.VideoUrl</a></p>
-                            <p><strong>Lesson Details:</strong> @lesson.LessonDetails</p>
-                            <p><strong>Course Order:</strong> @lesson.CourseOrder</p>
+                            <p>
+                                <strong>Video URL:</strong> <a href="@lesson.VideoUrl" target="_blank">@lesson.VideoUrl</a>
+                            </p>
+                            <p>
+                                <strong>Lesson Details:</strong> @lesson.LessonDetails
+                            </p>
+                            <p>
+                                <strong>Course Order:</strong> @lesson.CourseOrder
+                            </p>
                         </div>
                     </div>
                 </div>

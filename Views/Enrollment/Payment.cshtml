@@ -1,24 +1,30 @@
-@model OnlineLearningPlatform.ViewModels.PaymentViewModel
+@model PaymentViewModel
 
 @{
     ViewData["Title"] = "Payment";
 }
 
-<h2>Payment</h2>
+<div class="container mt-5 vh-100">
+    <h2 class="mb-4">Payment</h2>
 
-<p>Please review the course details and proceed to payment.</p>
+    <p class="lead mb-4">Please review the course details and proceed to payment.</p>
 
-<div class="card mb-4">
-    <div class="card-body">
-        <h4 class="card-title">@Model.CourseName</h4>
-        <p class="card-text">Amount: $@Model.Amount</p>
+    <!-- Course Details Card -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h4 class="card-title">@Model.CourseName</h4>
+            <p class="card-text">Amount: <span class="h4 text-success">$@Model.Amount</span></p>
+        </div>
     </div>
+
+    <!-- Payment Form -->
+    <form asp-action="ProcessPayment" method="post" class="bg-light p-4 rounded border">
+        <input type="hidden" asp-for="CourseId"/>
+        <input type="hidden" asp-for="Amount"/>
+        <input type="hidden" asp-for="CourseName"/>
+
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary btn-lg">Proceed to Payment</button>
+        </div>
+    </form>
 </div>
-
-<form asp-action="ProcessPayment" method="post">
-    <input type="hidden" asp-for="CourseId"/>
-    <input type="hidden" asp-for="Amount"/>
-    <input type="hidden" asp-for="CourseName"/>
-
-    <button type="submit" class="btn btn-primary">Proceed to Payment</button>
-</form>

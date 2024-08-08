@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using OnlineLearningPlatform.Context;
 using OnlineLearningPlatform.Models;
 using OnlineLearningPlatform.Repositories.Interface;

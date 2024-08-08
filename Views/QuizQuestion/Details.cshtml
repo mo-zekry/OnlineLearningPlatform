@@ -27,23 +27,18 @@
 
             <div class="mb-4">
                 <h5 class="card-title">Answers</h5>
-                @if (answers != null && answers.Any())
-                {
+                @if (answers != null && answers.Any()) {
                     <ul class="list-unstyled">
-                        @foreach (var answer in answers)
-                        {
+                        @foreach (var answer in answers) {
                             <li class="d-flex align-items-center mb-3">
                                 <p class="mb-0 me-2">@answer.AnswerText</p>
-                                @if (answer.IsCorrect)
-                                {
+                                @if (answer.IsCorrect) {
                                     <span class="badge bg-success">Correct</span>
                                 }
                             </li>
                         }
                     </ul>
-                }
-                else
-                {
+                } else {
                     <p class="text-muted">No answers available.</p>
                 }
             </div>
@@ -53,13 +48,15 @@
                 <a
                     class="btn btn-primary me-2"
                     asp-action="Edit"
-                    asp-route-id="@Model?.Id"
-                >Edit</a>
+                    asp-route-id="@Model?.Id">
+                    Edit
+                </a>
                 <a
                     class="btn btn-secondary"
                     asp-action="Index"
-                    asp-route-quizId="@Model?.QuizId"
-                >Back to List</a>
+                    asp-route-quizId="@Model?.QuizId">
+                    Back to List
+                </a>
             </div>
         </div>
     </div>

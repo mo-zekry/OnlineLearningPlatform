@@ -4,12 +4,9 @@ using OnlineLearningPlatform.Models;
 
 namespace OnlineLearningPlatform.ModelsConfiguration;
 
-public class StudentQuizAttemptConfiguration : IEntityTypeConfiguration<StudentQuizAttempt>
-{
-    public void Configure(EntityTypeBuilder<StudentQuizAttempt> builder)
-    {
-        builder.HasKey(e => new
-        {
+public class StudentQuizAttemptConfiguration : IEntityTypeConfiguration<StudentQuizAttempt> {
+    public void Configure(EntityTypeBuilder<StudentQuizAttempt> builder) {
+        builder.HasKey(e => new {
             e.StudentId,
             e.QuizId,
             e.AttemptDatetime

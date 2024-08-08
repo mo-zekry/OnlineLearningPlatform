@@ -9,79 +9,73 @@
 <div class="container mt-5 vh-100">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <form asp-action="Login" method="post" id="loginForm" novalidate>
+            <form asp-action="Login" method="post" id="loginForm">
+                <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="mb-3">
                     <label asp-for="Email" class="form-label"></label>
                     <input asp-for="Email" class="form-control" placeholder="Enter your email" aria-describedby="emailHelp" required/>
-                    <div class="invalid-feedback" id="emailError">Please enter a valid email address.</div>
+
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
                 <div class="mb-3">
                     <label asp-for="Password" class="form-label"></label>
                     <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" required minlength="6"/>
-                    <div class="invalid-feedback" id="passwordError">Password must be at least 6 characters long.</div>
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
-                <div class="form-check mb-3">
-                    <input asp-for="RememberMe" class="form-check-input" type="checkbox" id="rememberMeCheck"/>
-                    <label asp-for="RememberMe" class="form-check-label" for="rememberMeCheck"></label>
-                </div>
                 <div class="d-grid">
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="button" class="btn btn-primary" onclick="validateAndSubmit()">Login</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial"/>
-    <script>
-        // Real-time validation script
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.getElementById('loginForm');
+<!-- Bootstrap Modal for Email Not Found -->
+<div class="modal fade" id="emailNotFoundModal" tabindex="-1" aria-labelledby="emailNotFoundModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="emailNotFoundModalLabel">Email Not Found</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                The email address you entered is not registered. Please check and try again.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a asp-action="Register" asp-controller="Account" class="btn btn-primary">
+                    Register
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 
-            form.addEventListener('input', function (event) {
-                const emailInput = form.querySelector('input[name="Email"]');
-                const passwordInput = form.querySelector('input[name="Password"]');
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    // Function to validate email existence and submit form
+    function validateAndSubmit() {
+        var email = $('#Email').val();
+        var form = $('#loginForm');
 
-                if (emailInput) {
-                    const emailValue = emailInput.value;
-                    const emailError = document.getElementById('emailError');
-                    if (emailValue && /^[^\s\@@]+@@[^\s\@@]+\.[^\s@@]+$/.test(emailValue)) {
-                        emailInput.classList.remove('is-invalid');
-                        emailInput.classList.add('is-valid');
-                        emailError.style.display = 'none';
-                    } else {
-                        emailInput.classList.remove('is-valid');
-                        emailInput.classList.add('is-invalid');
-                        emailError.style.display = 'block';
-                    }
+        $.ajax({
+            url: '@Url.Action("Login", "Account")',
+            type: 'POST',
+            data: form.serialize(),
+            success: function (response) {
+                if (response.emailExists === false) {
+                    // Show modal if email does not exist
+                    var modal = new bootstrap.Modal(document.getElementById('emailNotFoundModal'));
+                    modal.show();
+                } else {
+                    // Submit the form if the email exists
+                    form.off('submit').submit();
                 }
-
-                if (passwordInput) {
-                    const passwordValue = passwordInput.value;
-                    const passwordError = document.getElementById('passwordError');
-                    if (passwordValue.length >= 6) {
-                        passwordInput.classList.remove('is-invalid');
-                        passwordInput.classList.add('is-valid');
-                        passwordError.style.display = 'none';
-                    } else {
-                        passwordInput.classList.remove('is-valid');
-                        passwordInput.classList.add('is-invalid');
-                        passwordError.style.display = 'block';
-                    }
-                }
-            });
-
-            form.addEventListener('submit', function (event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-
-                form.classList.add('was-validated');
-            }, false);
+            },
+            error: function () {
+                console.log("Error validating email");
+            }
         });
-    </script>
-}
+    }
+</script>

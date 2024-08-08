@@ -1,24 +1,30 @@
-@model OnlineLearningPlatform.Models.StudentQuizAttempt
+@model StudentQuizAttempt
 
 @{
     ViewData["Title"] = "Passed";
 }
 
-<div class="container mt-5">
-    <div
-        class="alert alert-success"
-        role="alert"
-    >
-        <h4 class="alert-heading">Congratulations!</h4>
-        <p>You have successfully passed the quiz.</p>
-        <hr>
-        <p class="mb-0">Your score: <strong>@Model.ScoreAchieved</strong></p>
-        <p>Quiz ID: <strong>@Model.QuizId</strong></p>
-        <p>Date and Time: <strong>@Model.AttemptDatetime</strong></p>
+<div class="container my-5 vh-100">
+    <div class="row justify-content-center ">
+        <div class="col-lg-8">
+            <div class="card bg-success-subtle">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Congratulations!</h4>
+                    <p class="card-text mb-4">You have successfully passed the quiz.</p>
+                    <hr class="my-4">
+                    <div class="mb-3">
+                        <p class="fw-bold mb-2">Your score: <strong>@Model.ScoreAchieved</strong></p>
+                        <p class="mb-2">Quiz ID: <strong>@Model.QuizId</strong></p>
+                        <p class="mb-0">Date and Time: <strong>@Model.AttemptDatetime</strong></p>
+                    </div>
+                    <a
+                        asp-action="Index"
+                        asp-controller="Home"
+                        class="btn btn-primary mt-3">
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-    <a
-        href="@Url.Action("Index", "Home")"
-        class="btn btn-primary"
-    >Back to Home</a>
 </div>
-

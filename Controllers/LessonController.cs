@@ -9,8 +9,7 @@ using OnlineLearningPlatform.ViewModels;
 namespace OnlineLearningPlatform.Controllers;
 
 // [Authorize(Roles = "Admin")]
-public class LessonController : BaseController
-{
+public class LessonController : BaseController {
     private readonly IUnitOfWork _db;
     private readonly IMapper _mapper;
 
@@ -19,16 +18,14 @@ public class LessonController : BaseController
         IMapper mapper,
         UserManager<ApplicationUser> userManager
     )
-        : base(userManager)
-    {
+        : base(userManager) {
         _db = unitOfWork;
         _mapper = mapper;
     }
 
     // GET: Lesson
-    public IActionResult Index(int moduleId)
-    {
-        var lessons = _db.Lessons.Get(filter: l => l.ModuleId == moduleId);
+    public IActionResult Index(int moduleId) {
+        var lessons = _db.Lessons.Get(l => l.ModuleId == moduleId);
 
         var lessonViewModels = _mapper.Map<IEnumerable<LessonViewModel>>(lessons);
 
@@ -42,8 +39,7 @@ public class LessonController : BaseController
     }
 
     // GET: Lesson/Details/5
-    public IActionResult Details(int? id)
-    {
+    public IActionResult Details(int? id) {
         if (id == null)
             return NotFound();
 
@@ -54,8 +50,7 @@ public class LessonController : BaseController
     }
 
     // GET: Lesson/Create
-    public IActionResult Create(int moduleId)
-    {
+    public IActionResult Create(int moduleId) {
         ViewBag.ModuleId = moduleId;
 
         return View(new LessonViewModel());
@@ -64,8 +59,7 @@ public class LessonController : BaseController
     // POST: Lesson/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(LessonViewModel lessonViewModel)
-    {
+    public IActionResult Create(LessonViewModel lessonViewModel) {
         if (!ModelState.IsValid)
             return View(lessonViewModel);
         var lesson = _mapper.Map<Lesson>(lessonViewModel);
@@ -75,8 +69,7 @@ public class LessonController : BaseController
     }
 
     // GET: Lesson/Edit/5
-    public IActionResult Edit(int? id)
-    {
+    public IActionResult Edit(int? id) {
         if (id == null)
             return NotFound();
 
@@ -89,8 +82,7 @@ public class LessonController : BaseController
     // POST: Lesson/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(int id, LessonViewModel lessonViewModel)
-    {
+    public IActionResult Edit(int id, LessonViewModel lessonViewModel) {
         if (id != lessonViewModel.Id)
             return NotFound();
 
@@ -103,8 +95,7 @@ public class LessonController : BaseController
     }
 
     // GET: Lesson/Delete/5
-    public IActionResult Delete(int? id)
-    {
+    public IActionResult Delete(int? id) {
         if (id == null)
             return NotFound();
 
@@ -117,8 +108,7 @@ public class LessonController : BaseController
     [HttpPost]
     [ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public IActionResult DeleteConfirmed(int id)
-    {
+    public IActionResult DeleteConfirmed(int id) {
         var lesson = _db.Lessons.GetByID(id);
         _db.Lessons.Delete(lesson);
         _db.SaveChanges();

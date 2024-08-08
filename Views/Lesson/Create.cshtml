@@ -10,26 +10,26 @@
             <h4 class="mb-0">Create Lesson</h4>
         </div>
         <div class="card-body">
-            <form asp-action="Create">
+            <form asp-action="Create" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                <input type="hidden" asp-for="ModuleId" />
+                <input type="hidden" asp-for="ModuleId"/>
 
                 <div class="mb-3">
                     <label asp-for="Name" class="form-label"></label>
-                    <input asp-for="Name" class="form-control" />
+                    <input asp-for="Name" class="form-control"/>
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="Number" class="form-label"></label>
-                    <input asp-for="Number" class="form-control" />
+                    <input asp-for="Number" class="form-control"/>
                     <span asp-validation-for="Number" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="VideoUrl" class="form-label"></label>
-                    <input asp-for="VideoUrl" class="form-control" />
+                    <input asp-for="VideoUrl" class="form-control"/>
                     <span asp-validation-for="VideoUrl" class="text-danger"></span>
                 </div>
 
@@ -41,7 +41,7 @@
 
                 <div class="mb-3">
                     <label asp-for="CourseOrder" class="form-label"></label>
-                    <input asp-for="CourseOrder" class="form-control" />
+                    <input asp-for="CourseOrder" class="form-control"/>
                     <span asp-validation-for="CourseOrder" class="text-danger"></span>
                 </div>
 

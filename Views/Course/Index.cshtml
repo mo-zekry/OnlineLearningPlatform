@@ -3,7 +3,7 @@
 @{
     var categories = ViewData["Categories"] as List<CategoryViewModel>;
     var userRole = User.IsInRole("Admin") ? "Admin" : User.IsInRole("Student") ? "Student" : "Guest";
-    int targetElementId = 0;
+    var targetElementId = 0;
 }
 
 <div class="container mt-5">
@@ -14,9 +14,24 @@
         }
     </div>
 
+    @* search *@
+    <div class="input-group mb-3">
+        <input
+            type="text"
+            class="form-control"
+            placeholder="Search Course"
+            aria-label="Search Course"
+            aria-describedby="button-addon2">
+        <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="button-addon2">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+
     <div class="row">
         @foreach (var item in Model) {
-
             targetElementId = item.Id;
 
             <div class="col-md-4 mb-4">
@@ -29,7 +44,7 @@
                             <strong>Price:</strong> <span class="text-success">@item.Price.ToString("C")</span>
                         </p>
                         <p class="card-text">
-                            <strong>Progress Limited:</strong> <span class="text-info">@((item.IsProgressLimited ? "Yes" : "No"))</span>
+                            <strong>Progress Limited:</strong> <span class="text-info">@(item.IsProgressLimited ? "Yes" : "No")</span>
                         </p>
                         <p class="card-text">
                             <strong>Category:</strong>
@@ -45,9 +60,7 @@
                                 <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</a>
                                 <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Details</a>
                             </div>
-
                         }
-
 
 
                         <!-- Other Users (Student/Guest) Actions -->
@@ -63,25 +76,25 @@
                 </div>
             </div>
         }
-                        <!-- Delete Modal -->
-                        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5 fw-bold text-danger" id="deleteModalLabel">Are you sure you want to delete this course?</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form asp-action="Delete" method="post" asp-route-id="@targetElementId">
-         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-         <button type="submit" class="btn btn-primary">Delete</button>
-        </form>
-      </div>
-      <div class="modal-footer">
-      </div>
-    </div>
-  </div>
-</div>
+        <!-- Delete Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5 fw-bold text-danger" id="deleteModalLabel">Are you sure you want to delete this course?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form asp-action="Delete" method="post" asp-route-id="@targetElementId">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Delete</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

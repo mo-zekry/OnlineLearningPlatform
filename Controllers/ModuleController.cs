@@ -10,8 +10,7 @@ using OnlineLearningPlatform.ViewModels;
 namespace OnlineLearningPlatform.Controllers;
 
 [Authorize(Roles = "Admin")]
-public class ModuleController : BaseController
-{
+public class ModuleController : BaseController {
     private readonly IUnitOfWork _db;
     private readonly IMapper _mapper;
 
@@ -20,15 +19,13 @@ public class ModuleController : BaseController
         IMapper mapper,
         UserManager<ApplicationUser> userManager
     )
-        : base(userManager)
-    {
+        : base(userManager) {
         _db = unitOfWork;
         _mapper = mapper;
     }
 
     // GET: Module
-    public IActionResult Index()
-    {
+    public IActionResult Index() {
         var modules = _db.Modules.Get();
         var moduleViewModels = _mapper.Map<IEnumerable<ModuleViewModel>>(modules);
 
@@ -40,8 +37,7 @@ public class ModuleController : BaseController
     }
 
     // GET: Module/Create
-    public IActionResult Create(int courseId)
-    {
+    public IActionResult Create(int courseId) {
         ViewBag.CourseId = courseId;
         // get the list of courses
         var listOfCourses = _db.Courses.Get();
@@ -53,10 +49,8 @@ public class ModuleController : BaseController
     // POST: Module/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(ModuleViewModel moduleViewModel)
-    {
-        if (ModelState.IsValid)
-        {
+    public IActionResult Create(ModuleViewModel moduleViewModel) {
+        if (ModelState.IsValid) {
             var module = _mapper.Map<Module>(moduleViewModel);
             _db.Modules.Insert(module);
             _db.SaveChanges();
@@ -69,13 +63,11 @@ public class ModuleController : BaseController
     // POST: Module/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(int id, ModuleViewModel moduleViewModel)
-    {
+    public IActionResult Edit(int id, ModuleViewModel moduleViewModel) {
         if (id != moduleViewModel.Id)
             return NotFound();
 
-        if (ModelState.IsValid)
-        {
+        if (ModelState.IsValid) {
             var module = _mapper.Map<Module>(moduleViewModel);
             _db.Modules.Update(module);
             _db.SaveChanges();
@@ -89,17 +81,13 @@ public class ModuleController : BaseController
     [HttpPost]
     [ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public IActionResult DeleteConfirmed(int id)
-    {
+    public IActionResult DeleteConfirmed(int id) {
         var module = _db.Modules.GetByID(id);
         _db.Modules.Delete(module);
         _db.SaveChanges();
 
         // get related lessons
-        foreach (var lesson in _db.Lessons.Get(l => l.ModuleId == id))
-        {
-            _db.Lessons.Delete(lesson);
-        }
+        foreach (var lesson in _db.Lessons.Get(l => l.ModuleId == id)) _db.Lessons.Delete(lesson);
         _db.SaveChanges();
 
         return RedirectToAction(nameof(Index), new { courseId = module.CourseId });

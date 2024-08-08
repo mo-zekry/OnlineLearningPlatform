@@ -10,8 +10,7 @@ using OnlineLearningPlatform.ViewModels;
 namespace OnlineLearningPlatform.Controllers;
 
 [Authorize(Roles = "Student")]
-public class StudentQuizAttemptController : BaseController
-{
+public class StudentQuizAttemptController : BaseController {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<ApplicationUser> _userManager;
@@ -21,16 +20,14 @@ public class StudentQuizAttemptController : BaseController
         IMapper mapper,
         UserManager<ApplicationUser> userManager
     )
-        : base(userManager)
-    {
+        : base(userManager) {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _userManager = userManager;
     }
 
     // GET: StudentQuizAttempt
-    public IActionResult Index()
-    {
+    public IActionResult Index() {
         var userId = _userManager.GetUserId(User);
         var attempts = _unitOfWork.StudentQuizAttempts.Get(sqa => sqa.StudentId == userId);
         var attemptViewModels = _mapper.Map<IEnumerable<StudentQuizAttemptViewModel>>(attempts);
@@ -38,8 +35,7 @@ public class StudentQuizAttemptController : BaseController
     }
 
     // GET: StudentQuizAttempt/Details/5
-    public IActionResult Details(int? quizId)
-    {
+    public IActionResult Details(int? quizId) {
         if (quizId == null)
             return NotFound();
 
@@ -58,14 +54,11 @@ public class StudentQuizAttemptController : BaseController
     // POST: StudentQuizAttempt/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(StudentQuizAttemptViewModel attemptViewModel)
-    {
-        if (ModelState.IsValid)
-        {
+    public IActionResult Create(StudentQuizAttemptViewModel attemptViewModel) {
+        if (ModelState.IsValid) {
             var attempt = _mapper.Map<StudentQuizAttempt>(attemptViewModel);
             var userId = _userManager.GetUserId(User);
-            if (userId != null)
-            {
+            if (userId != null) {
                 attempt.StudentId = userId;
                 _unitOfWork.StudentQuizAttempts.Insert(attempt);
                 _unitOfWork.SaveChanges();
@@ -79,8 +72,7 @@ public class StudentQuizAttemptController : BaseController
     // POST: StudentQuizAttempt/Complete/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Complete(int quizId)
-    {
+    public IActionResult Complete(int quizId) {
         var userId = _userManager.GetUserId(User);
         var attempt = _unitOfWork
             .StudentQuizAttempts.Get(sqa => sqa.QuizId == quizId && sqa.StudentId == userId)

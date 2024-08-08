@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using OnlineLearningPlatform.Context.Identity;
 using OnlineLearningPlatform.Models;
 using OnlineLearningPlatform.ModelsConfiguration;
-using OnlineLearningPlatform.ViewModels;
 
 namespace OnlineLearningPlatform.Context;
 
@@ -14,6 +13,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser> {
     public ApplicationDbContext() { }
 
     public DbSet<Course> Courses { get; set; }
+    public DbSet<Category> Categories  { get; set; }
     public DbSet<Module> Modules { get; set; }
     public DbSet<Lesson> Lessons { get; set; }
     public DbSet<Quiz> Quizzes { get; set; }

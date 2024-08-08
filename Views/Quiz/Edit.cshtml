@@ -1,4 +1,4 @@
-@model OnlineLearningPlatform.ViewModels.QuizViewModel
+@model QuizViewModel
 
 @{
     ViewData["Title"] = "Edit Quiz";
@@ -14,34 +14,34 @@
             <form asp-action="Edit">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="Id"/>
 
                 <div class="mb-3">
                     <label asp-for="Name" class="form-label"></label>
-                    <input asp-for="Name" class="form-control" />
+                    <input asp-for="Name" class="form-control"/>
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="Number" class="form-label"></label>
-                    <input asp-for="Number" class="form-control" />
+                    <input asp-for="Number" class="form-control"/>
                     <span asp-validation-for="Number" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="CourseOrder" class="form-label"></label>
-                    <input asp-for="CourseOrder" class="form-control" />
+                    <input asp-for="CourseOrder" class="form-control"/>
                     <span asp-validation-for="CourseOrder" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="MinPassScore" class="form-label"></label>
-                    <input asp-for="MinPassScore" class="form-control" />
+                    <input asp-for="MinPassScore" class="form-control"/>
                     <span asp-validation-for="MinPassScore" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3 form-check">
-                    <input asp-for="IsPassRequired" class="form-check-input" type="checkbox" id="isPassRequired" />
+                    <input asp-for="IsPassRequired" class="form-check-input" type="checkbox" id="isPassRequired"/>
                     <label class="form-check-label" for="isPassRequired">
                         @Html.DisplayNameFor(model => model.IsPassRequired)
                     </label>

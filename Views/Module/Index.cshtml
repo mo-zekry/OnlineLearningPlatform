@@ -10,28 +10,30 @@
         <h2 class="text-primary">Modules Management</h2>
         <a
             asp-action="Create"
-            class="btn btn-primary btn-lg"
-        >
+            class="btn btn-primary btn-lg">
             <i class="fas fa-plus-circle"></i> Create New
         </a>
     </div>
 
     <div class="row">
-        @foreach (var item in Model)
-        {
+        @foreach (var item in Model) {
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card shadow-lg h-100 border-0">
                     <div class="card-body bg-light rounded-top">
                         <h5 class="card-title text-dark font-weight-bold">@item.Name</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Number: <span class="text-dark">@item.Number</span></h6>
-                        <p class="card-text"><strong>Course:</strong> <span class="text-primary">@courses?.FirstOrDefault(c
-                            => c.Id == item.CourseId)?.Name</span></p>
+                        <p class="card-text">
+                            <strong>Course:</strong>
+                            <span class="text-primary">
+                                @courses?.FirstOrDefault(c
+                                    => c.Id == item.CourseId)?.Name
+                            </span>
+                        </p>
                         <div class="mt-4">
                             <button
                                 class="btn btn-outline-primary"
                                 data-bs-toggle="modal"
-                                data-bs-target="#editModal-@item.Id"
-                            >
+                                data-bs-target="#editModal-@item.Id">
                                 <i class="fas fa-edit"></i> Edit
                             </button>
                             <a
@@ -39,16 +41,14 @@
                                 asp-route-id="@item.Id"
                                 class="btn btn-outline-danger"
                                 data-bs-toggle="modal"
-                                data-bs-target="#deleteModal-@item.Id"
-                            >
+                                data-bs-target="#deleteModal-@item.Id">
                                 <i class="fas fa-trash"></i> Delete
                             </a>
                             <a
                                 class="btn btn-outline-success"
                                 asp-action="Index"
                                 asp-controller="Lesson"
-                                asp-route-moduleId="@item.Id"
-                            >
+                                asp-route-moduleId="@item.Id">
                                 <i class="fas fa-book"></i> Lessons
                             </a>
                         </div>
@@ -62,73 +62,66 @@
                 id="editModal-@item.Id"
                 tabindex="-1"
                 aria-labelledby="editModalLabel-@item.Id"
-                aria-hidden="true"
-            >
+                aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5
                                 class="modal-title"
-                                id="editModalLabel-@item.Id"
-                            >Edit Module - @item.Name</h5>
+                                id="editModalLabel-@item.Id">
+                                Edit Module - @item.Name
+                            </h5>
                             <button
                                 type="button"
                                 class="btn-close"
                                 data-bs-dismiss="modal"
-                                aria-label="Close"
-                            ></button>
+                                aria-label="Close">
+                            </button>
                         </div>
                         <div class="modal-body">
-                            <form asp-action="Edit">
+                            <form method="post" asp-action="Edit">
                                 <div
                                     asp-validation-summary="ModelOnly"
-                                    class="text-danger"
-                                ></div>
+                                    class="text-danger">
+                                </div>
                                 <input
                                     type="hidden"
-                                    asp-for="@Model.Last().Id"
-                                />
+                                    asp-for="@Model.Last().Id"/>
                                 <div class="form-group">
                                     <label
                                         asp-for="@Model.Last().Name"
-                                        class="control-label"
-                                    ></label>
+                                        class="control-label">
+                                    </label>
                                     <input
                                         asp-for="@Model.Last().Name"
-                                        class="form-control"
-                                    />
+                                        class="form-control"/>
                                     <span
                                         asp-validation-for="@Model.Last().Name"
-                                        class="text-danger"
-                                    ></span>
+                                        class="text-danger">
+                                    </span>
                                 </div>
                                 <div class="form-group">
                                     <label
                                         asp-for="@Model.Last().Number"
-                                        class="control-label"
-                                    ></label>
+                                        class="control-label">
+                                    </label>
                                     <input
                                         asp-for="@Model.Last().Number"
-                                        class="form-control"
-                                    />
+                                        class="form-control"/>
                                     <span
                                         asp-validation-for="@Model.Last().Number"
-                                        class="text-danger"
-                                    ></span>
+                                        class="text-danger">
+                                    </span>
                                 </div>
                                 <div class="form-group">
                                     <select
                                         asp-for="@Model.Last().CourseId"
-                                        class="form-select"
-                                    >
-                                        @if (courses != null)
-                                        {
-                                            @foreach (var course in courses)
-                                            {
+                                        class="form-select">
+                                        @if (courses != null) {
+                                            @foreach (var course in courses) {
                                                 <option
                                                     value="@course.Id"
-                                                    selected="@((course.Id == item.CourseId) ? "selected" : "")"
-                                                >
+                                                    selected="@(course.Id == item.CourseId ? "selected" : "")">
                                                     @course.Name
                                                 </option>
                                             }
@@ -139,8 +132,7 @@
                                     <input
                                         type="submit"
                                         value="Save"
-                                        class="btn btn-primary"
-                                    />
+                                        class="btn btn-primary"/>
                                 </div>
                             </form>
                         </div>
@@ -154,38 +146,40 @@
                 id="deleteModal-@item.Id"
                 tabindex="-1"
                 aria-labelledby="deleteModalLabel-@item.Id"
-                aria-hidden="true"
-            >
+                aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5
                                 class="modal-title text-danger"
-                                id="deleteModalLabel-@item.Id"
-                            >Delete Module - @item.Name</h5>
+                                id="deleteModalLabel-@item.Id">
+                                Delete Module - @item.Name
+                            </h5>
                             <button
                                 type="button"
                                 class="btn-close"
                                 data-bs-dismiss="modal"
-                                aria-label="Close"
-                            ></button>
+                                aria-label="Close">
+                            </button>
                         </div>
                         <div class="modal-body">
                             <p>Are you sure you want to delete the module <strong>@item.Name</strong>?</p>
                         </div>
                         <div class="modal-footer">
-                            <form asp-action="Delete">
+                            <form method="post" asp-action="Delete">
                                 <button
                                     type="button"
                                     class="btn btn-secondary"
-                                    data-bs-dismiss="modal"
-                                >Cancel</button>
+                                    data-bs-dismiss="modal">
+                                    Cancel
+                                </button>
                                 <button
                                     type="submit"
                                     asp-action="Delete"
                                     asp-route-id="@item.Id"
-                                    class="btn btn-danger"
-                                >Delete</button>
+                                    class="btn btn-danger">
+                                    Delete
+                                </button>
                             </form>
                         </div>
                     </div>

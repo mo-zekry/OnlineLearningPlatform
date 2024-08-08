@@ -31,8 +31,7 @@ public class HomeController : BaseController {
         var courseViewModels = _mapper.Map<IEnumerable<CourseViewModel>>(courses);
 
         var categories = _db.Categories.Get();
-        var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
-        ViewData["Categories"] = categoryViewModels;
+        ViewData["Categories"] = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
 
         return View(courseViewModels);
     }
@@ -48,7 +47,7 @@ public class HomeController : BaseController {
             var smtpClient = new SmtpClient("smtp.office365.com") {
                 Port = 587,
                 Credentials = new NetworkCredential("mozekry.68@outlook.sa", ""),
-                EnableSsl = true,
+                EnableSsl = true
             };
 
             var mailMessage = new MailMessage {
@@ -59,7 +58,7 @@ public class HomeController : BaseController {
                     + $"<p>Email: {email}</p>"
                     + $"<p>Phone: {phone}</p>"
                     + $"<p>Message: {message}</p>",
-                IsBodyHtml = true,
+                IsBodyHtml = true
             };
 
             mailMessage.To.Add("mozekry.68@outlook.sa");
@@ -82,8 +81,7 @@ public class HomeController : BaseController {
         var courseViewModels = _mapper.Map<IEnumerable<CourseViewModel>>(results);
 
         var categories = _db.Categories.Get();
-        var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
-        ViewData["Categories"] = categoryViewModels;
+        ViewData["Categories"] = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
 
         return PartialView("_CourseListPartial", courseViewModels);
     }
@@ -95,8 +93,7 @@ public class HomeController : BaseController {
         var courseViewModels = _mapper.Map<IEnumerable<CourseViewModel>>(results);
 
         var categories = _db.Categories.Get();
-        var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
-        ViewData["Categories"] = categoryViewModels;
+        ViewData["Categories"] = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
 
         return PartialView("_CourseListPartial", courseViewModels);
     }
@@ -108,8 +105,7 @@ public class HomeController : BaseController {
         var courseViewModels = _mapper.Map<IEnumerable<CourseViewModel>>(results);
 
         var categories = _db.Categories.Get();
-        var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
-        ViewData["Categories"] = categoryViewModels;
+        ViewData["Categories"] = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
 
         return PartialView("_CourseListPartial", courseViewModels);
     }

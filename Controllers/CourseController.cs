@@ -12,9 +12,9 @@ namespace OnlineLearningPlatform.Controllers;
 [Authorize(Roles = "Admin,Student")]
 public class CourseController : BaseController
 {
+    private readonly IAuthorizationService _authorizationService;
     private readonly IUnitOfWork _db;
     private readonly IMapper _mapper;
-    private readonly IAuthorizationService _authorizationService;
 
     public CourseController(
         IUnitOfWork unitOfWork,
@@ -44,7 +44,7 @@ public class CourseController : BaseController
 
     // GET: Course
     [AllowAnonymous]
-    public async Task<IActionResult> DetailsAsync(int? id)
+    public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
             return NotFound();
@@ -60,9 +60,7 @@ public class CourseController : BaseController
             "EnrolledInCourse"
         );
         if (!authorizationResult.Succeeded && !User.IsInRole("Admin"))
-        {
             return RedirectToAction("Create", "Enrollment", new { courseId = id });
-        }
 
         var modules = _db.Modules.Get(m => m.CourseId == id);
         ViewData["Modules"] = modules;
@@ -170,6 +168,7 @@ public class CourseController : BaseController
                 ModelState.AddModelError("CategoryId", "Invalid Category.");
                 return View(courseViewModel);
             }
+
             course.Category = category;
 
             _db.Courses.Update(course);
@@ -207,44 +206,56 @@ public class CourseController : BaseController
 
         // get related modules
         foreach (var module in _db.Modules.Get(m => m.CourseId == id))
-        {
             _db.Modules.Delete(module);
-        }
 
         _db.SaveChanges();
 
         // get related lessons
         foreach (var lesson in _db.Lessons.Get(l => l.ModuleId == id))
-        {
             _db.Lessons.Delete(lesson);
-        }
 
         _db.SaveChanges();
 
         // get related quizzes
         foreach (var quiz in _db.Quizzes.Get(q => q.CourseId == id))
-        {
             _db.Quizzes.Delete(quiz);
-        }
 
         _db.SaveChanges();
 
         // get related questions
         foreach (var question in _db.QuizQuestions.Get(q => q.QuizId == id))
-        {
             _db.QuizQuestions.Delete(question);
-        }
 
         _db.SaveChanges();
 
         // get related answers
         foreach (var answer in _db.QuizAnswers.Get(a => a.QuestionId == id))
-        {
             _db.QuizAnswers.Delete(answer);
-        }
 
         _db.SaveChanges();
 
         return RedirectToAction(nameof(Index));
     }
+
+    [HttpGet]
+    public IActionResult SearchCourses(string query)
+    {
+        var categories = _db.Categories.Get();
+        var courses = _db.Courses.Get()
+            .Where(c => c.Name.Contains(query) || c.Description.Contains(query))
+            .Select(c => new CourseViewModel
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+                Price = c.Price,
+                IsProgressLimited = c.IsProgressLimited,
+                CategoryId = c.CategoryId,
+                ImageUrl = c.ImageUrl
+            })
+            .ToList();
+
+        return PartialView("_CourseListPartial", courses);
+    }
+
 }

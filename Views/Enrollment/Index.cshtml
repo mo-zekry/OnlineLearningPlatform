@@ -1,36 +1,56 @@
-@model IEnumerable<OnlineLearningPlatform.ViewModels.EnrollmentViewModel>
+@model IEnumerable<Enrollment>
 
 @{
     ViewData["Title"] = "My Enrollments";
 }
 
-<h2>My Enrollments</h2>
+<div class="container vh-100">
 
-@if (TempData["Message"] != null) {
-    <div class="alert alert-success">@TempData["Message"]</div>
-}
+    <h2 class="mt-5 mb-5 text-center">My Enrollments</h2>
 
-@if (!Model.Any()) {
-    <p>You are not enrolled in any courses yet.</p>
-} else {
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th>Course Name</th>
-            <th>Enrollment Date</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var enrollment in Model) {
-            <tr>
-                <td>@enrollment.CourseName</td>
-                <td>@enrollment.EnrolmentDateTime.ToString("dd MMM yyyy")</td>
-                <td>
-                    <a asp-action="Delete" asp-route-courseId="@enrollment.CourseId" class="btn btn-danger btn-sm">Unenroll</a>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success">@TempData["Message"]</div>
+    }
+
+    @if (!Model.Any())
+    {
+        <p>You are not enrolled in any courses yet.</p>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var enrollment in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card border-secondary">
+                        <div class="card-body">
+                            <h5 class="card-title">@enrollment.Course.Name</h5>
+                            <p class="card-text">
+                                <strong>Enrollment Date:</strong> @enrollment.EnrollmentDatetime.ToString("MMM dd, yyyy")<br>
+                                <strong>Student:</strong> @(enrollment.Student.FirstName + " " + @enrollment.Student.LastName)
+                            </p>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a
+                                    asp-action="Delete"
+                                    asp-route-courseId="@enrollment.CourseId"
+                                    class="btn btn-danger btn-sm"
+                                >Unenroll</a>
+                            }
+
+                            <a
+                                asp-action="Details"
+                                asp-controller="Course"
+                                asp-route-id="@enrollment.CourseId"
+                                class="btn btn-primary btn-sm"
+                            >Continue Learning</a>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+</div>

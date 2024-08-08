@@ -1,18 +1,27 @@
-@model OnlineLearningPlatform.ViewModels.EnrollmentViewModel
+@model EnrollmentViewModel
 
 @{
     ViewData["Title"] = "Unenroll from Course";
 }
 
-<h2>Unenroll from Course</h2>
-
-<div class="alert alert-warning" role="alert">
-    <h4 class="alert-heading">Warning!</h4>
-    <p>Are you sure you want to unenroll from the course <strong>@Model.CourseName</strong>?</p>
-    <hr>
-    <form asp-action="DeleteConfirmed" method="post">
-        <input type="hidden" asp-for="CourseId"/>
-        <button type="submit" class="btn btn-danger">Unenroll</button>
-        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-    </form>
+<div class="container my-5 vh-100">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="p-4 border rounded">
+                <h2 class="text-center mb-4">Unenroll from Course</h2>
+                <div class="alert alert-warning" role="alert">
+                    <h4 class="alert-heading">Warning!</h4>
+                    <p>Are you sure you want to unenroll from the course <strong>@Model.CourseName</strong>?</p>
+                    <hr>
+                    <form asp-action="DeleteConfirmed" method="post">
+                        <input type="hidden" asp-for="CourseId"/>
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-danger">Unenroll</button>
+                            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

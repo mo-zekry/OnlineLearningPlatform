@@ -1,4 +1,3 @@
-using OnlineLearningPlatform.Repositories.Class;
 using OnlineLearningPlatform.Repositories.Interface;
 
 namespace OnlineLearningPlatform.Repositories;

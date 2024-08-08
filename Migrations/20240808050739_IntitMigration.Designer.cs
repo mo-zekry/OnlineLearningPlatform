@@ -12,8 +12,8 @@ using OnlineLearningPlatform.Context;
 namespace OnlineLearningPlatform.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240801234504_AddPayment")]
-    partial class AddPayment
+    [Migration("20240808050739_IntitMigration")]
+    partial class IntitMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -248,7 +248,7 @@ namespace OnlineLearningPlatform.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("OnlineLearningPlatform.Models.Course", b =>
@@ -727,13 +727,13 @@ namespace OnlineLearningPlatform.Migrations
                     b.HasOne("OnlineLearningPlatform.Models.Quiz", "Quiz")
                         .WithMany("StudentQuizAttempts")
                         .HasForeignKey("QuizId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("OnlineLearningPlatform.Context.Identity.ApplicationUser", "Student")
                         .WithMany("StudentQuizAttempts")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Quiz");

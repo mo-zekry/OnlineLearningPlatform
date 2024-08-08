@@ -4,88 +4,126 @@
     ViewData["Title"] = "Profile";
 }
 
-<div class="container">
-    <h1 class="mt-5">Profile</h1>
-    <hr/>
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
-            <div class="text-center mb-4">
-                @if (!string.IsNullOrEmpty(Model.ProfilePictureBase64)) {
-                    <img src="data:image/jpeg;base64,@Model.ProfilePictureBase64" class="rounded-circle img-thumbnail mb-3" alt="Profile Picture" style="width: 120px; height: 120px;" id="profilePic"/>
-                } else {
-                    <img src="https://via.placeholder.com/120" class="rounded-circle img-thumbnail mb-3" alt="Default Profile Picture" id="profilePic"/>
-                }
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="display-4 mb-4">Profile</h1>
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <img
+                            src="data:image/jpeg;base64,@ViewData["ProfilePictureUrl"]"
+                            class="rounded-circle img-thumbnail mb-3 shadow"
+                            alt="New Profile Picture"
+                            style="width: 120px; height: 120px;"
+                            id="newProfilePic"
+                            onload="updateCurrentProfilePicSrc(this.src)"
+                        />
+                    </div>
+                    <form
+                        asp-action="Profile"
+                        method="post"
+                        enctype="multipart/form-data"
+                        class="row g-3"
+                    >
+                        <div class="col-12">
+                            <label
+                                asp-for="Email"
+                                class="form-label"
+                            >Email address</label>
+                            <input
+                                asp-for="Email"
+                                class="form-control"
+                                readonly
+                            />
+                            <span
+                                asp-validation-for="Email"
+                                class="text-danger"
+                            ></span>
+                        </div>
+                        <div class="col-6">
+                            <label
+                                asp-for="FirstName"
+                                class="form-label"
+                            >First name</label>
+                            <input
+                                asp-for="FirstName"
+                                class="form-control"
+                            />
+                            <span
+                                asp-validation-for="FirstName"
+                                class="text-danger"
+                            ></span>
+                        </div>
+                        <div class="col-6">
+                            <label
+                                asp-for="LastName"
+                                class="form-label"
+                            >Last name</label>
+                            <input
+                                asp-for="LastName"
+                                class="form-control"
+                            />
+                            <span
+                                asp-validation-for="LastName"
+                                class="text-danger"
+                            ></span>
+                        </div>
+                        <div class="col-12">
+                            <label
+                                asp-for="ProfilePictureUrl"
+                                class="form-label"
+                            >Profile picture</label>
+                            <input
+                                asp-for="ProfilePictureUrl"
+                                class="form-control"
+                                type="file"
+                                accept="image/*"
+                                id="ProfilePictureInput"
+                            />
+                            <span
+                                asp-validation-for="ProfilePictureUrl"
+                                class="text-danger"
+                            ></span>
+                        </div>
+                        <div class="col-12">
+                            <button
+                                type="submit"
+                                class="btn btn-primary w-100"
+                            >Save</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <form
-                asp-action="Profile"
-                method="post"
-                enctype="multipart/form-data">
-                <div class="form-group">
-                    <label
-                        asp-for="Email"
-                        class="control-label">
-                    </label>
-                    <input
-                        asp-for="Email"
-                        class="form-control"
-                        readonly/>
-                    <span
-                        asp-validation-for="Email"
-                        class="text-danger">
-                    </span>
-                </div>
-                <div class="form-group">
-                    <label
-                        asp-for="FirstName"
-                        class="control-label">
-                    </label>
-                    <input
-                        asp-for="FirstName"
-                        class="form-control"/>
-                    <span
-                        asp-validation-for="FirstName"
-                        class="text-danger">
-                    </span>
-                </div>
-                <div class="form-group">
-                    <label
-                        asp-for="LastName"
-                        class="control-label">
-                    </label>
-                    <input
-                        asp-for="LastName"
-                        class="form-control"/>
-                    <span
-                        asp-validation-for="LastName"
-                        class="text-danger">
-                    </span>
-                </div>
-                <div class="form-group">
-                    <label
-                        asp-for="ProfilePictureUrl"
-                        class="control-label">
-                    </label>
-                    <input
-                        asp-for="ProfilePictureUrl"
-                        class="form-control-file"
-                        type="file"/>
-                    <span
-                        asp-validation-for="ProfilePictureUrl"
-                        class="text-danger">
-                    </span>
-                </div>
-                <div class="form-group mt-3">
-                    <button
-                        type="submit"
-                        class="btn btn-primary">
-                        Save
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial"/>
+    <script>
+        var currentProfilePicSrc;
+        function updateCurrentProfilePicSrc(src)
+        {
+            currentProfilePicSrc = src;
+        }
+
+        $(document).ready(function ()
+        {
+            $('#ProfilePictureInput').on('change', function (e)
+            {
+                var file = e.target.files[0];
+                var reader = new FileReader();
+                reader.onload = function (f)
+                {
+                    $('#newProfilePic').attr('src', f.target.result);
+                    $('#newProfilePic').show();
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+    </script>
+    <partial name="_ValidationScriptsPartial" />
 }
+
+

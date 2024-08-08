@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OnlineLearningPlatform.Context;
@@ -8,6 +7,7 @@ using OnlineLearningPlatform.Handlers;
 using OnlineLearningPlatform.Mapping;
 using OnlineLearningPlatform.Repositories;
 using OnlineLearningPlatform.Requirements;
+using Stripe;
 
 namespace OnlineLearningPlatform;
 
@@ -46,7 +46,7 @@ public static class Program {
         builder.Services.AddAutoMapper(typeof(MappingProfile));
 
         // stripe payment configurations
-        Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+        StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
         // Configure Authorization
         builder.Services.AddAuthorization(options => {

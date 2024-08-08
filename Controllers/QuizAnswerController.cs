@@ -10,8 +10,7 @@ using OnlineLearningPlatform.ViewModels;
 namespace OnlineLearningPlatform.Controllers;
 
 [Authorize(Roles = "Admin")]
-public class QuizAnswerController : BaseController
-{
+public class QuizAnswerController : BaseController {
     private readonly IUnitOfWork _db;
     private readonly IMapper _mapper;
 
@@ -20,23 +19,20 @@ public class QuizAnswerController : BaseController
         IMapper mapper,
         UserManager<ApplicationUser> userManager
     )
-        : base(userManager)
-    {
+        : base(userManager) {
         _db = unitOfWork;
         _mapper = mapper;
     }
 
     // GET: QuizAnswer
-    public IActionResult Index(int questionId)
-    {
+    public IActionResult Index(int questionId) {
         var answers = _db.QuizAnswers.Get();
         var answerViewModels = _mapper.Map<IEnumerable<QuizAnswerViewModel>>(answers);
         return View(answerViewModels);
     }
 
     // GET: QuizAnswer/Details/5
-    public IActionResult Details(int? id)
-    {
+    public IActionResult Details(int? id) {
         if (id == null)
             return NotFound();
 
@@ -47,8 +43,7 @@ public class QuizAnswerController : BaseController
     }
 
     // GET: QuizAnswer/Create
-    public IActionResult Create(int questionId)
-    {
+    public IActionResult Create(int questionId) {
         ViewBag.QuestionId = questionId;
 
         // get the quiz id for redirect
@@ -60,8 +55,7 @@ public class QuizAnswerController : BaseController
     // POST: QuizAnswer/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(QuizAnswerViewModel answerViewModel)
-    {
+    public IActionResult Create(QuizAnswerViewModel answerViewModel) {
         if (!ModelState.IsValid)
             return View(answerViewModel);
         var answer = _mapper.Map<QuizAnswer>(answerViewModel);
@@ -73,8 +67,7 @@ public class QuizAnswerController : BaseController
     }
 
     // GET: QuizAnswer/Edit/5
-    public IActionResult Edit(int? id)
-    {
+    public IActionResult Edit(int? id) {
         if (id == null)
             return NotFound();
 
@@ -90,8 +83,7 @@ public class QuizAnswerController : BaseController
     // POST: QuizAnswer/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(int id, QuizAnswerViewModel answerViewModel)
-    {
+    public IActionResult Edit(int id, QuizAnswerViewModel answerViewModel) {
         if (id != answerViewModel.Id)
             return NotFound();
 
@@ -108,8 +100,7 @@ public class QuizAnswerController : BaseController
     [HttpPost]
     [ValidateAntiForgeryToken]
     [ActionName("DeleteAnswer")]
-    public IActionResult Delete(int id)
-    {
+    public IActionResult Delete(int id) {
         var answer = _db.QuizAnswers.GetByID(id);
         _db.QuizAnswers.Delete(answer);
         _db.SaveChanges();
