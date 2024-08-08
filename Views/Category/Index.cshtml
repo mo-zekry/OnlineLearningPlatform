@@ -33,25 +33,24 @@
                 {
                     <div class="col">
                         <div class="card shadow-sm">
-                    <!--Categories Admin actions-->
-                    @if (userRole == "Admin")
-                    {
-                        <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
-                            <a
-                                asp-action="Edit"
-                                asp-route-id="@category.Id"
-                                class="btn btn-warning btn-sm"
-                            >Edit</a>
-                            <a
-                                asp-action="Delete"
-                                asp-route-id="@category.Id"
-                                class="btn btn-danger btn-sm"
-                                data-bs-toggle="modal"
-                                data-bs-target="#deleteModal"
-                                data-bs-category-id="@category.Id"
-                            >Delete</a>
-                        </div>
-                    }
+                            <!--Categories Admin actions-->
+                            @if (userRole == "Admin")
+                            {
+                                <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                                    <a
+                                        asp-action="Edit"
+                                        asp-controller="Category"
+                                        asp-route-id="@category.Id"
+                                        class="btn btn-warning btn-sm"
+                                    >Edit</a>
+                                    <a
+                                        asp-action="Delete"
+                                        asp-controller="Category"
+                                        asp-route-id="@category.Id"
+                                        class="btn btn-danger btn-sm"
+                                    >Delete</a>
+                                </div>
+                            }
                             <div class="card-body">
                                 <h4 class="card-title">@category.Name</h4>
                                 <div class="row bg-light p-3">
@@ -183,5 +182,4 @@
             </div>
         </div>
     </div>
-</div>
 </div>

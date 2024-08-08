@@ -10,19 +10,26 @@ using OnlineLearningPlatform.ViewModels;
 namespace OnlineLearningPlatform.Controllers;
 
 [Authorize(Roles = "Admin")]
-public class CategoryController : BaseController {
+public class CategoryController : BaseController
+{
     private readonly IUnitOfWork _db;
     private readonly IMapper _mapper;
 
-    public CategoryController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager) :
-        base(userManager) {
+    public CategoryController(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        UserManager<ApplicationUser> userManager
+    )
+        : base(userManager)
+    {
         _db = unitOfWork;
         _mapper = mapper;
     }
 
     // GET: Category
     [AllowAnonymous]
-    public IActionResult Index() {
+    public IActionResult Index()
+    {
         var categories = _db.Categories.Get();
         var categoryViewModels = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
 
@@ -34,26 +41,32 @@ public class CategoryController : BaseController {
     }
 
     // GET: Category/Details/5
-    public IActionResult Details(int? id) {
-        if (id == null) return NotFound();
+    public IActionResult Details(int? id)
+    {
+        if (id == null)
+            return NotFound();
 
         var category = _db.Categories.GetByID(id);
-        if (category == null) return NotFound();
+        if (category == null)
+            return NotFound();
 
         var categoryViewModel = _mapper.Map<CategoryViewModel>(category);
         return View(categoryViewModel);
     }
 
     // GET: Category/Create
-    public IActionResult Create() {
+    public IActionResult Create()
+    {
         return View();
     }
 
     // POST: Category/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(CategoryViewModel categoryViewModel) {
-        if (ModelState.IsValid) {
+    public IActionResult Create(CategoryViewModel categoryViewModel)
+    {
+        if (ModelState.IsValid)
+        {
             var category = _mapper.Map<Category>(categoryViewModel);
             _db.Categories.Insert(category);
             _db.SaveChanges();
@@ -64,11 +77,14 @@ public class CategoryController : BaseController {
     }
 
     // GET: Category/Edit/5
-    public IActionResult Edit(int? id) {
-        if (id == null) return NotFound();
+    public IActionResult Edit(int? id)
+    {
+        if (id == null)
+            return NotFound();
 
         var category = _db.Categories.GetByID(id);
-        if (category == null) return NotFound();
+        if (category == null)
+            return NotFound();
 
         var categoryViewModel = _mapper.Map<CategoryViewModel>(category);
         return View(categoryViewModel);
@@ -77,10 +93,13 @@ public class CategoryController : BaseController {
     // POST: Category/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(int id, CategoryViewModel categoryViewModel) {
-        if (id != categoryViewModel.Id) return NotFound();
+    public IActionResult Edit(int id, CategoryViewModel categoryViewModel)
+    {
+        if (id != categoryViewModel.Id)
+            return NotFound();
 
-        if (ModelState.IsValid) {
+        if (ModelState.IsValid)
+        {
             var category = _mapper.Map<Category>(categoryViewModel);
             _db.Categories.Update(category);
             _db.SaveChanges();
@@ -91,11 +110,14 @@ public class CategoryController : BaseController {
     }
 
     // GET: Category/Delete/5
-    public IActionResult Delete(int? id) {
-        if (id == null) return NotFound();
+    public IActionResult Delete(int? id)
+    {
+        if (id == null)
+            return NotFound();
 
         var category = _db.Categories.GetByID(id);
-        if (category == null) return NotFound();
+        if (category == null)
+            return NotFound();
 
         var categoryViewModel = _mapper.Map<CategoryViewModel>(category);
         return View(categoryViewModel);
@@ -105,7 +127,8 @@ public class CategoryController : BaseController {
     [HttpPost]
     [ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public IActionResult DeleteConfirmed(int id) {
+    public IActionResult DeleteConfirmed(int id)
+    {
         var category = _db.Categories.GetByID(id);
         _db.Categories.Delete(category);
         _db.SaveChanges();
