@@ -10,7 +10,7 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <form asp-action="Register" method="post" id="registerForm" novalidate>
-                <div asp-validation-summary="All" class="text-danger"></div>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="mb-3">
                     <label asp-for="FirstName" class="form-label"></label>
                     <input asp-for="FirstName" class="form-control" placeholder="Enter your first name" required/>

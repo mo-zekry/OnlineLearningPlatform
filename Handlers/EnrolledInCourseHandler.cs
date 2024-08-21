@@ -7,11 +7,11 @@ using OnlineLearningPlatform.Requirements;
 namespace OnlineLearningPlatform.Handlers;
 
 public class EnrolledInCourseHandler : AuthorizationHandler<EnrolledInCourseRequirement, int> {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUnitOfWork _db;
     private readonly UserManager<ApplicationUser> _userManager;
 
     public EnrolledInCourseHandler(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager) {
-        _unitOfWork = unitOfWork;
+        _db = unitOfWork;
         _userManager = userManager;
     }
 
@@ -24,7 +24,7 @@ public class EnrolledInCourseHandler : AuthorizationHandler<EnrolledInCourseRequ
         if (userId == null) return Task.CompletedTask;
 
         // Check if the user is enrolled in the specified course
-        var isEnrolled = _unitOfWork.Enrollments
+        var isEnrolled = _db.Enrollments
             .Get(e => e.StudentId == userId && e.CourseId == courseId)
             .Any();
 

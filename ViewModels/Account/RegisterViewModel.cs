@@ -4,7 +4,7 @@ namespace OnlineLearningPlatform.ViewModels.Account;
 
 public class RegisterViewModel {
     [Required]
-    [EmailAddress]
+        [DataType(DataType.EmailAddress)]
     [Display(Name = "Email")]
     public string Email { get; set; } = "";
 

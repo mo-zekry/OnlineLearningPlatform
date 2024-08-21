@@ -17,5 +17,9 @@ public interface IGenericRepository<TEntity>
 
     public void Delete(TEntity entityToDelete);
 
+    public void DeleteRange(IEnumerable<TEntity> entities);
+
+
+
     public void Update(TEntity entityToUpdate);
 }

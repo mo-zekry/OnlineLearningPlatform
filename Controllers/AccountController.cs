@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using OnlineLearningPlatform.Context.Identity;
 using OnlineLearningPlatform.ViewModels.Account;
 
@@ -80,14 +81,13 @@ public class AccountController : BaseController
 
     // GET: /Account/Login
     [AllowAnonymous]
-    public IActionResult Login(string? returnUrl = null)
+    public IActionResult Login()
     {
         // Check if the user is already logged in
         if (User.Identity?.IsAuthenticated == true)
         {
             return RedirectToAction("Index", "Home");
         }
-        ViewData["ReturnUrl"] = returnUrl;
         return View();
     }
 
@@ -95,14 +95,11 @@ public class AccountController : BaseController
     [HttpPost]
     [AllowAnonymous]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
+    public async Task<IActionResult> Login(LoginViewModel model)
     {
-        ViewData["ReturnUrl"] = returnUrl;
-
         if (!EmailExists(model.Email))
         {
-            // Return a JSON response indicating that the email does not exist
-            return Json(new { emailExists = false });
+            ModelState.AddModelError("Email", "Email Address Not Exist.");
         }
 
         if (ModelState.IsValid)
@@ -116,15 +113,16 @@ public class AccountController : BaseController
 
             if (result.Succeeded)
             {
-                return RedirectToLocal(returnUrl ?? "/");
+                return RedirectToAction("Index", "Home");
             }
 
             if (result.IsLockedOut)
             {
                 return View("Lockout");
             }
+            // ModelState.AddModelError("", "");
+            // ModelState.AddModelError("Password", "InCorrect Password.");
 
-            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             return View(model);
         }
 
