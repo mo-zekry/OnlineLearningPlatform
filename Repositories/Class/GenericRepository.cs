@@ -95,4 +95,9 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
         _dbSet.Attach(entityToUpdate);
         _context.Entry(entityToUpdate).State = EntityState.Modified;
     }
+
+    public void DeleteRange(IEnumerable<TEntity> entities)
+    {
+        _dbSet.RemoveRange(entities);
+    }
 }

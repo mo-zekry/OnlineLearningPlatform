@@ -4,8 +4,8 @@ namespace OnlineLearningPlatform.ViewModels.Account;
 
 public class LoginViewModel {
     [Required]
-    [EmailAddress]
     [Display(Name = "Email")]
+    [DataType(DataType.EmailAddress)]
     public string Email { get; set; } = "";
 
     [Required]

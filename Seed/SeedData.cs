@@ -21,7 +21,8 @@ public static class SeedData
         foreach (var roleName in roleNames)
         {
             var roleExists = await roleManager.RoleExistsAsync(roleName);
-            if (!roleExists) await roleManager.CreateAsync(new IdentityRole(roleName));
+            if (!roleExists)
+                await roleManager.CreateAsync(new IdentityRole(roleName));
         }
 
         // Add Admin user
@@ -39,7 +40,8 @@ public static class SeedData
         if (admin == null)
         {
             var createAdminUser = await userManager.CreateAsync(adminUser, adminPassword);
-            if (createAdminUser.Succeeded) await userManager.AddToRoleAsync(adminUser, "Admin");
+            if (createAdminUser.Succeeded)
+                await userManager.AddToRoleAsync(adminUser, "Admin");
         }
 
         // Check if data has already been seeded
@@ -48,43 +50,46 @@ public static class SeedData
             return; // Data already seeded, exit the method
         }
 
-        // Seed Categories
-        var categories = new List<Category>
-        {
-            new() { Name = "Web Development" },
-            new() { Name = "Data Science" },
-            new() { Name = "Programming Languages" }
-        };
+        // Seed Categories and retrieve their IDs
+        var webDevCategory = new Category { Name = "Web Development" };
+        var dataScienceCategory = new Category { Name = "Data Science" };
+        var progLangsCategory = new Category { Name = "Programming Languages" };
 
-        await context.Categories.AddRangeAsync(categories);
+        context.Categories.AddRange(webDevCategory, dataScienceCategory, progLangsCategory);
         await context.SaveChangesAsync();
 
         // Seed Courses
         var courses = new List<Course>
         {
-            new() {
+            new()
+            {
                 Name = "Introduction to Web Development",
-                Description = "Learn the basics of web development using HTML, CSS, and JavaScript.",
+                Description =
+                    "Learn the basics of web development using HTML, CSS, and JavaScript.",
                 Price = 100,
-                ImageUrl= "https://images.pexels.com/photos/39284/macbook-apple-imac-computer-39284.jpeg",
+                ImageUrl =
+                    "https://images.pexels.com/photos/39284/macbook-apple-imac-computer-39284.jpeg",
                 IsProgressLimited = true,
-                CategoryId = categories.First(c => c.Name == "Web Development").Id
+                CategoryId = webDevCategory.Id
             },
-            new() {
+            new()
+            {
                 Name = "Advanced Data Analysis",
                 Description = "Master data analysis techniques using Python and R.",
                 Price = 200,
-                ImageUrl= "https://images.pexels.com/photos/669619/pexels-photo-669619.jpeg",
+                ImageUrl = "https://images.pexels.com/photos/669619/pexels-photo-669619.jpeg",
                 IsProgressLimited = true,
-                CategoryId = categories.First(c => c.Name == "Data Science").Id
+                CategoryId = dataScienceCategory.Id
             },
-            new() {
+            new()
+            {
                 Name = "Modern JavaScript",
                 Description = "Learn modern JavaScript features and frameworks.",
                 Price = 150,
-                ImageUrl = "https://cdn.pixabay.com/photo/2015/04/23/17/41/javascript-736400_960_720.png",
+                ImageUrl =
+                    "https://cdn.pixabay.com/photo/2015/04/23/17/41/javascript-736400_960_720.png",
                 IsProgressLimited = false,
-                CategoryId = categories.First(c => c.Name == "Programming Languages").Id
+                CategoryId = progLangsCategory.Id
             }
         };
 
@@ -94,134 +99,166 @@ public static class SeedData
         // Seed Modules and Lessons for each Course
         var modules = new List<Module>
         {
-            new() {
+            new()
+            {
                 CourseId = courses.First(c => c.Name == "Introduction to Web Development").Id,
                 Name = "HTML Basics",
                 Number = 1,
                 Lessons = new List<Lesson>
                 {
-                    new() {
+                    new()
+                    {
                         Name = "Introduction to HTML",
                         Number = 1,
-                        VideoUrl = "https://videos.pexels.com/video-files/1321208/1321208-uhd_2560_1440_30fps.mp4",
+                        VideoUrl =
+                            "https://videos.pexels.com/video-files/1321208/1321208-uhd_2560_1440_30fps.mp4",
                         LessonDetails = "Learn the basics of HTML structure and syntax.",
                         CourseOrder = 1
                     },
-                    new() {
+                    new()
+                    {
                         Name = "HTML Elements",
                         Number = 2,
-                        VideoUrl = "https://videos.pexels.com/video-files/1093662/1093662-hd_1920_1080_30fps.mp4",
+                        VideoUrl =
+                            "https://videos.pexels.com/video-files/1093662/1093662-hd_1920_1080_30fps.mp4",
                         LessonDetails = "Explore various HTML elements and their uses.",
                         CourseOrder = 2
                     }
                 }
             },
-            new() {
+            new()
+            {
                 CourseId = courses.First(c => c.Name == "Introduction to Web Development").Id,
                 Name = "CSS Fundamentals",
                 Number = 2,
                 Lessons = new List<Lesson>
                 {
-                    new() {
+                    new()
+                    {
                         Name = "CSS Basics",
                         Number = 1,
-                        VideoUrl = "https://videos.pexels.com/video-files/1536322/1536322-hd_1920_1080_30fps.mp4",
+                        VideoUrl =
+                            "https://videos.pexels.com/video-files/1536322/1536322-hd_1920_1080_30fps.mp4",
                         LessonDetails = "Learn the basics of CSS styling and selectors.",
                         CourseOrder = 3
                     },
-                    new() {
+                    new()
+                    {
                         Name = "CSS Layouts",
                         Number = 2,
-                        VideoUrl = "https://videos.pexels.com/video-files/1536315/1536315-hd_1920_1080_30fps.mp4",
-                        LessonDetails = "Understand the different ways to layout web pages using CSS.",
+                        VideoUrl =
+                            "https://videos.pexels.com/video-files/1536315/1536315-hd_1920_1080_30fps.mp4",
+                        LessonDetails =
+                            "Understand the different ways to layout web pages using CSS.",
                         CourseOrder = 4
                     }
                 }
             },
-            new() {
+            new()
+            {
                 CourseId = courses.First(c => c.Name == "Advanced Data Analysis").Id,
                 Name = "Python for Data Analysis",
                 Number = 1,
                 Lessons = new List<Lesson>
                 {
-                    new() {
+                    new()
+                    {
                         Name = "Introduction to Pandas",
                         Number = 1,
-                        VideoUrl = "https://videos.pexels.com/video-files/2239241/2239241-hd_1920_1080_24fps.mp4",
+                        VideoUrl =
+                            "https://videos.pexels.com/video-files/2239241/2239241-hd_1920_1080_24fps.mp4",
                         LessonDetails = "Learn how to use Pandas for data manipulation.",
                         CourseOrder = 1
                     },
-                    new() {
+                    new()
+                    {
                         Name = "Data Visualization with Matplotlib",
                         Number = 2,
-                        VideoUrl = "https://videos.pexels.com/video-files/2895788/2895788-uhd_2560_1440_24fps.mp4",
+                        VideoUrl =
+                            "https://videos.pexels.com/video-files/2895788/2895788-uhd_2560_1440_24fps.mp4",
                         LessonDetails = "Explore data visualization techniques with Matplotlib.",
                         CourseOrder = 2
                     }
                 }
             },
-            new() {
+            new()
+            {
                 CourseId = courses.First(c => c.Name == "Advanced Data Analysis").Id,
                 Name = "R for Data Analysis",
                 Number = 2,
                 Lessons = new List<Lesson>
                 {
-                    new() {
+                    new()
+                    {
                         Name = "Introduction to R",
                         Number = 1,
-                        VideoUrl = "https://videos.pexels.com/video-files/3126661/3126661-uhd_2560_1440_24fps.mp4",
+                        VideoUrl =
+                            "https://videos.pexels.com/video-files/3126661/3126661-uhd_2560_1440_24fps.mp4",
                         LessonDetails = "Learn the basics of R programming for data analysis.",
                         CourseOrder = 3
                     },
-                    new() {
+                    new()
+                    {
                         Name = "Data Manipulation with dplyr",
                         Number = 2,
-                        VideoUrl = "https://videos.pexels.com/video-files/979689/979689-hd_1920_1080_30fps.mp4",
+                        VideoUrl =
+                            "https://videos.pexels.com/video-files/979689/979689-hd_1920_1080_30fps.mp4",
                         LessonDetails = "Understand how to manipulate data using dplyr.",
                         CourseOrder = 4
                     }
                 }
             },
-            new() {
+            new()
+            {
                 CourseId = courses.First(c => c.Name == "Modern JavaScript").Id,
                 Name = "ES6 Features",
                 Number = 1,
                 Lessons = new List<Lesson>
                 {
-                    new() {
+                    new()
+                    {
                         Name = "Introduction to ES6",
                         Number = 1,
-                        VideoUrl = "https://videos.pexels.com/video-files/3048183/3048183-uhd_2560_1440_24fps.mp4",
+                        VideoUrl =
+                            "https://videos.pexels.com/video-files/3048183/3048183-uhd_2560_1440_24fps.mp4",
                         LessonDetails = "Explore the new features introduced in ES6.",
                         CourseOrder = 1
                     },
-                    new() {
+                    new()
+                    {
                         Name = "Arrow Functions",
                         Number = 2,
-                        VideoUrl = "https://videos.pexels.com/video-files/2890236/2890236-hd_1920_1080_30fps.mp4",
+                        VideoUrl =
+                            "https://videos.pexels.com/video-files/2890236/2890236-hd_1920_1080_30fps.mp4",
                         LessonDetails = "Learn about arrow functions and their syntax.",
                         CourseOrder = 2
                     }
                 }
             },
-            new() {
+            new()
+            {
                 CourseId = courses.First(c => c.Name == "Modern JavaScript").Id,
                 Name = "JavaScript Frameworks",
                 Number = 2,
                 Lessons = new List<Lesson>
                 {
-                    new() {
+                    new()
+                    {
                         Name = "Introduction to React",
                         Number = 1,
-                        VideoUrl = "https://videos.pexels.com/video-files/4199353/4199353-uhd_2560_1440_25fps.mp4",
+                        VideoUrl =
+                            "https://videos.pexels.com/video-files/4199353/4199353-uhd_2560_1440_25fps.mp4",
                         LessonDetails = "Learn the basics of building web applications with React.",
                         CourseOrder = 3
                     },
-                    new() {
+                    new()
+                    {
                         Name = "Vue.js Basics",
                         Number = 2,
-                        VideoUrl = "https://videos.pexels.com/video-files/9783690/9783690-uhd_2732_1440_25fps.mp4",
-                        LessonDetails = "Understand how to use Vue.js for building interactive user interfaces.",
+                        VideoUrl =
+                            "https://videos.pexels.com/video-files/9783690/9783690-uhd_2732_1440_25fps.mp4",
+                        LessonDetails =
+                            "Understand how to use Vue.js for building interactive user interfaces.",
                         CourseOrder = 4
                     }
                 }
@@ -234,7 +271,8 @@ public static class SeedData
         // Seed Quizzes and Quiz Questions/Answers for each Course
         var quizzes = new List<Quiz>
         {
-            new() {
+            new()
+            {
                 CourseId = courses.First(c => c.Name == "Introduction to Web Development").Id,
                 Name = "HTML Basics Quiz",
                 Number = 1,
@@ -243,7 +281,8 @@ public static class SeedData
                 IsPassRequired = true,
                 QuizQuestions = new List<QuizQuestion>
                 {
-                    new() {
+                    new()
+                    {
                         QuestionTitle = "What does HTML stand for?",
                         QuizAnswers = new List<QuizAnswer>
                         {
@@ -252,7 +291,8 @@ public static class SeedData
                             new() { AnswerText = "HighText Machine Language", IsCorrect = false }
                         }
                     },
-                    new() {
+                    new()
+                    {
                         QuestionTitle = "Which tag is used for creating hyperlinks?",
                         QuizAnswers = new List<QuizAnswer>
                         {
@@ -263,7 +303,8 @@ public static class SeedData
                     }
                 }
             },
-            new() {
+            new()
+            {
                 CourseId = courses.First(c => c.Name == "Advanced Data Analysis").Id,
                 Name = "Python Basics Quiz",
                 Number = 1,
@@ -272,7 +313,8 @@ public static class SeedData
                 IsPassRequired = true,
                 QuizQuestions = new List<QuizQuestion>
                 {
-                    new() {
+                    new()
+                    {
                         QuestionTitle = "What is Pandas primarily used for?",
                         QuizAnswers = new List<QuizAnswer>
                         {
@@ -281,7 +323,8 @@ public static class SeedData
                             new() { AnswerText = "Machine learning", IsCorrect = false }
                         }
                     },
-                    new() {
+                    new()
+                    {
                         QuestionTitle = "Which library is used for data visualization in Python?",
                         QuizAnswers = new List<QuizAnswer>
                         {
@@ -292,7 +335,8 @@ public static class SeedData
                     }
                 }
             },
-            new() {
+            new()
+            {
                 CourseId = courses.First(c => c.Name == "Modern JavaScript").Id,
                 Name = "JavaScript Basics Quiz",
                 Number = 1,
@@ -301,7 +345,8 @@ public static class SeedData
                 IsPassRequired = true,
                 QuizQuestions = new List<QuizQuestion>
                 {
-                    new() {
+                    new()
+                    {
                         QuestionTitle = "Which keyword is used to declare variables in ES6?",
                         QuizAnswers = new List<QuizAnswer>
                         {
@@ -310,7 +355,8 @@ public static class SeedData
                             new() { AnswerText = "define", IsCorrect = false }
                         }
                     },
-                    new() {
+                    new()
+                    {
                         QuestionTitle = "Which of the following is a JavaScript framework?",
                         QuizAnswers = new List<QuizAnswer>
                         {

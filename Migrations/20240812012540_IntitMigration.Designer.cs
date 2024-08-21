@@ -12,7 +12,7 @@ using OnlineLearningPlatform.Context;
 namespace OnlineLearningPlatform.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240808050739_IntitMigration")]
+    [Migration("20240812012540_IntitMigration")]
     partial class IntitMigration
     {
         /// <inheritdoc />
