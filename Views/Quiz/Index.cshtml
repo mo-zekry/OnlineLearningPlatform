@@ -3,73 +3,79 @@
 @{
     ViewData["Title"] = "Admin Quiz Page";
     var courses = ViewData["CoursesViewModel"] as IEnumerable<CourseViewModel>;
-    @* var quizViewModel = ViewData["QuizViewModel"] as QuizViewModel; *@
     var targetQuizId = 0;
 }
 
-<div class="container">
-    <button
-        type="button"
-        class="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#staticBackdrop">
-        Create Quiz
-    </button>
-    <table class="table">
-        <thead>
-        <tr>
-            <td>#</td>
-            <td>Name</td>
-            <td>Number</td>
-            <td>Course Order</td>
-            <td>Pass Score</td>
-            <td>Is Pass Required</td>
-            <td>Course</td>
-            <td>Actions</td>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var quiz in Model.ToList()) {
-            // get the id for modal
-            targetQuizId = quiz.Id;
+<div class="container my-4 vh-100">
+    @* <button
+    type="button"
+    class="btn btn-primary mb-3"
+    data-bs-toggle="modal"
+    data-bs-target="#staticBackdrop"
+    >
+    Create Quiz
+    </button> *@
 
-            <tr>
-                <td>@(Model.ToList().IndexOf(quiz) + 1)</td>
-                <td>@quiz.Name</td>
-                <td>@quiz.Number</td>
-                <td>@quiz.CourseOrder</td>
-                <td>@quiz.MinPassScore</td>
-                <td>@quiz.IsPassRequired</td>
-                @if (courses != null) {
-                    <td>@courses.FirstOrDefault(c => c.Id == quiz.CourseId)?.Name</td>
-                }
-                <td>
-                    <!-- Button trigger modal -->
-                    <a
-                        asp-action="Edit"
-                        asp-route-id="@quiz.Id"
-                        class="btn btn-primary">
-                        Edit
-                    </a>
-                    <!-- Button trigger modal -->
-                    <a
-                        asp-action="ConfirmDelete"
-                        asp-route-id="@targetQuizId"
-                        class="btn btn-primary"
-                        data-bs-toggle="modal"
-                        data-bs-target="#deleteQuizModal">
-                        Delete
-                    </a>
-                    <a class="btn btn-outline-success" asp-action="Index" asp-controller="QuizQuestion" asp-route-quizId="@quiz.Id">
-                        Add Qoustions
-                    </a>
-                </td>
-            </tr>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">Quiz Management</h2>
+        <a
+            data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop"
+            class="btn btn-primary btn-lg"
+        >
+            <i class="fas fa-plus-circle"></i> Create Quiz
+        </a>
+    </div>
+
+    <div class="row">
+        @foreach (var quiz in Model)
+        {
+            targetQuizId = quiz.Id;
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm rounded-3">
+                    <div class="card-body">
+                        <h5 class="card-title">@quiz.Name</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Number: @quiz.Number</h6>
+                        <p class="card-text">
+                            <strong>Course:</strong> <a
+                                href="#"
+                                class="text-decoration-none"
+                            >@courses?.FirstOrDefault(c => c.Id == quiz.CourseId)?.Name</a>
+                        </p>
+                        <div class="d-flex justify-content-evenly">
+                            <a
+                                asp-action="Edit"
+                                asp-route-id="@quiz.Id"
+                                class="btn btn-outline-primary btn-sm"
+                            >
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
+                            <a
+                                asp-action="ConfirmDelete"
+                                asp-route-id="@quiz.Id"
+                                class="btn btn-outline-danger btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteQuizModal"
+                            >
+                                <i class="bi bi-trash"></i> Delete
+                            </a>
+                            <a
+                                asp-action="Index"
+                                asp-controller="QuizQuestion"
+                                asp-route-quizId="@quiz.Id"
+                                class="btn btn-outline-success btn-sm"
+                            >
+                                <i class="bi bi-journal-text"></i> Questions
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
-        </tbody>
-    </table>
+    </div>
 </div>
 
+<!-- Create Quiz Modal -->
 <div
     class="modal fade"
     id="staticBackdrop"
@@ -100,7 +106,7 @@
                 </p>
                 <form asp-action="CreateQuiz" method="post">
                     <div
-                        asp-validation-summary="ModelOnly"
+                        asp-validation-summary="All"
                         class="text-danger">
                     </div>
                     <div class="form-group">
@@ -184,45 +190,43 @@
     </div>
 </div>
 
-
-<!-- Modal -->
+<!-- Delete Quiz Modal -->
 <div
     class="modal fade"
     id="deleteQuizModal"
     tabindex="-1"
     aria-labelledby="deleteQuizModalLabel"
-    aria-hidden="true">
+    aria-hidden="true"
+>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h1
                     class="modal-title fs-5"
-                    id="deleteQuizModalLabel">
-                    Are You Sure that you need to delete this Quiz
-                </h1>
+                    id="deleteQuizModalLabel"
+                >Confirm Delete</h1>
                 <button
                     type="button"
                     class="btn-close"
                     data-bs-dismiss="modal"
-                    aria-label="Close">
-                </button>
+                    aria-label="Close"
+                ></button>
             </div>
             <div class="modal-body">
                 <form
                     method="post"
                     asp-action="ConfirmDelete"
-                    asp-route-id="@targetQuizId">
+                    asp-route-id="@targetQuizId"
+                >
                     <button
                         type="button"
                         class="btn btn-secondary"
-                        data-bs-dismiss="modal">
-                        Close
-                    </button>
+                        data-bs-dismiss="modal"
+                    >Close</button>
                     <button
                         type="submit"
-                        class="btn btn-danger">
-                        Confirm Delete
-                    </button>
+                        class="btn btn-danger"
+                    >Delete</button>
                 </form>
             </div>
         </div>

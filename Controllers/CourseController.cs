@@ -31,13 +31,67 @@ public class CourseController : BaseController
 
     // GET: Course
     [AllowAnonymous]
-    public IActionResult Index()
+    public IActionResult Index(
+        string searchString,
+        int? categoryId,
+        string sortOrder,
+        int pageNumber = 1,
+        int pageSize = 3
+    )
     {
+        // Retrieve courses from the database
         var courses = _db.Courses.Get();
-        var courseViewModels = _mapper.Map<IEnumerable<CourseViewModel>>(courses);
 
+        // Search functionality
+        if (!string.IsNullOrEmpty(searchString))
+        {
+            var lowerCaseSearchString = searchString.ToLower();
+            courses = _db.Courses.Get(c =>
+                c.Name.ToLower().Contains(lowerCaseSearchString)
+                || c.Description.ToLower().Contains(lowerCaseSearchString)
+            );
+        }
+
+        // Filter by category
+        if (categoryId.HasValue)
+        {
+            courses = courses.Where(c => c.CategoryId == categoryId.Value);
+        }
+
+        // Sorting
+        switch (sortOrder)
+        {
+            case "name_desc":
+                courses = courses.OrderByDescending(c => c.Name);
+                break;
+            case "price_asc":
+                courses = courses.OrderBy(c => c.Price);
+                break;
+            case "price_desc":
+                courses = courses.OrderByDescending(c => c.Price);
+                break;
+            default:
+                courses = courses.OrderBy(c => c.Name);
+                break;
+        }
+
+        // Pagination
+        var paginatedCourses = courses.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+        // Map to view models
+        var courseViewModels = _mapper.Map<IEnumerable<CourseViewModel>>(paginatedCourses);
+
+        // Retrieve and map categories for the dropdown filter
         var categories = _db.Categories.Get();
         ViewData["Categories"] = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
+
+        // Pass the pagination data to the view
+        ViewData["CurrentSearch"] = searchString;
+        ViewData["CurrentCategory"] = categoryId;
+        ViewData["CurrentSort"] = sortOrder;
+        ViewData["PageNumber"] = pageNumber;
+        ViewData["PageSize"] = pageSize;
+        ViewData["TotalPages"] = Math.Ceiling((double)courses.Count() / pageSize);
 
         return View(courseViewModels);
     }
@@ -241,7 +295,8 @@ public class CourseController : BaseController
     public IActionResult SearchCourses(string query)
     {
         var categories = _db.Categories.Get();
-        var courses = _db.Courses.Get()
+        var courses = _db
+            .Courses.Get()
             .Where(c => c.Name.Contains(query) || c.Description.Contains(query))
             .Select(c => new CourseViewModel
             {
@@ -257,5 +312,4 @@ public class CourseController : BaseController
 
         return PartialView("_CourseListPartial", courses);
     }
-
 }

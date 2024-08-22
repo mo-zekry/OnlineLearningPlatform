@@ -4,6 +4,11 @@
     var categories = ViewData["Categories"] as List<CategoryViewModel>;
     var userRole = User.IsInRole("Admin") ? "Admin" : User.IsInRole("Student") ? "Student" : "Guest";
     var targetElementId = 0;
+    var currentSearch = ViewData["CurrentSearch"] as string;
+    var currentCategory = ViewData["CurrentCategory"] as int?;
+    var currentSort = ViewData["CurrentSort"] as string;
+    var pageNumber = ViewData["PageNumber"] as int? ?? 1;
+    var totalPages = ViewData["TotalPages"] as double? ?? 1;
 }
 
 <div class="container mt-5">
@@ -14,24 +19,20 @@
         }
     </div>
 
-    @* search *@
-    <div class="input-group mb-3">
-        <input
-            type="text"
-            class="form-control"
-            placeholder="Search Course"
-            aria-label="Search Course"
-            aria-describedby="button-addon2">
-        <button
-            class="btn btn-outline-secondary"
-            type="button"
-            id="button-addon2">
-            <i class="fas fa-search"></i>
-        </button>
-    </div>
+    <!-- Search -->
+    <form method="get" asp-action="Index" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="searchString" value="@currentSearch" class="form-control" placeholder="Search Course">
+            <button class="btn btn-outline-secondary" type="submit">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+        <input type="hidden" name="pageNumber" value="@(pageNumber)" />
+    </form>
 
     <div class="row">
-        @foreach (var item in Model) {
+        @foreach (var item in Model)
+        {
             targetElementId = item.Id;
 
             <div class="col-md-4 mb-4">
@@ -48,13 +49,15 @@
                         </p>
                         <p class="card-text">
                             <strong>Category:</strong>
-                            @if (categories != null) {
+                            @if (categories != null)
+                            {
                                 <span class="badge bg-secondary">@categories.FirstOrDefault(c => c.Id == item.CategoryId)?.Name</span>
                             }
                         </p>
 
                         <!-- Admin-Specific Actions -->
-                        @if (userRole == "Admin") {
+                        @if (userRole == "Admin")
+                        {
                             <div class="d-flex flex-wrap gap-2 mt-3">
                                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
                                 <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</a>
@@ -62,12 +65,13 @@
                             </div>
                         }
 
-
                         <!-- Other Users (Student/Guest) Actions -->
-                        @if (userRole == "Student" || userRole == "Guest") {
+                        @if (userRole == "Student" || userRole == "Guest")
+                        {
                             <div class="d-flex flex-wrap gap-2 mt-3">
                                 <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Details</a>
-                                @if (userRole == "Student") {
+                                @if (userRole == "Student")
+                                {
                                     <a asp-action="Create" asp-route-courseId="@item.Id" asp-controller="Enrollment" class="btn btn-primary btn-sm">Enroll</a>
                                 }
                             </div>
@@ -76,6 +80,29 @@
                 </div>
             </div>
         }
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mt-4">
+                <li class="page-item @(pageNumber <= 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@(pageNumber - 1)" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                @for (var i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == pageNumber ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@i">@i</a>
+                    </li>
+                }
+                <li class="page-item @(pageNumber >= totalPages ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@(pageNumber + 1)" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
         <!-- Delete Modal -->
         <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -91,7 +118,7 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                    </div>
+                    </div
                 </div>
             </div>
         </div>
