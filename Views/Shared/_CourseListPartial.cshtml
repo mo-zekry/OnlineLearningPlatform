@@ -3,12 +3,14 @@
 @{
     var categories = ViewData["Categories"] as List<CategoryViewModel>;
     var userRole = User.IsInRole("Admin") ? "Admin" : User.IsInRole("Student") ? "Student" : "Guest";
+    var targetElementId =0;
 }
 
 <div class="container mt-5">
     <div class="row">
         @foreach (var course in Model)
         {
+            targetElementId = course.Id;
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm border-light rounded-3">
                     <img src="@course.ImageUrl" class="card-img-top img-fluid" alt="Course Image">
@@ -56,7 +58,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form asp-action="Delete" method="post">
+                    <form asp-action="Delete" asp-route-id="@targetElementId" asp-controller="Course" method="post">
                         <input type="hidden" id="courseId" name="courseId" value="" />
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Delete</button>
