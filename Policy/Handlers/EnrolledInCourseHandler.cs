@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using OnlineLearningPlatform.Context.Identity;
 using OnlineLearningPlatform.Repositories;
-using OnlineLearningPlatform.Requirements;
+using OnlineLearningPlatform.Policy.Requirements;
 
-namespace OnlineLearningPlatform.Handlers;
+namespace OnlineLearningPlatform.Policy.Handlers;
 
 public class EnrolledInCourseHandler : AuthorizationHandler<EnrolledInCourseRequirement, int> {
     private readonly IUnitOfWork _db;

@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OnlineLearningPlatform.Context;
 using OnlineLearningPlatform.Context.Identity;
-using OnlineLearningPlatform.Handlers;
 using OnlineLearningPlatform.Mapping;
 using OnlineLearningPlatform.Repositories;
-using OnlineLearningPlatform.Requirements;
+using OnlineLearningPlatform.Policy.Requirements;
 using Stripe;
+using OnlineLearningPlatform.Handlers;
 
 namespace OnlineLearningPlatform;
 
