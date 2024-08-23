@@ -11,12 +11,14 @@
 @section StyleSheets {
     <link
         href="~/css/home.css"
-        rel="stylesheet">
+        rel="stylesheet"
+    >
 }
 
 <div
     id="hero"
-    class="p-5 text-center bg-image hero container-fluid">
+    class="p-5 text-center bg-image hero container-fluid"
+>
     <div class="container d-flex justify-content-center align-items-center hero-inner">
         <div class="row w-100">
             <div class="col-md-6 hero-text">
@@ -28,11 +30,13 @@
                     Discover a wide range of courses tailored to enhance your skills and knowledge. Engage with experts
                     and unlock your potential today.
                 </p>
-                @if (!(User.Identity != null && User.Identity.IsAuthenticated)) {
+                @if (!(User.Identity != null && User.Identity.IsAuthenticated))
+                {
                     <a
                         class="btn btn-primary btn-lg join-now"
                         asp-action="Register"
-                        asp-controller="Account">
+                        asp-controller="Account"
+                    >
                         Join Now
                     </a>
                 }
@@ -46,25 +50,28 @@
     <section class="categories">
         <h2
             id="category-heading"
-            class="mb-4 mt-4 display-5 text-center">
+            class="mb-4 mt-4 display-5 text-center"
+        >
             Categories
         </h2>
         <div class="row mb-5 mt-4 container-fluid g-4">
-            @foreach (var category in ViewBag.Categories) {
-                @if(category.Name != ""){
-                <div class="col-md-4 d-flex align-items-stretch">
-                    <div class="card custom-category-card h-100">
-                        <div class="card-body text-center card-category d-flex flex-column justify-content-center">
-                            <a
-                                class="card-title custom-card-category-title text-decoration-none"
-                                asp-action="Details"
-                                asp-controller="Category"
-                                asp-route-id="@category.Id">
-                                @category.Name
-                            </a>
+            @foreach (var category in ViewBag.Categories)
+            {
+                @if (category.Name != "")
+                {
+                    <div class="col-md-4 d-flex align-items-stretch">
+                        <div class="card custom-category-card h-100">
+                            <div class="card-body text-center card-category d-flex flex-column justify-content-center">
+                                <a
+                                    class="card-title custom-card-category-title text-decoration-none"
+                                    asp-action="index"
+                                    asp-controller="Category"
+                                >
+                                    @category.Name
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
                 }
             }
         </div>
@@ -73,27 +80,39 @@
 
 <!-- Courses Section -->
 <section class=" container-fluid courses bg-light d-flex flex-column align-items-center">
-    <h2
-        id="course-list-heading"
-        class="mb-4 mt-4 display-5 text-center">
-        Our Courses
-    </h2>
+    <a
+    class="text-decoration-none d-flex flex-column align-items-center text-dark"
+        asp-action="Index"
+        asp-controller="Course"
+    >
+        <h2
+            id="course-list-heading"
+            class="mb-4 mt-4 display-5 text-center"
+        >
+            Our Courses
+        </h2>
+    </a>
     <div
         id="course-list"
-        class="container row g-4 mt-5">
+        class="container row g-4 mt-5"
+    >
         <partial
             name="_CourseListPartial"
             model="Model"
-            />
+        />
     </div>
 </section>
 
-<section id="about" class="about mt-5 mb-5 text-center text-lg-start custom-about-section">
+<section
+    id="about"
+    class="about mt-5 mb-5 text-center text-lg-start custom-about-section"
+>
     <div class="container">
 
         <h2
             id="about-heading"
-            class="mb-4 display-5 text-center">
+            class="mb-4 display-5 text-center"
+        >
             About Us
         </h2>
         <div class="row mt-lg-5 d-flex align-items-center justify-content-center">
@@ -114,7 +133,8 @@
                 <img
                     src="https://img.freepik.com/free-photo/student-wearing-red-headphones-e-learning-concept_23-2148552237.jpg?w=900&t=st=1722460482~exp=1722461082~hmac=42477eaf7e2203a9ca62f8f7756b1301876aa586e3323b39726e862fd5676e6d"
                     alt="About Us"
-                    class="img-fluid rounded-5 ">
+                    class="img-fluid rounded-5 "
+                >
             </div>
         </div>
     </div>
@@ -122,7 +142,10 @@
 
 @* contact section *@
 
-<section class="bg-light py-3 py-md-5" id="contact">
+<section
+    class="bg-light py-3 py-md-5"
+    id="contact"
+>
     <div class="container">
         <div class="row justify-content-md-center">
             <div class="col-12 col-md-10 col-lg-8 col-xl-7 col-xxl-6">
@@ -143,12 +166,14 @@
                     <form
                         id="contact-form"
                         method="post"
-                        action="/Home/SendEmail">
+                        action="/Home/SendEmail"
+                    >
                         <div class="row gy-4 gy-xl-5 p-4 p-xl-5">
                             <div class="col-12">
                                 <label
                                     for="fullname"
-                                    class="form-label">
+                                    class="form-label"
+                                >
                                     Full Name <span class="text-danger">*</span>
                                 </label>
                                 <input
@@ -156,12 +181,14 @@
                                     class="form-control"
                                     id="fullname"
                                     name="fullname"
-                                    required>
+                                    required
+                                >
                             </div>
                             <div class="col-12 col-md-6">
                                 <label
                                     for="email"
-                                    class="form-label">
+                                    class="form-label"
+                                >
                                     Email <span class="text-danger">*</span>
                                 </label>
                                 <input
@@ -169,24 +196,28 @@
                                     class="form-control"
                                     id="email"
                                     name="email"
-                                    required>
+                                    required
+                                >
                             </div>
                             <div class="col-12 col-md-6">
                                 <label
                                     for="phone"
-                                    class="form-label">
+                                    class="form-label"
+                                >
                                     Phone Number
                                 </label>
                                 <input
                                     type="tel"
                                     class="form-control"
                                     id="phone"
-                                    name="phone">
+                                    name="phone"
+                                >
                             </div>
                             <div class="col-12">
                                 <label
                                     for="message"
-                                    class="form-label">
+                                    class="form-label"
+                                >
                                     Message <span class="text-danger">*</span>
                                 </label>
                                 <textarea
@@ -201,7 +232,8 @@
                                 <div class="d-grid">
                                     <button
                                         class="btn btn-primary btn-lg contact-form-submit"
-                                        type="submit">
+                                        type="submit"
+                                    >
                                         Submit
                                     </button>
                                 </div>
@@ -209,7 +241,8 @@
                         </div>
                     </form>
 
-                    @if (ViewBag.Message != null) {
+                    @if (ViewBag.Message != null)
+                    {
                         <div class="alert alert-info mt-4">@ViewBag.Message</div>
                     }
 
