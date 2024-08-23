@@ -7,7 +7,7 @@ using OnlineLearningPlatform.Mapping;
 using OnlineLearningPlatform.Repositories;
 using OnlineLearningPlatform.Policy.Requirements;
 using Stripe;
-using OnlineLearningPlatform.Handlers;
+using OnlineLearningPlatform.Policy.Handlers;
 
 namespace OnlineLearningPlatform;
 
